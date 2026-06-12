@@ -13,7 +13,7 @@ He thong se duoc deploy that len hosting PHP/MySQL va su dung ten mien rieng de 
 - Co day du luong xu ly frontend, backend, database, authentication va admin CRUD.
 - Co du lieu mau de demo cac chuc nang chinh.
 - Deploy du an len hosting voi ten mien that.
-- Phan chia cong viec ro rang cho nhom 5 thanh vien trong thoi gian 1 thang.
+- Phan chia cong viec thanh 5 main task ro rang trong thoi gian 1 thang.
 
 ## 3. Pham vi trong 1 thang
 
@@ -36,7 +36,7 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 | Quan ly nguoi dung | Bat buoc | Planned |
 | Membership Free/Premium | Mo phong | Planned |
 | Quang cao cho Free user | Mo phong | Planned |
-| Binh luan phim co ban | Bat buoc | Planned |
+| Binh luan phim co ban, khong reply | Bat buoc | Planned |
 | Danh gia phim 1-5 sao | Bat buoc | Planned |
 | Dark Mode / Light Mode Toggle | Bat buoc | Planned |
 | Thanh toan online | Khong nam trong pham vi | Future |
@@ -193,16 +193,18 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 ### 6.8 Binh luan va danh gia phim
 
 - User dang nhap co the viet binh luan tren trang chi tiet phim.
+- Binh luan chi ho tro mot cap, khong co chuc nang reply trong pham vi 1 thang.
 - User co the xoa binh luan cua chinh minh neu can.
 - Admin co the an hoac xoa binh luan khong phu hop.
 - User dang nhap co the danh gia phim tu 1 den 5 sao.
-- Moi user chi co mot danh gia cho moi phim, co the cap nhat lai diem.
+- Moi user chi co mot danh gia cho moi phim, co the cap nhat lai diem da danh gia.
 - Trang chi tiet phim hien thi diem trung binh va tong so luot danh gia.
 
 ### 6.9 Dark Mode / Light Mode
 
 - Website co nut chuyen doi Dark Mode va Light Mode.
 - Lua chon giao dien duoc luu bang `localStorage`.
+- Theme khong can luu vao database vi day la tuy chon rieng tren trinh duyet cua tung nguoi dung.
 - Giao dien mac dinh uu tien dark mode de phu hop voi website xem phim.
 - Cac thanh phan chinh nhu header, card phim, form, admin table va watch page can ho tro ca hai che do.
 
@@ -318,6 +320,8 @@ Ghi chu: can tao unique constraint cho cap `user_id` va `movie_id` de tranh them
 - created_at
 - updated_at
 
+Ghi chu: bang `comments` khong co `parent_id` vi du an khong ho tro reply binh luan trong pham vi 1 thang.
+
 ### ratings
 
 - id
@@ -327,7 +331,7 @@ Ghi chu: can tao unique constraint cho cap `user_id` va `movie_id` de tranh them
 - created_at
 - updated_at
 
-Ghi chu: can tao unique constraint cho cap `user_id` va `movie_id` de moi user chi co mot danh gia cho moi phim.
+Ghi chu: can tao unique constraint cho cap `user_id` va `movie_id` de moi user chi co mot danh gia cho moi phim. Khi user danh gia lai, he thong cap nhat record cu thay vi tao record moi.
 
 ## 8. Quan he database
 
@@ -395,9 +399,11 @@ thauphim-movie-website/
 |-- README.md
 ```
 
-## 10. Phan cong cong viec nhom 5 thanh vien
+## 10. 5 Main Task cua du an
 
-### Thanh vien 1 - UI Layout & Homepage
+Day la 5 nhom cong viec chinh cua du an. Khi trien khai, nhom co the gan moi main task cho mot thanh vien hoac chia nho tuy theo tien do thuc te.
+
+### Main Task 1 - UI Layout & Homepage
 
 - Xay dung layout dung chung.
 - Header, navigation, footer.
@@ -407,7 +413,7 @@ thauphim-movie-website/
 - Dark Mode / Light Mode Toggle.
 - Chuan hoa CSS component cho card phim, button, form.
 
-### Thanh vien 2 - Browse, Search & Filter
+### Main Task 2 - Browse, Search & Filter
 
 - Trang danh sach phim.
 - Tim kiem theo ten phim.
@@ -415,7 +421,7 @@ thauphim-movie-website/
 - Sap xep va phan trang.
 - Toi uu query MySQL cho danh sach phim.
 
-### Thanh vien 3 - Movie Detail & Watch Page
+### Main Task 3 - Movie Detail & Watch Page
 
 - Trang chi tiet phim.
 - Danh sach tap phim.
@@ -424,7 +430,7 @@ thauphim-movie-website/
 - Phim lien quan.
 - Xu ly luu lich su xem khi user dang nhap.
 
-### Thanh vien 4 - User Features & Metadata Pages
+### Main Task 4 - User Features & Metadata Pages
 
 - Dang ky, dang nhap, dang xuat.
 - Session user.
@@ -436,7 +442,7 @@ thauphim-movie-website/
 - Trang dien vien.
 - Trang lich chieu.
 
-### Thanh vien 5 - Backend, Database, Admin & Deployment
+### Main Task 5 - Backend, Database, Admin & Deployment
 
 - Thiet ke database.
 - Tao `schema.sql` va `seed.sql`.
