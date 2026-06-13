@@ -15,7 +15,7 @@
         <div class="header-inner">
             <a class="brand" href="index.php" aria-label="ThauPhim trang chủ">
                 <span class="brand-icon" aria-hidden="true">
-                    <i class="fa-solid fa-clapperboard"></i>
+                    <img src="assets/images/favicon.png" alt="">
                 </span>
                 <span class="brand-copy">
                     <span class="brand-title">ThauPhim</span>
@@ -23,7 +23,8 @@
                 </span>
             </a>
 
-            <button class="menu-toggle" type="button" aria-label="Mở menu" aria-controls="primary-menu" aria-expanded="false">
+            <button class="menu-toggle" type="button" aria-label="Mở menu" aria-controls="primary-menu"
+                aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
