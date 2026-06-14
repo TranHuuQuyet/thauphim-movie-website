@@ -3,16 +3,16 @@
 
   /* Core palette */
   --bg-color: #191b24;
-  --text-base: #aaa;
+  --text-base: #fff;
   --primary-color: #ffd875;
   --primary-color-hover: #ffde8a;
   --primary-button-text: #191b24;
   --primary-text: #ffd875;
 
   /* Brand */
-  --color-primary: var(--primary-color);
+  --color-primary: var(text-base);
   --color-primary-hover: var(--primary-color-hover);
-  --color-primary-active: #f2c85f;
+  --color-primary-active: #f2c85f98;
   --color-primary-soft: rgba(255, 216, 117, 0.14);
   --color-secondary: var(--primary-color);
   --color-secondary-hover: var(--primary-color-hover);
@@ -28,7 +28,7 @@
   --color-surface: #20232e;
   --color-surface-muted: #292c38;
   --color-surface-raised: #303440;
-  --color-surface-inverse: #f8fafc;
+  --color-surface-inverse: #f8fafcdc;
   --color-overlay: rgba(0, 0, 0, 0.68);
   --color-backdrop: rgba(25, 27, 36, 0.88);
 
@@ -188,7 +188,7 @@ body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 a {
@@ -245,34 +245,34 @@ input {
 
 .brand-icon {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 60px;
+  height: 60px;
   place-items: center;
-  overflow: hidden;
-  border: 1px solid rgba(255, 216, 117, 0.34);
-  border-radius: 12px;
-  background: #05060a;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--primary-color);
   font-size: 1.18rem;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 10px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
 }
 .brand-icon img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
-  transform: scale(1.18);
-  filter: brightness(1.05) contrast(1.08);
+  transform: none;
+  filter: none;
 }
 .brand-copy {
   display: flex;
   flex-direction: column;
   line-height: 1.1;
 }
-
+.brand-copy strong {
+  color: var(--primary-color-hover);
+}
 .brand-title {
   color: var(--color-text);
   font-size: 1.35rem;
@@ -299,7 +299,7 @@ input {
   align-items: center;
   justify-content: flex-start;
   flex: 1 1 auto;
-  gap: 2px;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -310,7 +310,7 @@ input {
   padding: 0 8px;
   border-radius: 999px;
   color: var(--color-text-muted);
-  font-size: 0.92rem;
+  font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
   transition: color 0.2s ease;
@@ -331,7 +331,7 @@ input {
   display: flex;
   align-items: center;
   flex: 0 1 220px;
-  min-width: 160px;
+  min-width: 180px;
 }
 
 .search-form i {
@@ -347,7 +347,7 @@ input {
   height: 42px;
   padding: 0 16px 0 40px;
   border: 1px solid var(--color-input-border);
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--color-input-bg);
   color: var(--color-text);
   outline: none;
@@ -363,7 +363,6 @@ input {
 
 .search-form input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px var(--color-primary-soft);
 }
 
 .member-button {
@@ -373,8 +372,8 @@ input {
   flex: 0 0 auto;
   min-height: 42px;
   padding: 0 18px;
-  border-radius: 999px;
-  background: var(--color-button-primary-bg);
+  border-radius: 10px;
+  background: var(--color-surface-inverse);
   color: var(--color-button-primary-text);
   font-size: 0.94rem;
   font-weight: 700;

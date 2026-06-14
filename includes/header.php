@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ThauPhim</title>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/reponsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -18,7 +22,7 @@
                     <img src="assets/images/favicon.png" alt="">
                 </span>
                 <span class="brand-copy">
-                    <span class="brand-title">ThauPhim</span>
+                    <span class="brand-title">Thau<strong>Phim</strong></span>
                     <span class="brand-tagline">Phim hay cả thau</span>
                 </span>
             </a>
@@ -42,7 +46,7 @@
                 </nav>
 
                 <form class="search-form" action="pages/browse.php" method="get" role="search">
-                    <label class="sr-only" for="header-search">Tìm phim</label>
+                    <label class="sr-only" for="header-search">Tìm phim,diễn viên...</label>
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off">
                 </form>
