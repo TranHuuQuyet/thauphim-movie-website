@@ -245,8 +245,8 @@ input {
 
 .brand-icon {
   display: grid;
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   place-items: center;
   overflow: visible;
   border: 0;
@@ -337,7 +337,7 @@ input {
 .search-form i {
   position: absolute;
   left: 14px;
-  color: var(--color-text-soft);
+  color: var(--text-base);
   font-size: 0.9rem;
   pointer-events: none;
 }
@@ -358,7 +358,7 @@ input {
 }
 
 .search-form input::placeholder {
-  color: var(--color-text-soft);
+  color: var(--text-base);
 }
 
 .search-form input:focus {
