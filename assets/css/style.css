@@ -420,7 +420,7 @@ input {
 
 /* Tổng quan Footer */
 .site-footer {
-  background-color: #0b0f19; /* Màu nền dark-blue xám sâu cực sang */
+  background-color: #0b0f19; 
   color: #9ca3af;
   padding: 40px 20px 20px 20px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -476,134 +476,168 @@ input {
   margin-top: -2px;
 }
 
-/* Mạng xã hội */
 .footer-socials {
-  display: flex;
-  gap: 10px;
-}
-.social-item {
-  width: 38px;
-  height: 38px;
-  background-color: #1f2937;
-  color: #d1d5db;
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
-/* Hiệu ứng Hover riêng cho từng icon sinh động */
-.social-item:hover {
-  transform: translateY(-3px);
-  color: #fff;
-}
-.social-item.telegram:hover {
-  background-color: #0088cc;
-  box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4);
-}
-.social-item.discord:hover {
-  background-color: #5865f2;
-  box-shadow: 0 4px 12px rgba(88, 101, 242, 0.4);
-}
-.social-item.twitter:hover {
-  background-color: #14171a;
-  box-shadow: 0 4px 12px rgba(20, 23, 26, 0.4);
-}
-.social-item.facebook:hover {
-  background-color: #1877f2;
-  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
-}
-.social-item.tiktok:hover {
-  background-color: #010101;
-  box-shadow: 0 4px 12px rgba(1, 1, 1, 0.4);
-}
-.social-item.youtube:hover {
-  background-color: #ff0000;
-  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
-}
-.social-item.instagram:hover {
-  background: linear-gradient(
-    45deg,
-    #f09433,
-    #e6683c,
-    #dc2743,
-    #cc2366,
-    #bc1888
-  );
-  box-shadow: 0 4px 12px rgba(220, 39, 67, 0.4);
-}
-
-/* 3 & 4. Menu links & Tags */
-.footer-nav,
-.footer-tags {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 15px 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-.footer-nav a {
-  color: #9ca3af;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-.footer-nav a:hover {
-  color: #ffffff;
-}
-
-.footer-tags a {
-  color: #6b7280;
-  text-decoration: none;
-  font-size: 13px;
-  transition: color 0.2s ease;
-}
-.footer-tags a:hover {
-  color: var(--color-text-muted); /* Hover chuyển màu đỏ nổi bật */
-}
-
-/* Đường gạch ngang nhỏ mịn */
-.footer-divider {
-  border: 0;
-  border-top: 1px solid #1f2937;
-  margin: 20px 0;
-}
-
-/* 5. Đoạn giới thiệu & Copyright */
-.footer-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.footer-description {
-  font-size: 12.5px;
-  color: #6b7280;
-  text-align: justify;
-  margin: 0;
-}
-.footer-description strong {
-  color: #d1d5db;
-}
-.footer-copyright {
-  font-size: 12px;
-  color: #4b5563;
-}
-.footer-copyright span {
-  color: #9ca3af;
-  font-weight: 500;
-}
-
-/* Responsive mượt mà cho điện thoại */
-@media (max-width: 768px) {
-  .footer-main-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .footer-nav,
-  .footer-tags {
+    display: flex;
     gap: 12px;
-  }
+}
+
+.footer-socials a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background-color: #161820;
+    color: #a3a3a3;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hiệu ứng Hover sặc sỡ theo màu thương hiệu riêng biệt */
+.footer-socials a.btn-telegram:hover {
+    background-color: #0088cc;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(0, 136, 204, 0.6);
+    transform: translateY(-4px);
+}
+
+.footer-socials a.btn-discord:hover {
+    background-color: #5865F2;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(88, 101, 242, 0.6);
+    transform: translateY(-4px);
+}
+
+.footer-socials a.btn-twitter:hover {
+    background-color: #1DA1F2;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(29, 161, 242, 0.6);
+    transform: translateY(-4px);
+}
+
+.footer-socials a.btn-facebook:hover {
+    background-color: #1877F2;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(24, 119, 242, 0.6);
+    transform: translateY(-4px);
+}
+
+.footer-socials a.btn-tiktok:hover {
+    background-color: #FE2C55;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(254, 44, 85, 0.6);
+    transform: translateY(-4px);
+}
+
+.footer-socials a.btn-youtube:hover {
+    background-color: #FF0000;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    transform: translateY(-4px);
+}
+
+.footer-socials a.btn-instagram:hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(220, 39, 67, 0.6);
+    transform: translateY(-4px);
+}
+
+/* Đường kẻ phân chia */
+.footer-line {
+    border: 0;
+    border-top: 1px solid #1f222e;
+    margin: 25px 0;
+}
+
+/* --- HÀNG DƯỚI: HỆ THỐNG LƯỚI CỘT THẲNG HÀNG TẮP --- */
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 1.5fr 3.5fr; /* Tỷ lệ chia cột cân đối */
+    gap: 30px;
+    align-items: start; /* Ép đỉnh tất cả các cột bằng nhau, không bị lệch */
+}
+
+/* Các cột danh sách liên kết dọc */
+.footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.footer-col a {
+    color: #7a7a7a;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    width: fit-content;
+}
+
+/* Hiệu ứng hover chữ chuyển sang màu trắng phát sáng nhẹ */
+.footer-col a:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* Cấu trúc khối lớn bên phải */
+.footer-col-large {
+    gap: 18px;
+}
+
+.meta-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.meta-links a {
+    color: #cccccc;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.tag-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 12px;
+    color: #6e6a6a;
+}
+
+.footer-about {
+    font-size: 13px;
+    color: #8b8989;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.footer-about strong {
+    color: #858282;
+}
+
+.footer-copyright {
+    font-size: 12px;
+    color: #8a8888;
+    margin-top: 2px;
+}
+
+/* --- ĐÁP ỨNG GIAO DIỆN DI ĐỘNG (RESPONSIVE) --- */
+@media (max-width: 992px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer-top {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
 }

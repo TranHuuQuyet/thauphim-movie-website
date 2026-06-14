@@ -14,51 +14,63 @@
                 </div>
             </div>
 
-            <div class="footer-socials">
-                <a href="#" class="social-item telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-                <a href="#" class="social-item discord" title="Discord"><i class="fa-brands fa-discord"></i></a>
-                <a href="#" class="social-item twitter" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#" class="social-item facebook" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" class="social-item tiktok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                <a href="#" class="social-item youtube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#" class="social-item instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+<div class="footer-socials">
+                <a href="#" class="btn-telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                <a href="#" class="btn-discord" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                <a href="#" class="btn-twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" class="btn-facebook" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="btn-tiktok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" class="btn-youtube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" class="btn-instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
             </div>
         </div>
 
-        <div class="footer-links-group">
-            <ul class="footer-nav">
-                <li><a href="#">Hỏi-Đáp</a></li>
-                <li><a href="#">Chính sách bảo mật</a></li>
-                <li><a href="#">Điều khoản sử dụng</a></li>
-                <li><a href="#">Giới thiệu</a></li>
-                <li><a href="#">Liên hệ</a></li>
-            </ul>
-        </div>
+        <hr class="footer-line">
 
-        <div class="footer-tags-group">
-            <ul class="footer-tags">
-                <li><a href="#">Dongphim</a></li>
-                <li><a href="#">Ghienphim</a></li>
-                <li><a href="#">Motphim</a></li>
-                <li><a href="#">Subnhanh</a></li>
-                <li><a href="#">Onflix</a></li>
-            </ul>
-        </div>
-
-        <hr class="footer-divider">
-
-        <div class="footer-bottom">
-            <p class="footer-description">
-                <strong>ThauPhim</strong> – Phim hay cả thau - Trang xem phim online chất lượng cao miễn phí Vietsub,
-                thuyết
-                minh, lồng tiếng full HD. Kho phim mới khổng lồ, phim chiếu rạp, phim bộ, phim lẻ từ nhiều quốc gia như
-                Việt Nam, Hàn Quốc, Trung Quốc, Thái Lan, Nhật Bản, Âu Mỹ... đa dạng thể loại. Khám phá nền tảng phim
-                trực tuyến hay nhất 2026 chất lượng 4K!
-            </p>
-            <div class="footer-copyright">
-                &copy; <?php echo date("Y"); ?> <span>ThauPhim</span>. All rights reserved.
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="#">Audio Description</a>
+                <a href="#">Investor Relations</a>
+                <a href="#">Legal Notices</a>
+            </div>
+            
+            <div class="footer-col">
+                <a href="#">Help Center</a>
+                <a href="#">Jobs</a>
+                <a href="#">Cookie Preferences</a>
+            </div>
+            
+            <div class="footer-col">
+                <a href="#">Corporate Information</a>
+                <a href="#">Privacy</a>
+                <a href="#">Contact Us</a>
+            </div>
+            
+            <div class="footer-col footer-col-large">
+                <div class="meta-links">
+                    <a href="#">Hỏi-Đáp</a>
+                    <a href="#">Chính sách bảo mật</a>
+                    <a href="#">Điều khoản sử dụng</a>
+                    <a href="#">Giới thiệu</a>
+                    <a href="#">Liên hệ</a>
+                </div>
+                
+                <div class="tag-links">
+                    <span>Dongphim</span>
+                    <span>Ghienphim</span>
+                    <span>Motphim</span>
+                    <span>Subnhanh</span>
+                    <span>Onflix</span>
+                </div>
+                
+                <p class="footer-about">
+                    <strong>ThauPhim</strong> – Phim hay - Trang xem phim online chất lượng cao miễn phí Vietsub, thuyết minh, lồng tiếng full HD. Kho phim mới khổng lồ liên tục được cập nhật mỗi ngày từ các nguồn chất lượng nhất. Khám phá nền tảng phim trực tuyến hay nhất 2026 chất lượng 4K!
+                </p>
+                
+                <div class="footer-copyright">
+                    &copy; 2026 ThauPhim. All rights reserved.
+                </div>
             </div>
         </div>
-
     </div>
-</footer>
+</footer>           
