@@ -39,7 +39,43 @@
             </button>
         </div>
     </section>
+    <section class="movie-section">
+        <h2>Phim mới cập nhật!!!</h2>
+        <div class="movie-grid">
+            <div class="movie-card"><img src="assets/images/pic1.webp" alt="">
+                <div class="card-play">
 
+                    <h4>Ngôi trường xác sống</h4>
+                    <button class="play-btn">XEM NGAY
+                    </button>
+                </div>
+                <p>Reborn Rockie</p>
+
+            </div>
+            <div class="movie-card"><img src="assets/images/pic1.webp" alt="">
+                <div class="card-play">
+
+                    <h4>Ngôi trường xác sống</h4>
+                    <button class="play-btn">XEM NGAY
+                    </button>
+                </div>
+                <p>Reborn Rockie</p>
+
+            </div>
+            <div class="movie-card"><img src="assets/images/pic1.webp" alt="">
+                <div class="card-play">
+
+                    <h4>Ngôi trường xác sống</h4>
+                    <button class="play-btn">XEM NGAY
+                    </button>
+                </div>
+                <p>Reborn Rockie</p>
+
+            </div>
+
+        </div>
+
+    </section>
 </main>
 
 <script src="assets/js/main.js"></script>
