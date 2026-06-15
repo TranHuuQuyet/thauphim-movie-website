@@ -64,9 +64,16 @@
                 </div>
                 
                 <p class="footer-about">
-                    <strong>ThauPhim</strong> – Phim hay - Trang xem phim online chất lượng cao miễn phí Vietsub, thuyết minh, lồng tiếng full HD. Kho phim mới khổng lồ liên tục được cập nhật mỗi ngày từ các nguồn chất lượng nhất. Khám phá nền tảng phim trực tuyến hay nhất 2026 chất lượng 4K!
-                </p>
-                
+                    <strong>ThauPhim</strong> – Phim hay - Website giải trí xem phim trực tuyến được phát triển
+                    bằng PHP, MySQL, HTML, CSS và JavaScript cho
+                    đồ án môn Lập trình Web.<br>
+                      Tính năng:
+                    Xem phim
+                    Tìm kiếm & lọc phim
+                    Yêu thích phim
+                    Lịch sử xem
+                    Bình luận & đánh giá
+                    Quản trị nội dung </p>
                 <div class="footer-copyright">
                     &copy; 2026 ThauPhim. All rights reserved.
                 </div>
