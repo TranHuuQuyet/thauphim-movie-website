@@ -67,7 +67,7 @@
                     <strong>ThauPhim</strong> – Phim hay - Website giải trí xem phim trực tuyến được phát triển
                     bằng PHP, MySQL, HTML, CSS và JavaScript cho
                     đồ án môn Lập trình Web.<br>
-                      Tính năng:
+                    <span> Tính năng</span> :
                     Xem phim
                     Tìm kiếm & lọc phim
                     Yêu thích phim

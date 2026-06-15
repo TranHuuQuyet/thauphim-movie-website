@@ -664,7 +664,9 @@ body.light-mode .icon-sun {
 .footer-about strong {
   color: #858282;
 }
-
+.footer-about span {
+   color: #858282;
+}
 .footer-copyright {
   font-size: 12px;
   color: #8a8888;
