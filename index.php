@@ -121,6 +121,7 @@
     <section class="movie-slides">
         <div class="movie-slides-head">
             <h2>Phim mới gần đây</h2>
+            <a href="#" class="view-more">Xem thêm</a>
         </div>
 
         <div class="swiper movieHeroSwiper">
