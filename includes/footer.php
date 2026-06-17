@@ -28,53 +28,69 @@
         <hr class="footer-line">
 
         <div class="footer-grid">
-            <div class="footer-col">
-                <a href="#">Trang Chủ</a>
-                <a href="#">Phim Lẻ</a>
-                <a href="#">Phim Bộ</a>
-            </div>
-            
-            <div class="footer-col">
-                <a href="#">Thể Loại</a>
-                <a href="#">Phim Yêu Thích</a>
-                <a href="#">Lịch Sử Xem</a>
-            </div>
-            
-            <div class="footer-col">
-                <a href="#">Giới Thiệu </a>
-                <a href="#">Chính Sách Bảo Mật</a>
-                <a href="#">Liên hệ </a>
-            </div>
-            
-            <div class="footer-col footer-col-large">
-                <div class="meta-links">
-                    <a href="#">Hỏi-Đáp</a>
-                    <a href="#">Chính sách bảo mật</a>
-                    <a href="#">Điều khoản sử dụng</a>
-                    <a href="#">Giới thiệu</a>
-                    <a href="#">Liên hệ</a>
-                </div>
-                
-                <div class="tag-links">
-                    <span>Hành Động</span>
-                    <span>Tình Cảm</span>
-                    <span>Kinh dị</span>
-                    <span>Hài</span>
-                    <span>Hoạt Hình</span>
-                </div>
-                
-                <p class="footer-about">
-                    <strong>ThauPhim</strong> - Website giải trí xem phim trực tuyến được phát triển
-                    bằng PHP, MySQL, HTML, CSS và JavaScript cho
-                    đồ án môn Lập trình Web.<br>
-                    <strong> Tính Năng</strong> -Hệ thống hỗ trợ tìm kiếm phim, xem phim, quản lý yêu thích, 
-                    lịch sử xem và đánh giá nội dung. <br>
-                    <strong>Đồ án học phần Lập trình Web -
-                            Khoa Công nghệ Thông tin <br></strong> </p>
-                <div class="footer-copyright">
-                    &copy; 2026 ThauPhim. All rights reserved.
-                </div>
-            </div>
-        </div>
+
+    <div class="footer-col">
+        <h3>MENU</h3>
+        <a href="#">Trang Chủ</a>
+        <a href="#">Phim Lẻ</a>
+        <a href="#">Phim Bộ</a>
     </div>
-</footer>           
+
+    <div class="footer-col">
+        <h3>PHIM CỦA BẠN</h3>
+        <a href="#">Thể Loại</a>
+        <a href="#">Phim Yêu Thích</a>
+        <a href="#">Lịch Sử Xem</a>
+    </div>
+
+    <div class="footer-col">
+        <h3>THÔNG TIN</h3>
+        <a href="#">Giới Thiệu</a>
+        <a href="#">Liên Hệ</a>
+        <a href="#">Hỏi-Đáp</a>
+    </div>
+
+</div>
+
+<div class="tag-links">
+    <span>Hành Động</span>
+    <span>•</span>
+    <span>Tình Cảm</span>
+    <span>•</span>
+    <span>Kinh Dị</span>
+    <span>•</span>
+    <span>Hài</span>
+    <span>•</span>
+    <span>Hoạt Hình</span>
+</div>
+
+
+<div class="footer-col-large">
+
+    <div class="footer-about">
+        <p>
+            <strong>ThauPhim</strong> - Website giải trí xem phim trực tuyến được phát triển bằng
+            PHP, MySQL, HTML, CSS và JavaScript cho đồ án môn Lập trình Web.
+        </p>
+
+        <p>
+            <strong>Tính Năng</strong> - Hệ thống hỗ trợ tìm kiếm phim, xem phim,
+            quản lý yêu thích, lịch sử xem và đánh giá nội dung.
+        </p>
+
+        <p>
+            <strong>Đồ án học phần Lập trình Web - Nhóm 7 - Khoa Công nghệ Thông tin</strong>
+        </p>
+    </div>
+
+    <div class="meta-links">
+        <a href="#">Điều Khoản Sử Dụng</a>
+        <span>•</span>
+        <a href="#">Chính Sách Bảo Mật</a>
+    </div>
+
+    <div class="footer-copyright">
+        © 2026 ThauPhim. All rights reserved.
+    </div>
+
+</div>
