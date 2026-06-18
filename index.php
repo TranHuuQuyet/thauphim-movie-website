@@ -1,8 +1,6 @@
 <?php include __DIR__ . '/includes/header.php'; ?>
+<?php include 'includes/auth_modal.php'; ?>
 
-<head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
-</head>
 <main class="page-shell" aria-label="Nội dung chính">
     <section class="hero">
         <div class="video-bg">
@@ -494,5 +492,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/auth_modal.js"></script>
+
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

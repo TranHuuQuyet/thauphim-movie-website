@@ -9,8 +9,10 @@
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
     </style>
     <link rel="icon" type="image/png" sizes="512x512" href="assets/images/favicon-tab.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/reponsive.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
@@ -51,7 +53,7 @@
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off">
                 </form>
 
-                <a class="member-button" href="login.php">Thành viên</a>
+                <a class="member-button" href="#" id="openLogin">Thành viên</a>
                 <button id="themeToggle" class="theme-toggle">
                     <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                         <path

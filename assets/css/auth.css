@@ -1,0 +1,16 @@
+.auth-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+}
+.auth-modal.active {
+  display: flex;
+}
+#closeAuth,
+.auth-close {
+  cursor: pointer;
+}

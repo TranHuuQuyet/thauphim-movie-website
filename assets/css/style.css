@@ -185,6 +185,7 @@ body.light-theme {
 
 html {
   min-height: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -193,6 +194,7 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: "Montserrat", sans-serif;
+  overflow-x: clip;
 }
 
 a {
