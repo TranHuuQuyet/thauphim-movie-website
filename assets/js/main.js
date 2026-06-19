@@ -134,7 +134,7 @@ const loadheroMovies = async () => {
     const response = await fetch(url);
     const data = await response.json();
     console.log("he");
-    const movies = data.results.slice(0, 8);
+    const movies = data.results.slice(0, 11);
     heroMovies.innerHTML = movies
       .map((movie) => {
         const backdrop = movie.backdrop_path
