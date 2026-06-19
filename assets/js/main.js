@@ -71,8 +71,6 @@ const trendingapiKey = "9b4592d22d37d5f7ac7a5f6514fbdc0b";
 const trendingUrl = `https://api.themoviedb.org/3/trending/movie/day?api_key=${trendingapiKey}&language=vi-VN`;
 const loadtrendingMovie = async () => {
   if (!trendingmovieList) return;
-  console.log("hahah");
-
   try {
     const trendingresponse = await fetch(trendingUrl);
     const trendingdata = await trendingresponse.json();
@@ -126,14 +124,10 @@ const keyApi = "9b4592d22d37d5f7ac7a5f6514fbdc0b";
 const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${keyApi}&language=vi-VN&page=1`;
 
 const loadheroMovies = async () => {
-  console.log("hahahahah");
   if (!heroMovies || !thumbMovies) return;
-  console.log("ha");
-
   try {
     const response = await fetch(url);
     const data = await response.json();
-    console.log("he");
     const movies = data.results.slice(0, 11);
     heroMovies.innerHTML = movies
       .map((movie) => {
@@ -216,3 +210,68 @@ const loadheroMovies = async () => {
   }
 };
 loadheroMovies();
+//phim top tuan
+const topMovies = document.querySelector("#topMovies");
+const topApikey = "9b4592d22d37d5f7ac7a5f6514fbdc0b";
+const topUrl = `https://api.themoviedb.org/3/movie/top_rated?api_key=${topApikey}&language=en-vi-VN&page=1`;
+
+const loadtopMovies = async () => {
+  if (!topMovies) return;
+  try {
+    const response = await fetch(topUrl);
+    const data = await response.json();
+    const movies = data.results;
+    topMovies.innerHTML = data.results
+      .slice(0, 10)
+      .map((movie, index) => {
+        return ` <div class="swiper-slide">
+                    <img src="https://image.tmdb.org/t/p/w500${movie.backdrop_path}" alt="">
+                    <div class="slide-content">
+                        <span class="movie-rank">${index + 1}</span>
+                         <h3>${movie.title}</h3>
+                         <div class="movie-vote">
+                        ⭐ ${movie.vote_average.toFixed(1)}
+                         </div>
+                         <button class="play-btn">XEM NGAY</button>
+                        <p>${movie.overview}</p>
+                    </div>
+                </div>`;
+      })
+      .join("");
+    new Swiper(".bannerSwiper", {
+      loop: true,
+      centeredSlides: true,
+      slidesPerView: "auto",
+      spaceBetween: 10,
+      grabCursor: true,
+      speed: 700,
+
+      effect: "coverflow",
+      coverflowEffect: {
+        rotate: 0,
+        stretch: 0,
+        depth: 180,
+        modifier: 1.8,
+        slideShadows: false,
+      },
+
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: false,
+      },
+
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+loadtopMovies();

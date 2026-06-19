@@ -465,14 +465,15 @@ body.light-mode .icon-sun {
   }
 }
 /**/
-.site-footer{
-    background:
-    radial-gradient(circle at top,
-    rgba(0,50,130,.25),
+.site-footer {
+  background: radial-gradient(
+    circle at top,
+    rgba(0, 50, 130, 0.25),
     #0a1020 60%,
-    #060b16 100%);
+    #060b16 100%
+  );
 
-    padding:25px 0 12px;
+  padding: 25px 0 12px;
 }
 
 .footer-container {
@@ -482,13 +483,11 @@ body.light-mode .icon-sun {
 }
 
 /* Logo */
-.footer-img{
-    width:65px;
-    height:65px;
+.footer-img {
+  width: 65px;
+  height: 65px;
 
-    filter:
-      drop-shadow(0 0 8px #d4af37)
-      drop-shadow(0 0 18px #d4af37);
+  filter: drop-shadow(0 0 8px #d4af37) drop-shadow(0 0 18px #d4af37);
 }
 
 .footer-main-row {
@@ -532,7 +531,7 @@ body.light-mode .icon-sun {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(255,255,255,.08);
+  background: rgba(255, 255, 255, 0.08);
   color: #ddd;
   display: flex;
   align-items: center;
@@ -550,105 +549,102 @@ body.light-mode .icon-sun {
 }
 
 /* ===== 3 BOX ===== */
-.footer-grid{
-    display:flex;
-    justify-content:center;
-    gap:40px;
-    margin:40px 0 25px;
+.footer-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 40px 0 25px;
 }
 
-.footer-col{
-    width:260px;
-    min-height:120px;
-    padding:20px;
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:12px;
-    background:rgba(255,255,255,.03);
-    box-shadow:
-        0 0 15px rgba(255,255,255,.08),
-        inset 0 0 10px rgba(255,255,255,.03);
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
+.footer-col {
+  width: 260px;
+  min-height: 120px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 0.08),
+    inset 0 0 10px rgba(255, 255, 255, 0.03);
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-    text-align:center;
+  text-align: center;
 }
 
-.footer-col h3{
-    color:#a8a8a8;
-    font-size:13px;
-    margin-bottom:12px;
-    
+.footer-col h3 {
+  color: #a8a8a8;
+  font-size: 13px;
+  margin-bottom: 12px;
 }
 
-.footer-col a{
-    color:white;
-    text-decoration:none;
-    font-size:18px;
-    font-weight:600;
-    margin:4px 0;
-    
+.footer-col a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 4px 0;
 }
 
-.footer-col a:hover{
-    color:#d4af37;
-    
+.footer-col a:hover {
+  color: #d4af37;
 }
 
-.meta-links{
-    display:flex;
-    justify-content:center;
-    gap:15px;
-    margin-top:10px;
-     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+.meta-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
-.meta-links span{
-    color:#999;
+.meta-links span {
+  color: #999;
 }
-.tag-links{
-    width:85%;
-    margin:0 auto 25px;
-    padding:8px 15px;
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:6px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:12px;
-}
-
-.tag-links span{
-    color:#d4af37;
-    font-size:16px;
-    font-weight:600;
+.tag-links {
+  width: 85%;
+  margin: 0 auto 25px;
+  padding: 8px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
 }
 
-.footer-about{
-    text-align:center;
-    max-width:1200px;
-    margin:0 auto;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color:#c9c9c9;
-    font-weight:400;
-    line-height:1.9;
+.tag-links span {
+  color: #d4af37;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.footer-about p{
-    margin:10px 0;
+.footer-about {
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  color: #c9c9c9;
+  font-weight: 400;
+  line-height: 1.9;
 }
 
-.footer-about strong{
-    color:white;
+.footer-about p {
+  margin: 10px 0;
 }
 
-.footer-copyright{
-    margin-top:12px;
-    text-align:center;
-     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+.footer-about strong {
+  color: white;
+}
+
+.footer-copyright {
+  margin-top: 12px;
+  text-align: center;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 /* main */
 /* HEADER KHI Ở HERO */
@@ -805,7 +801,7 @@ body.light-mode .icon-sun {
 .play-btn:active {
   transform: scale(0.97);
 }
-/* slide 1*/
+/* phim noi bat*/
 .movie-section {
   position: relative;
   z-index: 2;
@@ -957,7 +953,256 @@ body.light-mode .icon-sun {
   font-size: 26px;
   font-weight: 900;
 }
-/* slide 2  */
+/* phim top tuan */
+.movie-top {
+  padding: 42px 30px 40px;
+  overflow: hidden;
+}
+
+.bannerSwiper {
+  width: 100%;
+  padding: 10px 0 42px;
+}
+
+.bannerSwiper .swiper-slide {
+  position: relative;
+  width: 580px;
+  height: 340px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: #090a0e;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.38);
+  font-family: "Segoe UI", Arial, sans-serif;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.bannerSwiper .swiper-slide:hover,
+.bannerSwiper .swiper-slide:focus-within {
+  border-color: rgba(255, 216, 117, 0.5);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.52);
+}
+
+.bannerSwiper .swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.bannerSwiper .swiper-slide:hover img,
+.bannerSwiper .swiper-slide:focus-within img {
+  transform: scale(1.035);
+}
+
+.bannerSwiper .swiper-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 6, 9, 0.62) 0%,
+    rgba(5, 6, 9, 0.08) 34%,
+    rgba(5, 6, 9, 0.32) 55%,
+    rgba(5, 6, 9, 0.96) 100%
+  );
+  pointer-events: none;
+}
+
+.bannerSwiper .slide-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "title title"
+    "vote button"
+    "description description";
+  align-content: end;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 24px;
+  color: #fff;
+}
+
+.bannerSwiper .movie-rank {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  color: var(--primary-color);
+  font-family: Impact, "Arial Black", "Segoe UI Black", sans-serif;
+  font-size: 68px;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  text-shadow: 0 5px 20px rgba(0, 0, 0, 0.48);
+}
+
+.bannerSwiper .slide-content h3 {
+  grid-area: title;
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-overflow: ellipsis;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.72);
+  white-space: nowrap;
+}
+
+.bannerSwiper .movie-vote {
+  grid-area: vote;
+  color: var(--primary-color);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.bannerSwiper .play-btn {
+  grid-area: button;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 18px;
+  border-radius: 9px;
+  background: var(--primary-color);
+  color: var(--primary-button-text);
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  box-shadow: none;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition:
+    background-color 0.2s ease,
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.bannerSwiper .swiper-slide:hover .play-btn,
+.bannerSwiper .swiper-slide:focus-within .play-btn {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.bannerSwiper .play-btn:hover {
+  background: var(--primary-color-hover);
+  box-shadow: none;
+  transform: translateY(-2px);
+}
+
+.bannerSwiper .play-btn:active {
+  transform: scale(0.97);
+}
+
+.bannerSwiper .play-btn:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 3px;
+}
+
+.bannerSwiper .slide-content p {
+  grid-area: description;
+  display: -webkit-box;
+  max-width: 500px;
+  margin: 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  line-height: 1.5;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.bannerSwiper .swiper-button-prev,
+.bannerSwiper .swiper-button-next {
+  color: #fff;
+}
+
+.bannerSwiper .swiper-button-prev::after,
+.bannerSwiper .swiper-button-next::after {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.bannerSwiper .swiper-pagination-bullet {
+  background: #fff;
+  opacity: 0.35;
+}
+
+.bannerSwiper .swiper-pagination-bullet-active {
+  background: var(--primary-color);
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .movie-top {
+    padding: 28px 16px 34px;
+  }
+
+  .bannerSwiper .swiper-slide {
+    width: calc(100vw - 32px);
+    height: 260px;
+  }
+
+  .bannerSwiper .slide-content {
+    gap: 7px 12px;
+    padding: 18px;
+  }
+
+  .bannerSwiper .movie-rank {
+    top: 14px;
+    left: 16px;
+    font-size: 54px;
+  }
+
+  .bannerSwiper .slide-content h3 {
+    font-size: 19px;
+  }
+
+  .bannerSwiper .slide-content p {
+    font-size: 12px;
+    -webkit-line-clamp: 1;
+  }
+
+  .bannerSwiper .play-btn {
+    min-height: 38px;
+    padding: 0 14px;
+    font-size: 11px;
+  }
+
+  .bannerSwiper .swiper-button-prev,
+  .bannerSwiper .swiper-button-next {
+    display: none;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .bannerSwiper .play-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bannerSwiper .swiper-slide,
+  .bannerSwiper .swiper-slide img,
+  .bannerSwiper .play-btn {
+    transition: none;
+  }
+}
+/* phim moi  */
 .movie-slides {
   --movie-slide-gutter: 24px;
   position: relative;

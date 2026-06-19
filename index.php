@@ -40,6 +40,7 @@
             </button>
         </div>
     </section>
+    <!-- phim noi bat -->
     <section class="movie-section">
         <div class="section-head">
             <h2>Phim bộ nổi bật</h2>
@@ -54,6 +55,26 @@
             <div class="swiper-button-next movie-next"></div>
         </div>
     </section>
+
+    <!-- top phim -->
+
+
+    <section class="movie-top">
+        <div class="section-head">
+            <h2>Phim top của tuần</h2>
+            <a href="#" class="view-more">Xem thêm</a>
+        </div>
+        <div class="swiper bannerSwiper">
+            <div class="swiper-wrapper" id="topMovies">
+
+            </div>
+
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+    <!-- phimm moi -->
     <section class="movie-slides">
         <div class="movie-slides-head">
             <h2>Phim mới gần đây</h2>
