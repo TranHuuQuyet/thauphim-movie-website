@@ -1,6 +1,7 @@
+<?php session_start();?>
+
 <?php include __DIR__ . '/includes/header.php'; ?>
 <?php include 'includes/auth_modal.php'; ?>
-
 <main class="page-shell" aria-label="Nội dung chính">
     <section class="hero">
         <div class="video-bg">
