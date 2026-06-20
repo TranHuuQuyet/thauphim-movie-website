@@ -5,7 +5,7 @@
     <section class="hero">
         <div class="video-bg">
             <iframe
-                src="https://www.youtube.com/embed/SlQR9iu09bQ?autoplay=1&mute=1&loop=1&playlist=SlQR9iu09bQ&controls=0&rel=0"
+                src="https://www.youtube.com/embed/62bIsvRcPv0?autoplay=1&mute=1&loop=1&playlist=62bIsvRcPv0&controls=0&rel=0"
                 allow="autoplay; encrypted-media" allowfullscreen>
             </iframe>
         </div>
@@ -13,27 +13,26 @@
         <div class="hero-overlay"></div>
 
         <div class="hero-content">
-            <h1>Come My Way</h1>
-            <p class="movie-name">SONTUNGMPT & TYGA</p>
+            <h1 class="hero-title" data-title="Spider Man" aria-label="Spider Man">Spider Man</h1>
+            <p class="movie-name">Brand-new-day</p>
 
 
             <div class="movie-info">
-                <span>28/5</span>
+                <span>31/7</span>
                 <span>2026</span>
-                <span>Music Video</span>
+                <span>New trailer(4k)</span>
 
             </div>
 
             <div class="movie-tags">
-                <span>#CMW</span>
-                <span>#commyway</span>
-                <span>#sontungmtp</span>
-                <span>#tyga</span>
+                <span>#SpiderMan</span>
+                <span>#trailer</span>
+                <span>#marvel</span>
+                <span>#Sony</span>
             </div>
 
             <p class="movie-desc">
-                ▶ CLICK TO SUBSCRIBE: https://mmusicrecords.lnk.to/sontungmtp
-                #sontungmtp #sontung #mtp #mtpentertainment
+                Watch the new trailer for #SpiderManBrandNewDay, in theatres July 31. Tickets on sale NOW.
             </p>
 
             <button class="play-btn">XEM NGAY
