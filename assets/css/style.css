@@ -852,95 +852,56 @@ body.light-mode .icon-sun {
   overflow: hidden;
 }
 
-.swiper-slide {
+.movieSwiper .swiper-slide {
   height: auto;
 }
 
 .movie-card {
   position: relative;
-  height: 250px;
-  border-radius: 18px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
   overflow: hidden;
-  background: #171923;
-  cursor: pointer;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  background: #252832;
 }
 
 .movie-card img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  transition: transform 0.45s ease;
+  transition: transform 0.35s ease;
 }
 
 .movie-card::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.05) 30%,
-    rgba(0, 0, 0, 0.85) 100%
-  );
-}
-
-.movie-overlay {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 16px;
-  z-index: 2;
-  color: #fff;
-}
-
-.movie-overlay h4 {
-  margin: 0 0 6px;
-  font-size: 20px;
-  line-height: 1.15;
-}
-
-.movie-overlay p {
-  margin: 0;
-  color: #d6d6d6;
-  font-size: 14px;
-}
-.movie-overlay h4,
-.movie-overlay p {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: 0.3s ease;
-}
-.movie-card:hover h4 {
-  opacity: 1;
-  transform: translateY(0);
-}
-.movie-card:hover p {
-  opacity: 1;
-  transform: translateY(0);
-}
-.movie-overlay .play-btn {
-  margin-top: 12px;
-  padding: 10px 18px;
-  border: 0;
-  border-radius: 999px;
-  background: #ffde8a;
-  color: #111;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: 0.3s ease;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 22%;
+  background: linear-gradient(to top, rgba(10, 11, 17, 0.42), transparent);
+  pointer-events: none;
 }
 
 .movie-card:hover img {
-  transform: scale(1.08);
+  transform: scale(1.04);
 }
 
-.movie-card:hover .play-btn {
-  opacity: 1;
-  transform: translateY(0);
+.movie-status {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 2;
+  padding: 6px 7px;
+  border-radius: 4px 4px 0 0;
+  background: #66769b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  transform: translateX(-50%);
 }
 
 .movie-prev,
@@ -952,6 +913,38 @@ body.light-mode .icon-sun {
 .movie-next::after {
   font-size: 26px;
   font-weight: 900;
+}
+.movie-card-info {
+  padding-top: 13px;
+  text-align: center;
+}
+
+.movie-title {
+  display: -webkit-box;
+  margin: 0;
+
+  overflow: hidden;
+  color: #f5f5f7;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.movie-original {
+  display: -webkit-box;
+  margin: 6px 0 0;
+
+  overflow: hidden;
+  color: #9497a1;
+  font-size: 0.86rem;
+  font-weight: 400;
+  line-height: 1.35;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 /* phim top tuan */
 .movie-top {

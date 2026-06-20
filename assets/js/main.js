@@ -78,16 +78,24 @@ const loadtrendingMovie = async () => {
       .slice(0, 30)
       .map(
         (movie) => `
-        <div class="swiper-slide">
-          <div class="movie-card">
-            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-            <div class="movie-overlay">
-              <h4>${movie.title}</h4>
-              <button class="play-btn">XEM NGAY</button>
-            </div>
-          </div>
-        </div>
-      `,
+   <div class="swiper-slide">
+  <div class="movie-card">
+    <img
+      src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+      alt="${movie.title}"
+      loading="lazy"
+    >
+    
+
+    <span class="movie-status">P.Đề</span>
+  </div>
+
+  <div class="movie-card-info">
+    <h4 class="movie-title">${movie.title}</h4>
+    <p class="movie-original">“${movie.original_title}”</p>
+  </div>
+</div>
+  `,
       )
       .join("");
 
