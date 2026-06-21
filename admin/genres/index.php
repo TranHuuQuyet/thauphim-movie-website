@@ -22,47 +22,52 @@ include '../layout_sidebar.php';
     </a>
 </div>
 
-<div class="card shadow-sm">
-    <div class="card-body">
-        <table class="table table-hover table-bordered align-middle mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <th width="10%">ID</th>
-                    <th width="45%">Tên thể loại</th>
-                    <th width="30%">Slug (Đường dẫn đẹp)</th>
-                    <th width="15%" class="text-center">Hành động</th>
-                </tr>
-            </table>
-            
-            <tbody>
-                <?php if (empty($genres)): ?>
+<div class="card shadow-sm mt-3">
+    <div class="card-body p-0"> <div class="table-responsive">
+            <table class="table table-hover m-0">
+                <thead>
                     <tr>
-                        <td colspan="4" class="text-center text-muted py-4">
-                            Hiện chưa có thể loại nào. Bấm nút "Thêm thể loại mới" ở trên để tạo nha!
-                        </td>
+                        <th width="80" class="text-center">ID</th>
+                        <th>Tên thể loại</th>
+                        <th>Slug (Đường dẫn đẹp)</th>
+                        <th width="150" class="text-center">Hành động</th>
                     </tr>
-                <?php else: ?>
-                    <?php foreach ($genres as $genre): ?>
+                </thead>
+                <tbody>
+                    <?php
+                    // Đoạn này giả định câu lệnh SQL và vòng lặp của bạn, hãy giữ nguyên biến logic cũ
+                    // Ví dụ nếu dùng PDO: while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    if (isset($genres) && count($genres) > 0) {
+                        foreach ($genres as $row) {
+                    ?>
                         <tr>
-                            <td><?php echo $genre['id']; ?></td>
-                            <td class="fw-bold"><?php echo htmlspecialchars($genre['name']); ?></td>
-                            <td><code class="text-danger"><?php echo htmlspecialchars($genre['slug']); ?></code></td>
-                            <td class="text-center">
-                                <a href="edit.php?id=<?php echo $genre['id']; ?>" class="btn btn-sm btn-warning me-1" title="Sửa">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </a>
-                                <a href="delete.php?id=<?php echo $genre['id']; ?>" class="btn btn-sm btn-danger" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa thể loại này không?');">
-                                    <i class="fa-solid fa-trash"></i>
-                                </a>
+                    <td class="text-center text-muted fw-bold"><?= $row['id']; ?></td>
+                    <td class="text-white fw-semibold"><?= htmlspecialchars($row['name']); ?></td>
+                    <td class="text-warning" style="font-family: monospace; font-size: 14px; opacity: 0.8;"><?= htmlspecialchars($row['slug']); ?></td>
+                    <td class="text-center">
+                        <a href="edit.php?id=<?= $row['id']; ?>" class="btn-action btn-action-edit me-1">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <a href="delete.php?id=<?= $row['id']; ?>" class="btn-action btn-action-delete" onclick="return confirm('Xóa hả má?');">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                 </tr>
+                    <?php 
+                        }
+                    } else { 
+                    ?>
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-folder-open me-2 fs-5"></i> Hiện chưa có thể loại nào. Bấm nút "Thêm thể loại mới" ở trên để tạo nha!
                             </td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-
 <?php
 // 4. Nhúng footer để đóng các thẻ HTML lại
 include '../layout_footer.php';
