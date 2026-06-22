@@ -43,7 +43,7 @@
                     <a href="pages/browse.php">Bộ lọc</a>
                     <a href="pages/browse.php?type=movie">Phim lẻ</a>
                     <a href="pages/browse.php?type=series">Phim bộ</a>
-                    <a href="pages/country.php">Quốc gia</a>
+                    <a href="/thauphim-movie-website/pages/country.php">Quốc gia</a>
                     <a href="/thauphim-movie-website/pages/actor.php">Diễn viên</a>
                     <a href="pages/schedule.php">Lịch chiếu</a>
                 </nav>
