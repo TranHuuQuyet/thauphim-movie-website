@@ -1462,18 +1462,18 @@ body.light-mode .icon-sun {
    ========================================================================== */
 
 :root {
-    --bg-main: #060913;          /* Nền không gian vũ trụ tối sâu thẳm */
-    --bg-sidebar: #0b0f19;       /* Nền Sidebar thanh lịch, cứng cáp */
-    --bg-card: #111827;          /* Nền của các khối nội dung, bảng */
-    --gold-primary: #ffcc33;     /* Vàng Gold thương hiệu */
-    --gold-hover: #ffe082;       /* Vàng ánh kim khi hover */
-    --text-light: #f3f4f6;       /* Chữ trắng sáng mịn */
-    --text-muted: #9ca3af;       /* Chữ xám mờ tinh tế */
-    --border-color: #1f293d;     /* Đường viền mờ ảo công nghệ */
-    --glow-effect: 0 0 15px rgba(255, 204, 51, 0.2); /* Hiệu ứng phát quang */
+    --bg-main: #060913;          
+    --bg-sidebar: #0b0f19;       
+    --bg-card: #111827;          
+    --gold-primary: #ffcc33;     
+    --gold-hover: #ffe082;       
+    --text-light: #f3f4f6;       
+    --text-muted: #9ca3af;       
+    --border-color: #1f293d;     
+    --glow-effect: 0 0 15px rgba(255, 204, 51, 0.2); 
 }
 
-/* 1. RESET TOÀN BỘ NỀN HỆ THỐNG */
+
 body {
     background-color: var(--bg-main) ;
     color: var(--text-light) ;
@@ -1481,7 +1481,7 @@ body {
     letter-spacing: -0.2px;
 }
 
-/* 2. SIÊU SIDEBAR BIẾN HÌNH CHUYÊN NGHIỆP */
+
 .sidebar {
     background-color: var(--bg-sidebar) ;
     border-right: 1px solid var(--border-color) ;
@@ -1489,7 +1489,7 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Fix cứng chiếc Badge Thương Hiệu ThauPhim Thần Thánh */
+
 .admin-logo-title {
     color: #ffffff ;
     font-size: 24px ;
@@ -1512,7 +1512,7 @@ body {
     box-shadow: 0 2px 8px rgba(255, 224, 130, 0.4);
 }
 
-/* Menu List - Hiệu ứng trượt phát sáng khi chọn */
+
 .admin-menu-list a {
     color: var(--text-muted) ;
     font-weight: 600;
@@ -1529,7 +1529,7 @@ body {
     color: var(--text-muted);
 }
 
-/* Khi hover hoặc đang active menu */
+
 .admin-menu-list a:hover, 
 .admin-menu-list a.active {
     background: linear-gradient(90deg, rgba(255, 204, 51, 0.15) 0%, rgba(255, 204, 51, 0.02) 100%) ;
@@ -1543,14 +1543,14 @@ body {
     transform: scale(1.15);
 }
 
-/* Nút đăng xuất phá cách */
+
 .admin-menu-list a.text-danger:hover {
     background: linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.02) 100%) ;
     color: #ef4444 ;
     box-shadow: inset 4px 0 0 #ef4444;
 }
 
-/* 3. KHỐI HIỂN THỊ THÔNG TIN (CARDS / TABLES) */
+
 .card, .table-responsive {
     background-color: var(--bg-card) ;
     border: 1px solid var(--border-color) ;
@@ -1560,19 +1560,19 @@ body {
     padding: 10px;
 }
 
-/* Tiêu đề lớn của các trang quản lý */
+
 h2, .card-title {
     color: #ffffff ;
     font-weight: 700 ;
 }
 
-/* 4. THIẾT KẾ BẢNG DANH SÁCH SIÊU NÉT (DANH SÁCH PHIM/THỂ LOẠI) */
+
 .table {
     background-color: transparent ;
     margin-bottom: 0 ;
 }
 
-/* Thanh tiêu đề bảng dữ liệu */
+
 .table thead th {
     background-color: #172033 ;
     color: var(--gold-primary) ;
@@ -1584,7 +1584,7 @@ h2, .card-title {
     border-bottom: 2px solid var(--border-color) ;
 }
 
-/* Nội dung các dòng trong bảng */
+
 .table tbody tr {
     transition: background-color 0.2s ease;
 }
@@ -1599,7 +1599,7 @@ h2, .card-title {
     background-color: transparent ;
 }
 
-/* Hiệu ứng highlight nguyên dòng khi rê chuột vào */
+
 .table tbody tr:hover {
     background-color: rgba(255, 204, 51, 0.03) ;
 }
@@ -1607,7 +1607,7 @@ h2, .card-title {
     color: #ffffff ;
 }
 
-/* Định dạng cột ID và cột Slug chuyên nghiệp */
+
 .table tbody td:first-child {
     font-family: 'Consolas', monospace;
     color: var(--text-muted) ;
@@ -1619,7 +1619,7 @@ h2, .card-title {
     font-size: 13px;
 }
 
-/* 5. NÚT BẤM (BUTTONS) HOÀN TOÀN MỚI */
+
 .btn {
     border-radius: 10px ;
     font-weight: 600 ;
@@ -1627,7 +1627,7 @@ h2, .card-title {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) ;
 }
 
-/* Nút Vàng chủ đạo (Thêm mới, Lưu...) */
+
 .btn-primary, .btn-warning {
     background: linear-gradient(135deg, var(--gold-primary) 0%, #f5a623 100%) ;
     border: none ;
@@ -1639,7 +1639,7 @@ h2, .card-title {
     background: var(--gold-hover) ;
 }
 
-/* Nút Hành động nhỏ trong bảng (Sửa/Xóa) */
+
 .btn-sm {
     padding: 5px 12px ;
     font-size: 12px ;
@@ -1657,7 +1657,7 @@ form div {
     letter-spacing: 0.3px;
 }
 
-/* 2. Làm rõ phần text chú thích mờ ảo nằm bên dưới ô nhập liệu */
+
 .text-muted, 
 form small, 
 .form-text,
@@ -1667,7 +1667,7 @@ p.text-muted {
     font-weight: 500 ;
 }
 
-/* 3. Làm sáng chữ gợi ý (Placeholder) nằm ĐẰNG TRONG các ô input */
+
 .form-control::placeholder, 
 .form-select::placeholder,
 input::placeholder,
@@ -1677,7 +1677,7 @@ textarea::placeholder {
     opacity: 1 ; 
 }
 
-/* 4. Làm nổi bật nội dung chữ khi người dùng gõ vào ô nhập liệu */
+
 .form-control, 
 .form-select,
 input[type="text"] {
