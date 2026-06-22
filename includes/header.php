@@ -14,12 +14,13 @@
     <link rel="stylesheet" href="/thauphim-movie-website/assets/css/reponsive.css">
     <link rel="stylesheet" href="/thauphim-movie-website/assets/css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
 </head>
 
 <body>
     <header class="site-header">
         <div class="header-inner">
-            <a class="brand" href="index.php" aria-label="ThauPhim trang chủ">
+            <a class="brand" href="/thauphim-movie-website/index.php" aria-label="ThauPhim trang chủ">
                 <span class="brand-icon" aria-hidden="true">
                     <img src="/thauphim-movie-website/assets/images/favicon.png" alt="">
                 </span>

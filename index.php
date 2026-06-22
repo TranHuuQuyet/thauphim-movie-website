@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . "/..includes/config.php";
+require_once __DIR__ . "/includes/config.php";
 ?>
 <?php include __DIR__ . '/includes/header.php'; ?>
 <?php include 'includes/auth_modal.php'; ?>
@@ -90,7 +90,6 @@ require_once __DIR__ . "/..includes/config.php";
 
         <div class="swiper-button-prev hero-prev"></div>
         <div class="swiper-button-next hero-next"></div>
-        </div>
 
         <div class="swiper movieThumbSwiper">
             <div class="swiper-wrapper" id="thumbMovies">
