@@ -36,33 +36,31 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  // Header scroll
+  if (header) {
+    window.addEventListener("scroll", () => {
+      header.classList.toggle("scrolled", window.scrollY > 80);
+    });
+  }
+  // Dark / light mode
+  const themeToggle = document.getElementById("themeToggle");
+
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-mode");
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+
+      if (document.body.classList.contains("light-mode")) {
+        localStorage.setItem("theme", "light");
+      } else {
+        localStorage.setItem("theme", "dark");
+      }
+    });
+  }
 });
-
-// Header scroll
-// if (header) {
-//   window.addEventListener("scroll", () => {
-//     header.classList.toggle("scrolled", window.scrollY > 80);
-//   });
-// }
-
-// Dark / light mode
-// const themeToggle = document.getElementById("themeToggle");
-
-// if (localStorage.getItem("theme") === "light") {
-//   document.body.classList.add("light-mode");
-// }
-
-// if (themeToggle) {
-//   themeToggle.addEventListener("click", () => {
-//     document.body.classList.toggle("light-mode");
-
-//     if (document.body.classList.contains("light-mode")) {
-//       localStorage.setItem("theme", "light");
-//     } else {
-//       localStorage.setItem("theme", "dark");
-//     }
-//   });
-// }
 
 // Slide phim nổi bật
 
