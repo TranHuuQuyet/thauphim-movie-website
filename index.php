@@ -1,5 +1,7 @@
-<?php session_start();?>
-
+<?php
+session_start();
+require_once __DIR__ . "/includes/config.php";
+?>
 <?php include __DIR__ . '/includes/header.php'; ?>
 <?php include 'includes/auth_modal.php'; ?>
 <main class="page-shell" aria-label="Nội dung chính">
@@ -98,6 +100,9 @@
     </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+<script>
+const TMDB_API_KEY = "<?= TMDB_API_KEY ?>";
+</script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/auth_modal.js"></script>
 
