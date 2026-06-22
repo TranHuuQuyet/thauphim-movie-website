@@ -53,7 +53,15 @@
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off">
                 </form>
 
-                <a class="member-button" href="#" id="openLogin">Thành viên</a>
+                <?php if(isset($_SESSION["is_login"])): ?>
+                <a class="member-button" href="logout.php">
+                    <?= $_SESSION["username"] ?> | Đăng xuất
+                </a>
+                <?php else: ?>
+                <a class="member-button" href="#" id="openLogin">
+                    Đăng nhập
+                </a>
+                <?php endif; ?>
                 <button id="themeToggle" class="theme-toggle">
                     <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                         <path
