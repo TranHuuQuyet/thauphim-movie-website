@@ -8,11 +8,11 @@
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
     </style>
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/images/favicon-tab.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/reponsive.css">
-    <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="icon" type="image/png" sizes="512x512" href="/thauphim-movie-website/assets/images/favicon-tab.png">
+
+    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/style.css">
+    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/reponsive.css">
+    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
@@ -21,7 +21,7 @@
         <div class="header-inner">
             <a class="brand" href="index.php" aria-label="ThauPhim trang chủ">
                 <span class="brand-icon" aria-hidden="true">
-                    <img src="assets/images/favicon.png" alt="">
+                    <img src="/thauphim-movie-website/assets/images/favicon.png" alt="">
                 </span>
                 <span class="brand-copy">
                     <span class="brand-title">Thau<strong>Phim</strong></span>
@@ -43,7 +43,7 @@
                     <a href="pages/browse.php?type=movie">Phim lẻ</a>
                     <a href="pages/browse.php?type=series">Phim bộ</a>
                     <a href="pages/country.php">Quốc gia</a>
-                    <a href="pages/actor.php">Diễn viên</a>
+                    <a href="/thauphim-movie-website/pages/actor.php">Diễn viên</a>
                     <a href="pages/schedule.php">Lịch chiếu</a>
                 </nav>
 

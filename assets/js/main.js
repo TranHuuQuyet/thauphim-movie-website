@@ -278,3 +278,5 @@ const loadtopMovies = async () => {
   }
 };
 loadtopMovies();
+
+//actor
