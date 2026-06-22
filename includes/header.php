@@ -55,7 +55,7 @@
 
                 <?php if(isset($_SESSION["is_login"])): ?>
                 <a class="member-button" href="logout.php">
-                    <?= $_SESSION["username"] ?> | Đăng xuất
+                    Đăng xuất
                 </a>
                 <?php else: ?>
                 <a class="member-button" href="#" id="openLogin">
