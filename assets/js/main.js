@@ -36,39 +36,36 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  // Header scroll
+  if (header) {
+    window.addEventListener("scroll", () => {
+      header.classList.toggle("scrolled", window.scrollY > 80);
+    });
+  }
+  // Dark / light mode
+  const themeToggle = document.getElementById("themeToggle");
+
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-mode");
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+
+      if (document.body.classList.contains("light-mode")) {
+        localStorage.setItem("theme", "light");
+      } else {
+        localStorage.setItem("theme", "dark");
+      }
+    });
+  }
 });
-
-// Header scroll
-// if (header) {
-//   window.addEventListener("scroll", () => {
-//     header.classList.toggle("scrolled", window.scrollY > 80);
-//   });
-// }
-
-// Dark / light mode
-// const themeToggle = document.getElementById("themeToggle");
-
-// if (localStorage.getItem("theme") === "light") {
-//   document.body.classList.add("light-mode");
-// }
-
-// if (themeToggle) {
-//   themeToggle.addEventListener("click", () => {
-//     document.body.classList.toggle("light-mode");
-
-//     if (document.body.classList.contains("light-mode")) {
-//       localStorage.setItem("theme", "light");
-//     } else {
-//       localStorage.setItem("theme", "dark");
-//     }
-//   });
-// }
 
 // Slide phim nổi bật
 
 const trendingmovieList = document.querySelector("#trendingMovie");
-const trendingapiKey = "9b4592d22d37d5f7ac7a5f6514fbdc0b";
-const trendingUrl = `https://api.themoviedb.org/3/trending/movie/day?api_key=${trendingapiKey}&language=vi-VN`;
+const trendingUrl = `https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_API_KEY}&language=vi-VN`;
 const loadtrendingMovie = async () => {
   if (!trendingmovieList) return;
   try {
@@ -128,8 +125,7 @@ loadtrendingMovie();
 //phim moi gan day
 const heroMovies = document.querySelector("#heroMovies");
 const thumbMovies = document.querySelector("#thumbMovies");
-const keyApi = "9b4592d22d37d5f7ac7a5f6514fbdc0b";
-const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${keyApi}&language=vi-VN&page=1`;
+const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_API_KEY}&language=vi-VN&page=1`;
 
 const loadheroMovies = async () => {
   if (!heroMovies || !thumbMovies) return;
@@ -220,8 +216,7 @@ const loadheroMovies = async () => {
 loadheroMovies();
 //phim top tuan
 const topMovies = document.querySelector("#topMovies");
-const topApikey = "9b4592d22d37d5f7ac7a5f6514fbdc0b";
-const topUrl = `https://api.themoviedb.org/3/movie/top_rated?api_key=${topApikey}&language=en-vi-VN&page=1`;
+const topUrl = `https://api.themoviedb.org/3/movie/top_rated?api_key=${TMDB_API_KEY}&language=en-vi-VN&page=1`;
 
 const loadtopMovies = async () => {
   if (!topMovies) return;
@@ -283,3 +278,5 @@ const loadtopMovies = async () => {
   }
 };
 loadtopMovies();
+
+//actor

@@ -666,7 +666,7 @@ body.light-mode .icon-sun {
   color: #858282;
 }
 .footer-about span {
-   color: #858282;
+  color: #858282;
 }
 .footer-copyright {
   font-size: 12px;
@@ -957,6 +957,7 @@ body.light-mode .icon-sun {
   line-height: 1.35;
 
   -webkit-box-orient: vertical;
+  line-clamp: 1;
   -webkit-line-clamp: 1;
 }
 
@@ -1192,6 +1193,7 @@ body.light-mode .icon-sun {
 
   .bannerSwiper .slide-content p {
     font-size: 12px;
+    line-clamp: 1;
     -webkit-line-clamp: 1;
   }
 
