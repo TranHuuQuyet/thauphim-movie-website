@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!header.classList.contains("is-menu-open") || header.contains(event.target)) {
         return;
       }
+
       closeMenu();
     });
 
@@ -83,7 +84,18 @@ document.addEventListener("DOMContentLoaded", () => {
         '<span class="country-movie-skeleton__poster"></span><span></span><span></span>';
       fragment.append(skeleton);
     }
+
     movieList.append(fragment);
+  };
+
+  const appendPosterFallback = (poster) => {
+    poster.classList.add("has-no-poster");
+    poster.replaceChildren();
+
+    const fallback = document.createElement("i");
+    fallback.className = "fa-solid fa-film";
+    fallback.setAttribute("aria-hidden", "true");
+    poster.append(fallback);
   };
 
   const createMovieCard = (movie) => {
@@ -100,13 +112,10 @@ document.addEventListener("DOMContentLoaded", () => {
       image.loading = "lazy";
       image.width = 342;
       image.height = 513;
+      image.addEventListener("error", () => appendPosterFallback(poster), { once: true });
       poster.append(image);
     } else {
-      const fallback = document.createElement("i");
-      fallback.className = "fa-solid fa-film";
-      fallback.setAttribute("aria-hidden", "true");
-      poster.classList.add("has-no-poster");
-      poster.append(fallback);
+      appendPosterFallback(poster);
     }
 
     const content = document.createElement("div");
@@ -190,7 +199,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!requestedCode) {
     const firstCountry = countries[0];
     if (firstCountry?.code) {
-      window.location.replace(`${window.location.pathname}?code=${encodeURIComponent(firstCountry.code)}`);
+      window.location.replace(
+        `${window.location.pathname}?code=${encodeURIComponent(firstCountry.code)}`,
+      );
       return;
     }
 
