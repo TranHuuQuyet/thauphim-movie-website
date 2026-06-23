@@ -10,7 +10,11 @@ include __DIR__ . '/../includes/header.php';
 <link rel="stylesheet" href="/thauphim-movie-website/assets/css/country.css">
 
 <main class="country-page">
-    <section class="country-movies" id="countryMovies" aria-label="Danh sách phim">
+    <section class="country-movies" id="countryMovies" aria-labelledby="country-movies-title">
+        <div class="country-section-heading">
+            <h1 id="country-movies-title"></h1>
+        </div>
+
         <div class="country-movie-status" id="countryMovieStatus" role="status" aria-live="polite"></div>
         <div class="country-movie-grid" id="countryMovieList"></div>
     </section>
