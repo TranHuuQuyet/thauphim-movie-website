@@ -111,3 +111,15 @@
   background: #4d4b55;
   box-shadow: 0 0 0 3px rgba(139, 109, 246, 0.18);
 }
+.auth-errors {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.auth-errors p {
+  margin: 4px 0;
+  color: #ff6b6b;
+  font-size: 13px;
+}
