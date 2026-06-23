@@ -1,5 +1,14 @@
 <?php
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+require_once __DIR__ . "/upcoming_notifications.php";
+
 $tmdbCountries = $TMDB_COUNTRIES ?? [];
+$isMember = !empty($_SESSION["is_login"]);
+$upcomingNotifications = get_published_upcoming_notifications();
+$notificationCount = count($upcomingNotifications);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -18,6 +27,8 @@ $tmdbCountries = $TMDB_COUNTRIES ?? [];
     <link rel="stylesheet" href="/thauphim-movie-website/assets/css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
+    <script src="/thauphim-movie-website/assets/js/auth_login.js" defer></script>
+    <script src="/thauphim-movie-website/assets/js/notifications.js" defer></script>
 </head>
 
 <body>
@@ -74,7 +85,7 @@ $tmdbCountries = $TMDB_COUNTRIES ?? [];
                     Đăng xuất
                 </a>
                 <?php else: ?>
-                <a class="member-button" href="#" id="openLogin">
+                <a class="member-button" href="#" id="openLogin" data-open-login>
                     Đăng nhập
                 </a>
                 <?php endif; ?>
@@ -93,10 +104,82 @@ $tmdbCountries = $TMDB_COUNTRIES ?? [];
                         </svg>
                     </button>
 
-                    <button class="notification-toggle" type="button" aria-label="Thông báo">
-                        <i class="fa-regular fa-bell" aria-hidden="true"></i>
-                    </button>
+                    <div class="notification-wrapper" data-notification-root>
+                        <button id="notificationToggle" class="notification-toggle" type="button"
+                            aria-label="Thông báo phim sắp chiếu" aria-haspopup="dialog" aria-expanded="false"
+                            aria-controls="notificationPanel" data-notification-toggle>
+                            <i class="fa-regular fa-bell" aria-hidden="true"></i>
+                            <?php if ($isMember && $notificationCount > 0): ?>
+                            <span class="notification-badge" aria-label="<?= $notificationCount ?> thông báo">
+                                <?= $notificationCount > 9 ? "9+" : $notificationCount ?>
+                            </span>
+                            <?php endif; ?>
+                        </button>
+
+                        <div class="notification-panel" id="notificationPanel" role="dialog"
+                            aria-label="Thông báo phim sắp chiếu" hidden data-notification-panel>
+                            <div class="notification-panel__head">
+                                <strong>Phim sắp chiếu</strong>
+                                <?php if ($isMember): ?>
+                                <span><?= $notificationCount ?> thông báo</span>
+                                <?php else: ?>
+                                <span>Yêu cầu đăng nhập</span>
+                                <?php endif; ?>
+                            </div>
+
+                            <?php if (!$isMember): ?>
+                            <div class="notification-state notification-state--login">
+                                <i class="fa-regular fa-bell" aria-hidden="true"></i>
+                                <p>
+                                    <a href="#" data-open-login>Đăng nhập</a>
+                                    để xem thông báo.
+                                </p>
+                            </div>
+                            <?php elseif ($notificationCount === 0): ?>
+                            <div class="notification-state">
+                                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                                <p>Chưa có phim sắp chiếu được công bố.</p>
+                            </div>
+                            <?php else: ?>
+                            <div class="notification-list">
+                                <?php foreach ($upcomingNotifications as $notification): ?>
+                                <?php
+                                $movieId = (string) ($notification["movie_id"] ?? "");
+                                $title = (string) ($notification["title"] ?? "Phim sắp chiếu");
+                                $poster = (string) ($notification["poster"] ?? "/thauphim-movie-website/assets/images/poster_movie.jpg");
+                                $showDate = (string) ($notification["show_date"] ?? "");
+                                $showTime = (string) ($notification["show_time"] ?? "");
+                                $dateObject = date_create($showDate);
+                                $displayDate = $dateObject ? date_format($dateObject, "d/m/Y") : "Đang cập nhật";
+                                $detailUrl = "/thauphim-movie-website/pages/movie-detail.php?id=" . rawurlencode($movieId);
+                                ?>
+                                <a class="notification-item" href="<?= htmlspecialchars($detailUrl, ENT_QUOTES, "UTF-8") ?>">
+                                    <span class="notification-item__poster">
+                                        <img src="<?= htmlspecialchars($poster, ENT_QUOTES, "UTF-8") ?>"
+                                            alt="Poster phim <?= htmlspecialchars($title, ENT_QUOTES, "UTF-8") ?>"
+                                            loading="lazy">
+                                    </span>
+                                    <span class="notification-item__body">
+                                        <strong><?= htmlspecialchars($title, ENT_QUOTES, "UTF-8") ?></strong>
+                                        <span class="notification-item__meta">
+                                            <span>
+                                                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                                                <?= htmlspecialchars($displayDate, ENT_QUOTES, "UTF-8") ?>
+                                            </span>
+                                            <span>
+                                                <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                                                <?= htmlspecialchars($showTime, ENT_QUOTES, "UTF-8") ?>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </a>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
+    <?php include __DIR__ . "/auth_login.php"; ?>
