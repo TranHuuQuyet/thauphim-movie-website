@@ -574,22 +574,59 @@ button {
   min-height: calc(100vh - 76px);
 }
 /* darklightmode */
-.theme-toggle {
+.header-icon-actions {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.theme-toggle,
+.notification-toggle {
   width: 44px;
   height: 44px;
-  border: 0;
+  border: 1px solid var(--color-border-muted);
   border-radius: 50%;
-  background: #1b1e2b;
+  background: var(--color-surface-muted);
+  color: var(--color-text);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.theme-toggle:hover,
+.notification-toggle:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-raised);
+  color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.theme-toggle:focus-visible,
+.notification-toggle:focus-visible {
+  border-color: var(--color-primary);
+  color: var(--color-primary-hover);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.theme-toggle:active,
+.notification-toggle:active {
+  transform: scale(0.98);
 }
 
 .theme-toggle svg {
   width: 24px;
   height: 24px;
-  fill: #e3e3e3;
+  fill: currentColor;
+}
+
+.notification-toggle i {
+  font-size: 1.08rem;
+  line-height: 1;
 }
 
 .icon-sun {
@@ -617,6 +654,8 @@ body.light-mode .icon-sun {
   .nav-dropdown summary i,
   .search-form input,
   .member-button,
+  .theme-toggle,
+  .notification-toggle,
   .play-btn,
   .watch-button,
   .movie-actions button,
