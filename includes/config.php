@@ -1,6 +1,12 @@
 <?php
 define("TMDB_API_KEY", "9b4592d22d37d5f7ac7a5f6514fbdc0b");
 
+define("DB_HOST", "localhost");
+define("DB_NAME", "thauphim");
+define("DB_USER", "root");
+define("DB_PASS", "");
+define("DB_CHARSET", "utf8mb4");
+
 $TMDB_COUNTRIES = [
     ["code" => "VN", "name" => "Việt Nam"],
     ["code" => "KR", "name" => "Hàn Quốc"],
