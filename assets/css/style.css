@@ -320,24 +320,87 @@ input {
   min-width: 0;
 }
 
-.main-nav a {
+.main-nav a,
+.nav-dropdown summary {
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   min-height: 40px;
   padding: 0 8px;
   border-radius: 999px;
+  border: 0;
+  background: transparent;
   color: var(--color-text-muted);
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
+  list-style: none;
+  cursor: pointer;
   transition: color 0.2s ease;
 }
 
-.main-nav a:hover {
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-dropdown summary i {
+  font-size: 0.68rem;
+  transition: transform 0.2s ease;
+}
+
+.nav-dropdown[open] summary {
   color: var(--color-primary-hover);
 }
 
-.main-nav a:focus-visible {
+.nav-dropdown[open] summary i {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 1001;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 4px;
+  min-width: 280px;
+  max-height: min(70vh, 430px);
+  padding: 8px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-muted);
+  border-radius: 12px;
+  background: var(--color-header-bg);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.nav-dropdown-menu a {
+  width: 100%;
+  min-height: 36px;
+  justify-content: flex-start;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.nav-dropdown-menu a:hover,
+.nav-dropdown-menu a:focus-visible {
+  background: var(--color-surface-muted);
+}
+
+.main-nav a:hover,
+.nav-dropdown summary:hover {
+  color: var(--color-primary-hover);
+}
+
+.main-nav a:focus-visible,
+.nav-dropdown summary:focus-visible {
   color: var(--color-primary-hover);
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
@@ -459,6 +522,8 @@ body.light-mode .icon-sun {
 
 @media (prefers-reduced-motion: reduce) {
   .main-nav a,
+  .nav-dropdown summary,
+  .nav-dropdown summary i,
   .search-form input,
   .member-button {
     transition: none;

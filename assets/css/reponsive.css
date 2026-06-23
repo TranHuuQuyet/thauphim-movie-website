@@ -27,7 +27,8 @@
         gap: 8px;
     }
 
-    .main-nav a {
+    .main-nav a,
+    .nav-dropdown summary {
         min-height: 38px;
         padding: 0 6px;
         font-size: 0.84rem;
@@ -138,11 +139,29 @@
         gap: 8px;
     }
 
-    .main-nav a {
+    .main-nav a,
+    .nav-dropdown summary {
         width: 100%;
         min-height: 42px;
         padding: 0 14px;
         background: var(--color-surface-muted);
+    }
+
+    .nav-dropdown {
+        width: 100%;
+    }
+
+    .nav-dropdown-menu {
+        position: static;
+        grid-template-columns: 1fr;
+        min-width: 0;
+        max-height: 260px;
+        margin-top: 8px;
+        border-radius: 10px;
+        background: var(--color-surface);
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 
     .search-form {
