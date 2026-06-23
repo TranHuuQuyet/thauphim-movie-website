@@ -226,12 +226,10 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 
 - id
 - title
-- slug
 - description
 - poster
 - backdrop
 - release_year
-- duration
 - type: movie/series
 - quality
 - country_id
@@ -249,9 +247,9 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 - movie_id
 - episode_number
 - title
-- slug
+
 - youtube_url
-- duration
+
 - created_at
 - updated_at
 
@@ -259,19 +257,17 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 
 - id
 - name
-- slug
 
 ### countries
 
 - id
+- code
 - name
-- slug
 
 ### actors
 
 - id
 - name
-- slug
 - avatar
 - biography
 
