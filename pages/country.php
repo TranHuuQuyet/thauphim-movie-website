@@ -10,14 +10,7 @@ include __DIR__ . '/../includes/header.php';
 <link rel="stylesheet" href="/thauphim-movie-website/assets/css/country.css">
 
 <main class="country-page">
-    <section class="country-movies" id="countryMovies" aria-labelledby="country-movies-title">
-        <div class="country-section-heading">
-            <div>
-                <h1 id="country-movies-title">Phim theo quốc gia</h1>
-                <p id="countryMoviesDescription">Chọn Quốc gia trên thanh điều hướng để xem phim.</p>
-            </div>
-        </div>
-
+    <section class="country-movies" id="countryMovies" aria-label="Danh sách phim">
         <div class="country-movie-status" id="countryMovieStatus" role="status" aria-live="polite"></div>
         <div class="country-movie-grid" id="countryMovieList"></div>
     </section>

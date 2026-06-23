@@ -5,12 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     typeof TMDB_COUNTRIES !== "undefined" && Array.isArray(TMDB_COUNTRIES)
       ? TMDB_COUNTRIES
       : [];
-  const movieTitle = document.querySelector("#country-movies-title");
-  const movieDescription = document.querySelector("#countryMoviesDescription");
   const movieStatus = document.querySelector("#countryMovieStatus");
   const movieList = document.querySelector("#countryMovieList");
 
-  if (!movieTitle || !movieDescription || !movieStatus || !movieList) {
+  if (!movieStatus || !movieList) {
     return;
   }
 
@@ -70,16 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
     applyScrollState();
   };
 
-  const renderIntro = () => {
-    movieList.replaceChildren();
-    movieStatus.className = "country-movie-status is-empty";
-    movieStatus.innerHTML =
-      '<i class="fa-solid fa-earth-asia" aria-hidden="true"></i><strong>Chưa chọn quốc gia</strong><span>Mở mục Quốc gia trên thanh điều hướng và chọn một quốc gia.</span>';
-  };
-
   const renderLoadingState = () => {
-    movieStatus.textContent = "Đang tải phim...";
     movieStatus.className = "country-movie-status is-loading";
+    movieStatus.textContent = "";
     movieList.replaceChildren();
 
     const fragment = document.createDocumentFragment();
@@ -140,8 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const renderCountryError = () => {
     movieList.replaceChildren();
-    movieTitle.textContent = "Không tìm thấy quốc gia";
-    movieDescription.textContent = "Quốc gia này chưa có trong danh sách cấu hình.";
     movieStatus.className = "country-movie-status is-error";
     movieStatus.innerHTML =
       '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><strong>Không có dữ liệu</strong><span>Hãy chọn lại một quốc gia trong menu.</span>';
@@ -149,8 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loadMovies = async (country) => {
     renderLoadingState();
-    movieTitle.textContent = `Phim từ ${country.name}`;
-    movieDescription.textContent = `Danh sách phim có nguồn gốc từ ${country.name}.`;
     document.title = `${country.name} - ThauPhim`;
 
     const params = new URLSearchParams({
@@ -183,8 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const fragment = document.createDocumentFragment();
       movies.forEach((movie) => fragment.append(createMovieCard(movie)));
       movieList.append(fragment);
-      movieStatus.textContent = `Đã tìm thấy ${movies.length} phim từ ${country.name}.`;
-      movieStatus.className = "country-movie-status is-ready";
+      movieStatus.className = "country-movie-status";
+      movieStatus.textContent = "";
     } catch (error) {
       console.error("Không thể tải phim theo quốc gia:", error);
       movieList.replaceChildren();
@@ -198,7 +185,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const requestedCode = new URLSearchParams(window.location.search).get("code");
   if (!requestedCode) {
-    renderIntro();
+    const firstCountry = countries[0];
+    if (firstCountry?.code) {
+      window.location.replace(`${window.location.pathname}?code=${encodeURIComponent(firstCountry.code)}`);
+      return;
+    }
+
+    renderCountryError();
     return;
   }
 

@@ -8,35 +8,6 @@
   scroll-margin-top: 88px;
 }
 
-.country-section-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 28px;
-}
-
-.country-section-heading h1 {
-  margin: 0;
-  color: var(--color-text);
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  line-height: 1.08;
-}
-
-.country-section-heading p {
-  max-width: 620px;
-  margin: 10px 0 0;
-  color: var(--color-text-soft);
-  line-height: 1.6;
-}
-
-.country-movie-status.is-loading,
-.country-movie-status.is-ready {
-  margin-bottom: 22px;
-  color: var(--color-text-soft);
-  font-size: 0.9rem;
-}
-
 .country-movie-status.is-empty,
 .country-movie-status.is-error {
   display: grid;
@@ -198,11 +169,6 @@
   .country-page {
     width: min(100% - 28px, 1380px);
     padding: 96px 0 56px;
-  }
-
-  .country-section-heading {
-    display: grid;
-    align-items: start;
   }
 
   .country-movie-grid {
