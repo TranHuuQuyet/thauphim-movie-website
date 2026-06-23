@@ -1,15 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const openLogin = document.querySelector("#openLogin");
+  const openLoginTriggers = document.querySelectorAll("#openLogin, [data-open-login]");
   const authModal = document.querySelector("#authModal");
   const closeAuth = document.querySelector("#closeAuth");
 
-  if (!openLogin || !authModal || !closeAuth) {
+  if (!authModal || !closeAuth) {
     return;
   }
 
-  openLogin.addEventListener("click", (event) => {
+  const openAuthModal = (event) => {
     event.preventDefault();
     authModal.classList.add("active");
+  };
+
+  openLoginTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", openAuthModal);
   });
 
   closeAuth.addEventListener("click", (event) => {

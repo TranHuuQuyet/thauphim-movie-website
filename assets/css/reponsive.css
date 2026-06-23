@@ -173,11 +173,23 @@
     .member-button {
         width: 100%;
     }
+
+    .header-icon-actions {
+        align-self: flex-start;
+    }
+
+    .notification-panel {
+        right: auto;
+        left: 0;
+        width: min(360px, calc(100vw - 36px));
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .menu-toggle,
-    .menu-toggle span {
+    .menu-toggle span,
+    .theme-toggle,
+    .notification-toggle {
         transition: none;
     }
 }
@@ -200,5 +212,9 @@
 
     .brand-tagline {
         font-size: 0.68rem;
+    }
+
+    .notification-panel {
+        width: calc(100vw - 28px);
     }
 }
