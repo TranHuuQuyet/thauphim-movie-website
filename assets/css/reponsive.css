@@ -176,6 +176,18 @@
 
     .header-icon-actions {
         align-self: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .header-icon-actions .member-button {
+        width: auto;
+    }
+
+    .account-panel {
+        right: auto;
+        left: 50%;
+        width: min(230px, calc(100vw - 36px));
+        transform: translateX(-50%);
     }
 
     .notification-panel {
@@ -189,7 +201,9 @@
     .menu-toggle,
     .menu-toggle span,
     .theme-toggle,
-    .notification-toggle {
+    .notification-toggle,
+    .account-toggle,
+    .account-menu-item {
         transition: none;
     }
 }

@@ -29,6 +29,7 @@ $notificationCount = count($upcomingNotifications);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
     <script src="/thauphim-movie-website/assets/js/auth_login.js" defer></script>
     <script src="/thauphim-movie-website/assets/js/notifications.js" defer></script>
+    <script src="/thauphim-movie-website/assets/js/account-menu.js" defer></script>
 </head>
 
 <body>
@@ -80,15 +81,6 @@ $notificationCount = count($upcomingNotifications);
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off">
                 </form>
 
-                <?php if(isset($_SESSION["is_login"])): ?>
-                <a class="member-button" href="/thauphim-movie-website/logout.php">
-                    Đăng xuất
-                </a>
-                <?php else: ?>
-                <a class="member-button" href="#" id="openLogin" data-open-login>
-                    Đăng nhập
-                </a>
-                <?php endif; ?>
                 <div class="header-icon-actions">
                     <button id="themeToggle" class="theme-toggle" type="button" aria-label="Chuyển giao diện sáng tối">
                         <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
@@ -178,6 +170,37 @@ $notificationCount = count($upcomingNotifications);
                             <?php endif; ?>
                         </div>
                     </div>
+
+                    <?php if($isMember): ?>
+                    <div class="account-wrapper" data-account-root>
+                        <button id="accountToggle" class="account-toggle" type="button" aria-label="Tài khoản"
+                            aria-haspopup="menu" aria-expanded="false" aria-controls="accountPanel"
+                            data-account-toggle>
+                            <i class="fa-solid fa-user" aria-hidden="true"></i>
+                        </button>
+
+                        <div class="account-panel" id="accountPanel" role="menu" aria-label="Tài khoản" hidden
+                            data-account-panel>
+                            <button class="account-menu-item" type="button" role="menuitem">
+                                <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                                <span>Phim yêu thích</span>
+                            </button>
+                            <button class="account-menu-item" type="button" role="menuitem">
+                                <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+                                <span>Lịch sử xem</span>
+                            </button>
+                            <a class="account-menu-item account-menu-item--logout"
+                                href="/thauphim-movie-website/logout.php" role="menuitem">
+                                <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                                <span>Đăng xuất</span>
+                            </a>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <a class="member-button" href="#" id="openLogin" data-open-login>
+                        Đăng nhập
+                    </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

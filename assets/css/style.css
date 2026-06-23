@@ -582,7 +582,8 @@ button {
 }
 
 .theme-toggle,
-.notification-toggle {
+.notification-toggle,
+.account-toggle {
   width: 44px;
   height: 44px;
   border: 1px solid var(--color-border-muted);
@@ -598,7 +599,8 @@ button {
 }
 
 .theme-toggle:hover,
-.notification-toggle:hover {
+.notification-toggle:hover,
+.account-toggle:hover {
   border-color: var(--color-primary);
   background: var(--color-surface-raised);
   color: var(--color-primary-hover);
@@ -606,7 +608,8 @@ button {
 }
 
 .theme-toggle:focus-visible,
-.notification-toggle:focus-visible {
+.notification-toggle:focus-visible,
+.account-toggle:focus-visible {
   border-color: var(--color-primary);
   color: var(--color-primary-hover);
   outline: 2px solid var(--color-primary);
@@ -614,7 +617,8 @@ button {
 }
 
 .theme-toggle:active,
-.notification-toggle:active {
+.notification-toggle:active,
+.account-toggle:active {
   transform: scale(0.98);
 }
 
@@ -624,20 +628,24 @@ button {
   fill: currentColor;
 }
 
-.notification-toggle i {
+.notification-toggle i,
+.account-toggle i {
   font-size: 1.08rem;
   line-height: 1;
 }
 
-.notification-wrapper {
+.notification-wrapper,
+.account-wrapper {
   position: relative;
 }
 
-.notification-toggle {
+.notification-toggle,
+.account-toggle {
   position: relative;
 }
 
-.notification-wrapper.is-open .notification-toggle {
+.notification-wrapper.is-open .notification-toggle,
+.account-wrapper.is-open .account-toggle {
   border-color: var(--color-primary);
   background: var(--color-surface-raised);
   color: var(--color-primary-hover);
@@ -678,6 +686,75 @@ button {
 
 .notification-panel[hidden] {
   display: none;
+}
+
+.account-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 1002;
+  width: min(230px, calc(100vw - 32px));
+  padding: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+}
+
+.account-panel[hidden] {
+  display: none;
+}
+
+.account-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--component-transition),
+    color var(--component-transition),
+    transform var(--component-transition);
+}
+
+.account-menu-item i {
+  width: 18px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  text-align: center;
+  transition: color var(--component-transition);
+}
+
+.account-menu-item:hover,
+.account-menu-item:focus-visible {
+  background: var(--color-surface-muted);
+  color: var(--color-primary-hover);
+  outline: none;
+}
+
+.account-menu-item:hover i,
+.account-menu-item:focus-visible i,
+.account-menu-item--logout,
+.account-menu-item--logout i {
+  color: var(--color-primary-hover);
+}
+
+.account-menu-item:active {
+  transform: scale(0.99);
 }
 
 .notification-panel__head {
@@ -850,6 +927,8 @@ body.light-mode .icon-sun {
   .member-button,
   .theme-toggle,
   .notification-toggle,
+  .account-toggle,
+  .account-menu-item,
   .notification-item,
   .play-btn,
   .watch-button,
