@@ -1,3 +1,25 @@
 <?php
 define("TMDB_API_KEY", "9b4592d22d37d5f7ac7a5f6514fbdc0b");
-?>
+
+$TMDB_COUNTRIES = [
+    ["code" => "VN", "name" => "Việt Nam"],
+    ["code" => "KR", "name" => "Hàn Quốc"],
+    ["code" => "CN", "name" => "Trung Quốc"],
+    ["code" => "JP", "name" => "Nhật Bản"],
+    ["code" => "TH", "name" => "Thái Lan"],
+    ["code" => "US", "name" => "Hoa Kỳ"],
+    ["code" => "GB", "name" => "Anh"],
+    ["code" => "FR", "name" => "Pháp"],
+    ["code" => "IN", "name" => "Ấn Độ"],
+    ["code" => "TW", "name" => "Đài Loan"],
+    ["code" => "HK", "name" => "Hồng Kông"],
+    ["code" => "CA", "name" => "Canada"],
+    ["code" => "ES", "name" => "Tây Ban Nha"],
+    ["code" => "DE", "name" => "Đức"],
+    ["code" => "IT", "name" => "Ý"],
+    ["code" => "AU", "name" => "Úc"],
+    ["code" => "PH", "name" => "Philippines"],
+    ["code" => "ID", "name" => "Indonesia"],
+    ["code" => "BR", "name" => "Brazil"],
+    ["code" => "MX", "name" => "Mexico"],
+];

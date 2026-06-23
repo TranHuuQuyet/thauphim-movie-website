@@ -1,3 +1,6 @@
+<?php
+$tmdbCountries = $TMDB_COUNTRIES ?? [];
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -39,23 +42,36 @@
 
             <div class="header-actions" id="primary-menu">
                 <nav class="main-nav" aria-label="Điều hướng chính">
-                    <a href="pages/browse.php?genre=all">Chủ đề</a>
-                    <a href="pages/browse.php">Bộ lọc</a>
-                    <a href="pages/browse.php?type=movie">Phim lẻ</a>
-                    <a href="pages/browse.php?type=series">Phim bộ</a>
-                    <a href="pages/country.php">Quốc gia</a>
+                    <a href="/thauphim-movie-website/pages/browse.php?genre=all">Chủ đề</a>
+                    <a href="/thauphim-movie-website/pages/browse.php">Bộ lọc</a>
+                    <a href="/thauphim-movie-website/pages/browse.php?type=movie">Phim lẻ</a>
+                    <a href="/thauphim-movie-website/pages/browse.php?type=series">Phim bộ</a>
+                    <details class="nav-dropdown">
+                        <summary>
+                            Quốc gia
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </summary>
+                        <div class="nav-dropdown-menu">
+                            <?php foreach ($tmdbCountries as $country): ?>
+                            <a
+                                href="/thauphim-movie-website/pages/country.php?code=<?= urlencode($country['code']) ?>">
+                                <?= htmlspecialchars($country['name'], ENT_QUOTES, 'UTF-8') ?>
+                            </a>
+                            <?php endforeach; ?>
+                        </div>
+                    </details>
                     <a href="/thauphim-movie-website/pages/actor.php">Diễn viên</a>
-                    <a href="pages/schedule.php">Lịch chiếu</a>
+                    <a href="/thauphim-movie-website/pages/schedule.php">Lịch chiếu</a>
                 </nav>
 
-                <form class="search-form" action="pages/browse.php" method="get" role="search">
+                <form class="search-form" action="/thauphim-movie-website/pages/browse.php" method="get" role="search">
                     <label class="sr-only" for="header-search">Tìm phim,diễn viên...</label>
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off">
                 </form>
 
                 <?php if(isset($_SESSION["is_login"])): ?>
-                <a class="member-button" href="logout.php">
+                <a class="member-button" href="/thauphim-movie-website/logout.php">
                     Đăng xuất
                 </a>
                 <?php else: ?>
