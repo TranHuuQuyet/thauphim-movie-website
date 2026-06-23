@@ -13,7 +13,7 @@
   --card: #ffffff;
 
   /* Brand */
-  --color-primary: var(text-base);
+  --color-primary: var(--primary-color);
   --color-primary-hover: var(--primary-color-hover);
   --color-primary-active: #f2c85f98;
   --color-primary-soft: rgba(255, 216, 117, 0.14);
@@ -81,6 +81,20 @@
   --color-button-primary-text: var(--primary-button-text);
   --color-button-secondary-bg: var(--color-surface-muted);
   --color-button-secondary-text: var(--color-text);
+  --color-input-placeholder: var(--color-text-soft);
+
+  /* Component scale */
+  --radius-control: 10px;
+  --radius-card: 12px;
+  --radius-card-lg: 16px;
+  --radius-pill: 999px;
+  --control-height: 42px;
+  --control-padding-x: 18px;
+  --component-transition: 0.22s ease;
+  --component-focus-shadow: 0 0 0 3px var(--color-focus-ring);
+  --card-poster-bg: var(--color-surface-muted);
+  --card-poster-shadow: var(--shadow-sm);
+  --card-hover-scale: 1.035;
 
   /* Effects */
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.24);
@@ -99,6 +113,7 @@
 }
 
 html[data-theme="light"],
+body.light-mode,
 body.light-theme {
   color-scheme: light;
 
@@ -120,6 +135,7 @@ body.light-theme {
   --color-surface-muted: #f1f5f9;
   --color-surface-raised: #ffffff;
   --color-surface-inverse: #0f172a;
+  --color-surface-inverse-hover: #1e293b;
   --color-overlay: rgba(15, 23, 42, 0.54);
   --color-backdrop: rgba(248, 250, 252, 0.86);
 
@@ -163,6 +179,8 @@ body.light-theme {
   --color-button-primary-text: #ffffff;
   --color-button-secondary-bg: var(--color-surface-muted);
   --color-button-secondary-text: var(--color-text);
+  --color-input-placeholder: #64748b;
+  --card-poster-bg: var(--color-surface);
 
   --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.08);
   --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.12);
@@ -203,8 +221,109 @@ a {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+.ui-button,
+.play-btn,
+.member-button,
+.auth-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--component-transition),
+    border-color var(--component-transition),
+    box-shadow var(--component-transition),
+    color var(--component-transition),
+    transform var(--component-transition);
+}
+
+.ui-button:focus-visible,
+.play-btn:focus-visible,
+.member-button:focus-visible,
+.auth-form button:focus-visible {
+  outline: none;
+  box-shadow: var(--component-focus-shadow);
+}
+
+.ui-button:active,
+.play-btn:active,
+.member-button:active,
+.auth-form button:active {
+  transform: scale(0.98);
+}
+
+.ui-field,
+.search-form input,
+.auth-form input {
+  width: 100%;
+  min-height: var(--control-height);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-control);
+  background: var(--color-input-bg);
+  color: var(--color-text);
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  transition:
+    background-color var(--component-transition),
+    border-color var(--component-transition),
+    box-shadow var(--component-transition);
+}
+
+.ui-field::placeholder,
+.search-form input::placeholder,
+.auth-form input::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.ui-field:focus,
+.search-form input:focus,
+.auth-form input:focus {
+  border-color: var(--color-primary);
+  box-shadow: var(--component-focus-shadow);
+}
+
+.ui-movie-poster,
+.movie-card,
+.country-movie-card__poster {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--card-poster-bg);
+  box-shadow: var(--card-poster-shadow);
+}
+
+.ui-movie-poster img,
+.movie-card img,
+.country-movie-card__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--component-transition);
+}
+
+.ui-movie-poster:hover img,
+.movie-card:hover img,
+.country-movie-card:hover .country-movie-card__poster img {
+  transform: scale(var(--card-hover-scale));
 }
 
 .sr-only {
@@ -417,62 +536,34 @@ input {
 .search-form i {
   position: absolute;
   left: 14px;
-  color: var(--text-base);
+  color: var(--color-input-placeholder);
   font-size: 0.9rem;
   pointer-events: none;
 }
 
 .search-form input {
-  width: 100%;
-  height: 42px;
   padding: 0 16px 0 40px;
-  border: 1px solid var(--color-input-border);
-  border-radius: 10px;
-  background: var(--color-input-bg);
-  color: var(--color-text);
-  outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
-}
-
-.search-form input::placeholder {
-  color: var(--text-base);
-}
-
-.search-form input:focus {
-  border-color: var(--color-primary);
 }
 
 .member-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   flex: 0 0 auto;
-  min-height: 42px;
-  padding: 0 18px;
-  border-radius: 10px;
+  padding: 0 var(--control-padding-x);
   background: var(--color-surface-inverse);
   color: var(--color-button-primary-text);
   font-size: 0.94rem;
-  font-weight: 500;
   box-shadow: var(--shadow-sm);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
-.member-button:hover,
-.member-button:focus-visible {
+.member-button:hover {
   background: var(--color-surface-inverse-hover);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
-  outline: none;
 }
 
-.member-button:active {
-  transform: translateY(0) scale(0.98);
+.member-button:focus-visible {
+  background: var(--color-surface-inverse-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md), var(--component-focus-shadow);
 }
 
 .menu-toggle {
@@ -525,7 +616,14 @@ body.light-mode .icon-sun {
   .nav-dropdown summary,
   .nav-dropdown summary i,
   .search-form input,
-  .member-button {
+  .member-button,
+  .play-btn,
+  .watch-button,
+  .movie-actions button,
+  .movie-card img,
+  .country-movie-card__poster img,
+  .auth-form input,
+  .auth-form button {
     transition: none;
   }
 }
@@ -864,34 +962,20 @@ body.light-mode .icon-sun {
   margin-bottom: 30px;
 }
 .play-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
   padding: 14px 32px;
   margin: 15px 0;
-  border: none;
-  border-radius: 999px;
-
-  background: #ffde8a;
-  color: #111;
-
+  border-radius: var(--radius-pill);
+  background: var(--color-button-primary-bg);
+  color: var(--color-button-primary-text);
   font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  cursor: pointer;
-
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(255, 222, 138, 0.35);
+  letter-spacing: 0.04em;
+  box-shadow: 0 8px 25px var(--color-primary-soft);
 }
 
 .play-btn:hover {
+  background: var(--color-primary-hover);
   transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(255, 222, 138, 0.5);
-}
-
-.play-btn:active {
-  transform: scale(0.97);
+  box-shadow: 0 12px 35px var(--color-primary-soft);
 }
 /* phim noi bat*/
 .movie-section {
@@ -949,21 +1033,8 @@ body.light-mode .icon-sun {
 }
 
 .movie-card {
-  position: relative;
   width: 100%;
   height: auto;
-  aspect-ratio: 2 / 3;
-  overflow: hidden;
-  border-radius: 12px;
-  background: #252832;
-}
-
-.movie-card img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.35s ease;
 }
 
 .movie-card::after {
@@ -975,10 +1046,6 @@ body.light-mode .icon-sun {
   height: 22%;
   background: linear-gradient(to top, rgba(10, 11, 17, 0.42), transparent);
   pointer-events: none;
-}
-
-.movie-card:hover img {
-  transform: scale(1.04);
 }
 
 .movie-status {
@@ -1016,7 +1083,7 @@ body.light-mode .icon-sun {
   margin: 0;
 
   overflow: hidden;
-  color: #f5f5f7;
+  color: var(--color-text);
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.35;
@@ -1031,7 +1098,7 @@ body.light-mode .icon-sun {
   margin: 6px 0 0;
 
   overflow: hidden;
-  color: #9497a1;
+  color: var(--color-text-soft);
   font-size: 0.86rem;
   font-weight: 400;
   line-height: 1.35;
@@ -1157,10 +1224,9 @@ body.light-mode .icon-sun {
   min-height: 40px;
   margin: 0;
   padding: 0 18px;
-  border-radius: 9px;
-  background: var(--primary-color);
-  color: var(--primary-button-text);
-  font-family: "Segoe UI", Arial, sans-serif;
+  border-radius: var(--radius-control);
+  background: var(--color-button-primary-bg);
+  color: var(--color-button-primary-text);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -1182,7 +1248,7 @@ body.light-mode .icon-sun {
 }
 
 .bannerSwiper .play-btn:hover {
-  background: var(--primary-color-hover);
+  background: var(--color-primary-hover);
   box-shadow: none;
   transform: translateY(-2px);
 }
@@ -1409,21 +1475,55 @@ body.light-mode .icon-sun {
   width: 70px;
   height: 70px;
   place-items: center;
-  border-radius: 50%;
-  background: #ffde8a;
-  color: #101010;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--color-button-primary-bg);
+  color: var(--color-button-primary-text);
   font-size: 26px;
   text-decoration: none;
+  transition:
+    background-color var(--component-transition),
+    box-shadow var(--component-transition),
+    transform var(--component-transition);
+}
+
+.watch-button:hover,
+.watch-button:focus-visible {
+  background: var(--color-primary-hover);
+  box-shadow: var(--component-focus-shadow);
+  outline: none;
+}
+
+.watch-button:active {
+  transform: scale(0.98);
 }
 
 .movie-actions button {
   width: 70px;
   height: 52px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-control);
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
   font-size: 20px;
   cursor: pointer;
+  transition:
+    background-color var(--component-transition),
+    border-color var(--component-transition),
+    box-shadow var(--component-transition),
+    transform var(--component-transition);
+}
+
+.movie-actions button:hover,
+.movie-actions button:focus-visible {
+  border-color: rgba(255, 216, 117, 0.44);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: var(--component-focus-shadow);
+  outline: none;
+}
+
+.movie-actions button:active {
+  transform: scale(0.98);
 }
 
 .movieThumbSwiper {
