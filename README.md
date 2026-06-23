@@ -2,7 +2,7 @@
 
 ## 1. Gioi thieu du an
 
-ThauPhim la website xem phim truc tuyen duoc xay dung cho do an mon Lap trinh Web. Du an lay cam hung tu cac website xem phim nhu RoPhim/Werp, tap trung vao cac chuc nang cot loi co the trien khai trong thoi gian 1 thang: duyet phim, tim kiem, loc phim, xem chi tiet phim, xem tap phim bang video nhung, quan ly yeu thich, lich su xem va trang quan tri du lieu.
+ThauPhim la website xem phim truc tuyen duoc xay dung cho do an mon Lap trinh Web. Du an lay cam hung tu cac website xem phim nhu RoPhim/Werp, tap trung vao cac chuc nang cot loi co the trien khai trong thoi gian 1 thang: duyet phim, tim kiem, loc phim, xem chi tiet phim, xem tap phim bang video nhung, quan ly yeu thich, lich su xem, thong bao phim sap chieu va trang quan tri du lieu.
 
 He thong se duoc deploy that len hosting PHP/MySQL va su dung ten mien rieng de phuc vu demo cuoi ky.
 
@@ -39,6 +39,8 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 | Binh luan phim co ban, khong reply | Bat buoc | Planned |
 | Danh gia phim 1-5 sao | Bat buoc | Planned |
 | Dark Mode / Light Mode Toggle | Bat buoc | Planned |
+| Thong bao phim sap chieu cho member | Bat buoc | Planned |
+| Admin quan ly phim sap chieu | Bat buoc | Planned |
 | Thanh toan online | Khong nam trong pham vi | Future |
 | Goi y phim nang cao | Khong nam trong pham vi | Future |
 
@@ -60,6 +62,7 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 - Tiep tuc xem tap phim gan nhat.
 - Binh luan phim.
 - Danh gia phim tu 1 den 5 sao.
+- Xem thong bao phim sap chieu tu icon chuong tren header.
 
 ### Premium Member
 
@@ -71,7 +74,8 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 ### Admin
 
 - Dang nhap vao trang quan tri.
-- Quan ly phim, tap phim, the loai, quoc gia, dien vien va lich chieu.
+- Quan ly phim, tap phim, the loai, quoc gia, dien vien va phim sap chieu.
+- Them phim chuan bi chieu, dat thoi gian chieu va ghi chu thong bao.
 - Quan ly nguoi dung.
 - Khoa hoac mo khoa tai khoan.
 - Doi trang thai membership cua nguoi dung.
@@ -122,6 +126,7 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 - Danh sach phim le.
 - Danh sach phim bo.
 - The loai hot.
+- Icon chuong tren header de member xem nhanh thong bao phim sap chieu.
 - Footer thong tin website.
 
 ### 6.2 Duyet phim, tim kiem va loc
@@ -183,7 +188,9 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 - CRUD the loai.
 - CRUD quoc gia.
 - CRUD dien vien.
-- CRUD lich chieu.
+- CRUD phim sap chieu.
+- Them phim chuan bi chieu va thoi gian chieu.
+- Bat/tat trang thai hien thi thong bao phim sap chieu.
 - Quan ly nguoi dung.
 - Khoa/mo khoa tai khoan.
 - Doi membership Free/Premium.
@@ -207,6 +214,16 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 - Theme khong can luu vao database vi day la tuy chon rieng tren trinh duyet cua tung nguoi dung.
 - Giao dien mac dinh uu tien dark mode de phu hop voi website xem phim.
 - Cac thanh phan chinh nhu header, card phim, form, admin table va watch page can ho tro ca hai che do.
+
+### 6.10 Thong bao phim sap chieu
+
+- Icon chuong tren header la diem vao thong bao phim sap chieu.
+- Member dang nhap co the bam icon chuong de xem danh sach phim sap chieu tren website.
+- Thong bao hien cac thong tin toi thieu: ten phim, poster nho, thoi gian chieu du kien va ghi chu neu co.
+- Danh sach thong bao chi lay cac phim sap chieu da duoc admin bat trang thai hien thi.
+- Sap xep phim sap chieu theo thoi gian chieu gan nhat truoc.
+- Khong tao trang rieng cho danh sach nay; member xem thong bao truc tiep qua icon chuong.
+- Neu kip tien do, co the them badge so luong thong bao moi tren icon chuong.
 
 ## 7. Thiet ke database
 
@@ -281,12 +298,27 @@ Du an uu tien hoan thanh cac chuc nang bat buoc truoc. Cac chuc nang nang cao se
 - movie_id
 - actor_id
 
-### schedules
+### upcoming_movies
 
 - id
 - movie_id
-- release_date
+- show_time
 - note
+- status: draft/published/cancelled/expired
+- created_by
+- created_at
+- updated_at
+
+Ghi chu: bang `upcoming_movies` la nguon du lieu cho thong bao phim sap chieu. Chi cac record co `status = published` va `show_time` chua qua moi duoc hien trong chuong thong bao cho member.
+
+### notification_reads
+
+- id
+- user_id
+- upcoming_movie_id
+- read_at
+
+Ghi chu: bang `notification_reads` la tuy chon. Nen them neu muon icon chuong co badge so thong bao chua doc theo tung member.
 
 ### favorites
 
@@ -335,10 +367,12 @@ Ghi chu: can tao unique constraint cho cap `user_id` va `movie_id` de moi user c
 - Mot phim co nhieu tap.
 - Mot phim co nhieu the loai thong qua bang `movie_genres`.
 - Mot phim co nhieu dien vien thong qua bang `movie_actors`.
+- Mot phim co the co nhieu moc sap chieu thong qua bang `upcoming_movies`.
 - Mot user co nhieu phim yeu thich.
 - Mot user co nhieu lich su xem.
 - Mot user co nhieu binh luan.
 - Mot user co nhieu danh gia phim.
+- Mot user co the co nhieu thong bao da doc thong qua bang `notification_reads`.
 - Mot phim co nhieu binh luan va nhieu danh gia.
 - Mot admin co quyen quan ly du lieu he thong.
 
@@ -353,7 +387,7 @@ thauphim-movie-website/
 |   |-- genres/
 |   |-- countries/
 |   |-- actors/
-|   |-- schedules/
+|   |-- upcoming/
 |   |-- users/
 |
 |-- assets/
@@ -381,7 +415,6 @@ thauphim-movie-website/
 |   |-- history.php
 |   |-- country.php
 |   |-- actor.php
-|   |-- schedule.php
 |
 |-- uploads/
 |   |-- posters/
@@ -407,6 +440,7 @@ Day la 5 nhom cong viec chinh cua du an. Khi trien khai, nhom co the gan moi mai
 - Banner phim noi bat.
 - Responsive desktop/mobile.
 - Dark Mode / Light Mode Toggle.
+- Icon chuong thong bao phim sap chieu tren header.
 - Chuan hoa CSS component cho card phim, button, form.
 
 ### Main Task 2 - Browse, Search & Filter
@@ -436,7 +470,7 @@ Day la 5 nhom cong viec chinh cua du an. Khi trien khai, nhom co the gan moi mai
 - Danh gia phim.
 - Trang quoc gia.
 - Trang dien vien.
-- Trang lich chieu.
+- Xem thong bao phim sap chieu tu icon chuong.
 
 ### Main Task 5 - Backend, Database, Admin & Deployment
 
@@ -444,7 +478,8 @@ Day la 5 nhom cong viec chinh cua du an. Khi trien khai, nhom co the gan moi mai
 - Tao `schema.sql` va `seed.sql`.
 - Ket noi database.
 - Admin dashboard.
-- CRUD phim, tap phim, the loai, quoc gia, dien vien, lich chieu.
+- CRUD phim, tap phim, the loai, quoc gia, dien vien, phim sap chieu.
+- Admin them phim chuan bi chieu, thoi gian chieu va ghi chu thong bao.
 - Quan ly user va membership.
 - Quan ly binh luan va thong ke danh gia.
 - Deploy len hosting va cau hinh ten mien.
@@ -455,8 +490,8 @@ Day la 5 nhom cong viec chinh cua du an. Khi trien khai, nhom co the gan moi mai
 | --- | --- | --- |
 | Tuan 1 | Chot yeu cau, thiet ke UI, thiet ke database | Wireframe, schema SQL, layout co ban, seed data mau |
 | Tuan 2 | Xay dung frontend va cac trang user chinh | Trang chu, dark/light toggle, danh sach phim, tim kiem, loc, dang ky/dang nhap |
-| Tuan 3 | Xay dung trang phim va admin | Chi tiet phim, xem phim, yeu thich, lich su xem, binh luan, danh gia, admin CRUD |
-| Tuan 4 | Hoan thien, test, deploy va bao cao | Fix bug, responsive, import data, deploy hosting, demo domain, bao cao |
+| Tuan 3 | Xay dung trang phim va admin | Chi tiet phim, xem phim, yeu thich, lich su xem, binh luan, danh gia, admin CRUD, quan ly phim sap chieu |
+| Tuan 4 | Hoan thien, test, deploy va bao cao | Fix bug, thong bao phim sap chieu, responsive, import data, deploy hosting, demo domain, bao cao |
 
 ## 12. Yeu cau bao mat
 
@@ -535,9 +570,12 @@ Ghi chu: mat khau demo chi dung cho moi truong demo do an, khong dung cho produc
 - Diem danh gia trung binh hien thi dung.
 - Moi user chi co mot danh gia tren moi phim.
 - Dark Mode / Light Mode Toggle hoat dong va duoc luu sau khi reload.
+- Member bam icon chuong va xem duoc danh sach phim sap chieu.
+- Thong bao phim sap chieu sap xep theo thoi gian gan nhat.
 - Admin tao, sua, xoa phim.
 - Admin tao, sua, xoa tap phim.
 - Admin tao, sua, xoa the loai, quoc gia, dien vien.
+- Admin them, sua, an/hien phim sap chieu va thoi gian chieu.
 - Admin doi membership user.
 - Website hien thi tot tren desktop va mobile.
 - Website chay duoc tren domain deploy.
