@@ -5,10 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     typeof TMDB_COUNTRIES !== "undefined" && Array.isArray(TMDB_COUNTRIES)
       ? TMDB_COUNTRIES
       : [];
+  const movieTitle = document.querySelector("#country-movies-title");
   const movieStatus = document.querySelector("#countryMovieStatus");
   const movieList = document.querySelector("#countryMovieList");
 
-  if (!movieStatus || !movieList) {
+  if (!movieTitle || !movieStatus || !movieList) {
     return;
   }
 
@@ -70,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const renderLoadingState = () => {
     movieStatus.className = "country-movie-status is-loading";
-    movieStatus.textContent = "";
+    movieStatus.textContent = "Đang tải phim...";
     movieList.replaceChildren();
 
     const fragment = document.createDocumentFragment();
@@ -131,12 +132,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const renderCountryError = () => {
     movieList.replaceChildren();
+    movieTitle.textContent = "Không tìm thấy quốc gia";
     movieStatus.className = "country-movie-status is-error";
     movieStatus.innerHTML =
       '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><strong>Không có dữ liệu</strong><span>Hãy chọn lại một quốc gia trong menu.</span>';
   };
 
   const loadMovies = async (country) => {
+    movieTitle.textContent = `Phim ${country.name}`;
     renderLoadingState();
     document.title = `${country.name} - ThauPhim`;
 
@@ -170,8 +173,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const fragment = document.createDocumentFragment();
       movies.forEach((movie) => fragment.append(createMovieCard(movie)));
       movieList.append(fragment);
-      movieStatus.className = "country-movie-status";
-      movieStatus.textContent = "";
+      movieStatus.textContent = `Đã tìm thấy ${movies.length} phim ${country.name}.`;
+      movieStatus.className = "country-movie-status is-ready";
     } catch (error) {
       console.error("Không thể tải phim theo quốc gia:", error);
       movieList.replaceChildren();

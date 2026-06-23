@@ -8,6 +8,24 @@
   scroll-margin-top: 88px;
 }
 
+.country-section-heading {
+  margin-bottom: 12px;
+}
+
+.country-section-heading h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.08;
+}
+
+.country-movie-status.is-loading,
+.country-movie-status.is-ready {
+  margin-bottom: 22px;
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+}
+
 .country-movie-status.is-empty,
 .country-movie-status.is-error {
   display: grid;
