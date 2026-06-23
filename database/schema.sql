@@ -37,29 +37,25 @@ CREATE TABLE IF NOT EXISTS actors (
     biography TEXT DEFAULT NULL
 ) ENGINE=InnoDB;
 
--- 6. Bảng Phim (Movies)
-CREATE TABLE IF NOT EXISTS movies (
+DROP TABLE IF EXISTS movies;
+CREATE TABLE movies (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) NOT NULL UNIQUE,
-    description TEXT DEFAULT NULL,
-    poster VARCHAR(255) DEFAULT NULL,
-    backdrop VARCHAR(255) DEFAULT NULL,
-    release_year INT NOT NULL,
-    duration INT DEFAULT 0,
-    type ENUM('movie', 'series') DEFAULT 'movie',
-    quality VARCHAR(50) DEFAULT 'HD',
+    description TEXT,
+    poster VARCHAR(255),
+    backdrop VARCHAR(255),
+    release_year INT,
+    type ENUM('movie', 'series'),
+    quality VARCHAR(50),
     country_id INT,
-    status VARCHAR(100) DEFAULT 'Hoàn thành',
-    is_premium TINYINT(1) DEFAULT 0,
-    is_hot TINYINT(1) DEFAULT 0, -- Bổ sung để làm phim nổi bật ở Trang chủ
+    status VARCHAR(50),
+    is_premium BOOLEAN DEFAULT FALSE,
     views INT DEFAULT 0,
     rating_average DECIMAL(3,2) DEFAULT 0.00,
     rating_count INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE SET NULL
-) ENGINE=InnoDB;
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
 -- 7. Bảng Tập phim (Episodes)
 CREATE TABLE IF NOT EXISTS episodes (
