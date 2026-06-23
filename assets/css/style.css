@@ -789,7 +789,7 @@ body.light-mode .icon-sun {
 
 /* Hiệu ứng hover chữ chuyển sang màu trắng phát sáng nhẹ */
 .footer-col a:hover {
-  color: #ffffff !important;
+  color: #ffffff ;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
 }
 
@@ -845,20 +845,20 @@ body.light-mode .icon-sun {
   width: 100%;
   z-index: 999;
 
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
+  background: transparent ;
+  background-color: transparent ;
+  box-shadow: none ;
+  backdrop-filter: none ;
 
   transition: 0.3s ease;
 }
 
 /* HEADER KHI SCROLL */
 .site-header.scrolled {
-  background: #171923 !important;
-  background-color: #171923 !important;
-  backdrop-filter: blur(10px) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+  background: #171923 ;
+  background-color: #171923 ;
+  backdrop-filter: blur(10px) ;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) ;
 }
 .page-shell {
   min-height: 0;
@@ -1618,4 +1618,248 @@ body.light-mode .icon-sun {
     grid-template-columns: 1fr;
     gap: 30px;
   }
+}
+
+
+/* Giao diện Hệ thống Quản trị (Admin Dashboard)*/
+/* ==========================================================================
+   HE THONG QUAN TRI THAUPHIM PREMIUM - CYBERPUNK DARK GOLD (2026)
+   ========================================================================== */
+
+:root {
+    --bg-main: #060913;          
+    --bg-sidebar: #0b0f19;       
+    --bg-card: #111827;          
+    --gold-primary: #ffcc33;     
+    --gold-hover: #ffe082;       
+    --text-light: #f3f4f6;       
+    --text-muted: #9ca3af;       
+    --border-color: #1f293d;     
+    --glow-effect: 0 0 15px rgba(255, 204, 51, 0.2); 
+}
+
+
+body {
+    background-color: var(--bg-main) ;
+    color: var(--text-light) ;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.2px;
+}
+
+
+.sidebar {
+    background-color: var(--bg-sidebar) ;
+    border-right: 1px solid var(--border-color) ;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+
+.admin-logo-title {
+    color: #ffffff ;
+    font-size: 24px ;
+    font-weight: 800 ;
+    display: inline-flex ;
+    align-items: center ;
+    gap: 6px ;
+}
+
+.admin-logo-title strong {
+    background-color: var(--gold-hover) ;
+    color: #060913 ;
+    font-weight: 900 ;
+    font-size: 17px ;
+    padding: 3px 10px ;
+    border-radius: 6px ;
+    display: inline-flex ;
+    align-items: center ;
+    text-shadow: none ;
+    box-shadow: 0 2px 8px rgba(255, 224, 130, 0.4);
+}
+
+
+.admin-menu-list a {
+    color: var(--text-muted) ;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 10px;
+    margin: 4px 15px;
+    padding: 12px 16px ;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none ;
+}
+
+.admin-menu-list a i {
+    transition: transform 0.25s ease;
+    color: var(--text-muted);
+}
+
+
+.admin-menu-list a:hover, 
+.admin-menu-list a.active {
+    background: linear-gradient(90deg, rgba(255, 204, 51, 0.15) 0%, rgba(255, 204, 51, 0.02) 100%) ;
+    color: var(--gold-primary) ;
+    box-shadow: inset 4px 0 0 var(--gold-primary);
+}
+
+.admin-menu-list a:hover i,
+.admin-menu-list a.active i {
+    color: var(--gold-primary) ;
+    transform: scale(1.15);
+}
+
+
+.admin-menu-list a.text-danger:hover {
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.02) 100%) ;
+    color: #ef4444 ;
+    box-shadow: inset 4px 0 0 #ef4444;
+}
+
+
+.card, .table-responsive {
+    background-color: var(--bg-card) ;
+    border: 1px solid var(--border-color) ;
+    border-radius: 16px ;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) ;
+    overflow: hidden;
+    padding: 10px;
+}
+
+
+h2, .card-title {
+    color: #ffffff ;
+    font-weight: 700 ;
+}
+
+
+.table {
+    background-color: transparent ;
+    margin-bottom: 0 ;
+}
+
+
+.table thead th {
+    background-color: #172033 ;
+    color: var(--gold-primary) ;
+    font-weight: 700 ;
+    font-size: 13px ;
+    letter-spacing: 0.8px ;
+    text-transform: uppercase ;
+    padding: 16px 20px ;
+    border-bottom: 2px solid var(--border-color) ;
+}
+
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody td {
+    color: var(--text-light) ;
+    font-weight: 500 ;
+    font-size: 14px ;
+    padding: 16px 20px ;
+    border-bottom: 1px solid var(--border-color) ;
+    vertical-align: middle ;
+    background-color: transparent ;
+}
+
+
+.table tbody tr:hover {
+    background-color: rgba(255, 204, 51, 0.03) ;
+}
+.table tbody tr:hover td {
+    color: #ffffff ;
+}
+
+
+.table tbody td:first-child {
+    font-family: 'Consolas', monospace;
+    color: var(--text-muted) ;
+}
+
+.table tbody td:nth-child(3) {
+    color: var(--gold-hover) ;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+}
+
+
+.btn {
+    border-radius: 10px ;
+    font-weight: 600 ;
+    padding: 8px 18px ;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) ;
+}
+
+
+.btn-primary, .btn-warning {
+    background: linear-gradient(135deg, var(--gold-primary) 0%, #f5a623 100%) ;
+    border: none ;
+    color: #060913 ;
+}
+.btn-primary:hover, .btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 204, 51, 0.4) ;
+    background: var(--gold-hover) ;
+}
+
+
+.btn-sm {
+    padding: 5px 12px ;
+    font-size: 12px ;
+    border-radius: 6px ;
+}
+
+/* 6. Ô NHẬP LIỆU (INPUTS/FORMS) HIỆN ĐẠI */
+form label, 
+.form-label,
+.card body,
+div[class*="form-group"] > span,
+form div {
+    color: #e5e7eb ; 
+    font-weight: 600 ; 
+    letter-spacing: 0.3px;
+}
+
+
+.text-muted, 
+form small, 
+.form-text,
+p.text-muted {
+    color: #9ca3af ;
+    font-size: 12.5px ;
+    font-weight: 500 ;
+}
+
+
+.form-control::placeholder, 
+.form-select::placeholder,
+input::placeholder,
+textarea::placeholder {
+    color: #6b7280 ;
+    font-weight: 400 ;
+    opacity: 1 ; 
+}
+
+
+.form-control, 
+.form-select,
+input[type="text"] {
+    color: #ffffff ; 
+    font-size: 15px ;
+    font-weight: 500 ;
+    background-color: #0b0f19 ; 
+}
+
+/* 7. THANH THÔNG BÁO (ALERTS) */
+.alert {
+    border-radius: 12px ;
+    border: none ;
+    font-weight: 500;
+}
+.alert-success {
+    background-color: rgba(16, 185, 129, 0.15) ;
+    color: #10b981 ;
+    border-left: 4px solid #10b981 ;
 }
