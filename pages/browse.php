@@ -156,7 +156,7 @@ $countries = getAllCountriesFromDB();
             <nav class="pagination-container" aria-label="Phân trang" style="margin-top: 40px; display: flex; justify-content: center;">
                 <ul style="display: flex; list-style: none; padding: 0; margin: 0; gap: 8px;">
                     <?php 
-                    $queryParams = $_Get;
+                    $queryParams = $_GET;
                     ?>
                     <?php
                     $queryParams['page'] = $i;
