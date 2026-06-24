@@ -1,11 +1,203 @@
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
 <?php
+require_once __DIR__ . '/../includes/db.php';
+
+$pdo = getDatabaseConnection();
+
 $movieId = isset($_GET["id"]) ? (int) $_GET["id"] : 1;
 
 $isLoggedIn = !empty($_SESSION["is_login"]);
 $currentUserId = $_SESSION["username"] ?? null;
 $currentUserName = $_SESSION["username"] ?? "Bạn";
+
+function e($value)
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
+}
+
+function assetPath($path, $fallback)
+{
+    if (empty($path)) {
+        return $fallback;
+    }
+
+    $cleanPath = ltrim($path, "/");
+    $fullPath = __DIR__ . "/../" . $cleanPath;
+
+    if (!file_exists($fullPath)) {
+        return $fallback;
+    }
+
+    return "../" . $cleanPath;
+}
+
+function statusText($status)
+{
+    return match ($status) {
+        "coming_soon" => "Chưa ra mắt",
+        "ongoing" => "Đang chiếu",
+        "completed" => "Đã hoàn thành",
+        default => "Đang cập nhật"
+    };
+}
+
+function youtubeEmbedUrl($url, $query = "")
+{
+    if (empty($url)) {
+        return "";
+    }
+
+    $videoId = "";
+
+    if (str_contains($url, "/embed/")) {
+        $parts = explode("/embed/", $url);
+        $videoId = explode("?", $parts[1])[0] ?? "";
+    } elseif (preg_match('/v=([^&]+)/', $url, $matches)) {
+        $videoId = $matches[1];
+    } elseif (preg_match('/youtu\.be\/([^?]+)/', $url, $matches)) {
+        $videoId = $matches[1];
+    }
+
+    if ($videoId === "") {
+        return $url;
+    }
+
+    return "https://www.youtube.com/embed/" . $videoId . $query;
+}
+
+$stmt = $pdo->prepare("
+    SELECT 
+        movies.*,
+        countries.name AS country_name,
+        (
+            SELECT schedules.release_date
+            FROM schedules
+            WHERE schedules.movie_id = movies.id
+            ORDER BY schedules.release_date ASC
+            LIMIT 1
+        ) AS release_date
+    FROM movies
+    LEFT JOIN countries ON movies.country_id = countries.id
+    WHERE movies.id = ?
+    LIMIT 1
+");
+$stmt->execute([$movieId]);
+$movie = $stmt->fetch();
+
+if (!$movie) {
+    echo "<main class='page-shell detail-page'><p>Không tìm thấy phim.</p></main>";
+    include __DIR__ . '/../includes/footer.php';
+    exit;
+}
+
+$stmt = $pdo->prepare("
+    SELECT genres.name
+    FROM movie_genres
+    INNER JOIN genres ON movie_genres.genre_id = genres.id
+    WHERE movie_genres.movie_id = ?
+");
+$stmt->execute([$movieId]);
+$genres = $stmt->fetchAll();
+
+$stmt = $pdo->prepare("
+    SELECT actors.name, actors.avatar
+    FROM movie_actors
+    INNER JOIN actors ON movie_actors.actor_id = actors.id
+    WHERE movie_actors.movie_id = ?
+");
+$stmt->execute([$movieId]);
+$actors = $stmt->fetchAll();
+
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM episodes
+    WHERE movie_id = ?
+    ORDER BY episode_number ASC
+");
+$stmt->execute([$movieId]);
+$episodes = $stmt->fetchAll();
+
+$firstEpisode = $episodes[0] ?? null;
+$continueWatching = null;
+
+if (!empty($_SESSION["is_login"]) && !empty($_SESSION["username"])) {
+    $stmt = $pdo->prepare("
+        SELECT id
+        FROM users
+        WHERE LOWER(username) = LOWER(?)
+        LIMIT 1
+    ");
+    $stmt->execute([$_SESSION["username"]]);
+    $user = $stmt->fetch();
+
+    if ($user) {
+        $stmt = $pdo->prepare("
+            SELECT 
+                watch_history.*,
+                episodes.episode_number,
+                episodes.title AS episode_title
+            FROM watch_history
+            INNER JOIN episodes ON watch_history.episode_id = episodes.id
+            WHERE watch_history.user_id = ?
+              AND watch_history.movie_id = ?
+            ORDER BY watch_history.watched_at DESC
+            LIMIT 1
+        ");
+        $stmt->execute([
+            $user["id"],
+            $movieId
+        ]);
+        $continueWatching = $stmt->fetch();
+    }
+}
+
+$stmt = $pdo->prepare("
+    SELECT DISTINCT movies.*
+    FROM movies
+    INNER JOIN movie_genres ON movies.id = movie_genres.movie_id
+    WHERE movies.id != ?
+      AND movie_genres.genre_id IN (
+          SELECT genre_id
+          FROM movie_genres
+          WHERE movie_id = ?
+      )
+    ORDER BY movies.views DESC
+    LIMIT 6
+");
+$stmt->execute([$movieId, $movieId]);
+$relatedMovies = $stmt->fetchAll();
+
+if (empty($relatedMovies)) {
+    $stmt = $pdo->prepare("
+        SELECT *
+        FROM movies
+        WHERE id != ?
+        ORDER BY views DESC
+        LIMIT 6
+    ");
+    $stmt->execute([$movieId]);
+    $relatedMovies = $stmt->fetchAll();
+}
+
+$typeLabel = $movie["type"] === "series" ? "Phim bộ" : "Phim lẻ";
+$premiumLabel = !empty($movie["is_premium"]) ? "Premium" : "Free";
+
+$releaseLabel = !empty($movie["release_date"])
+    ? date("d/m/Y", strtotime($movie["release_date"]))
+    : ($movie["release_year"] ?? "N/A");
+
+$statusClass = match ($movie["status"]) {
+    "coming_soon" => "status-warning",
+    "ongoing" => "status-success",
+    "completed" => "status-success",
+    default => "status-success"
+};
+
+$heroVideoUrl = youtubeEmbedUrl(
+    $firstEpisode["youtube_url"] ?? "https://www.youtube.com/embed/62bIsvRcPv0",
+    "?autoplay=1&mute=1&controls=0&rel=0"
+);
 ?>
 
 <link rel="stylesheet" href="../assets/css/movie-detail.css">
@@ -13,9 +205,7 @@ $currentUserName = $_SESSION["username"] ?? "Bạn";
 <main class="page-shell detail-page">
     <section class="hero detail-hero">
         <div class="video-bg">
-            <iframe
-                src="https://www.youtube.com/embed/62bIsvRcPv0?autoplay=1&mute=1&loop=1&playlist=62bIsvRcPv0&controls=0&rel=0"
-                allow="autoplay; encrypted-media" allowfullscreen>
+            <iframe src="<?= e($heroVideoUrl) ?>" allow="autoplay; encrypted-media" allowfullscreen>
             </iframe>
         </div>
 
@@ -26,12 +216,15 @@ $currentUserName = $_SESSION["username"] ?? "Bạn";
         <section id="movie-info" class="detail-sidebar">
             <div class="detail-info-card">
                 <div class="detail-poster">
-                    <img src="../assets/images/poster-spiderman.webp" alt="Spider Man">
+                    <img src="<?= e(assetPath($movie["poster"], "../assets/images/poster_movie.jpg")) ?>"
+                        alt="<?= e($movie["title"]) ?>">
                 </div>
 
                 <div class="detail-info-text">
-                    <h1>Spider Man</h1>
-                    <p class="movie-name">Brand New Day</p>
+                    <h1><?= e($movie["title"]) ?></h1>
+                    <p class="movie-name">
+                        <?= e(($movie["country_name"] ?? "Đang cập nhật") . " • " . ($movie["release_year"] ?? "N/A") . " • " . $typeLabel) ?>
+                    </p>
 
                     <a href="#movie-info" class="detail-info-link">Thông tin phim</a>
                 </div>
@@ -39,34 +232,33 @@ $currentUserName = $_SESSION["username"] ?? "Bạn";
                 <div class="detail-info-meta">
                     <div class="detail-badges">
                         <span class="detail-badge age">T13</span>
-                        <span class="detail-badge">31/7</span>
-                        <span class="detail-badge">2026</span>
-                        <span class="detail-badge">4K</span>
+                        <span class="detail-badge"><?= e($releaseLabel) ?></span>
+                        <span class="detail-badge"><?= e($movie["release_year"] ?? "N/A") ?></span>
+                        <span class="detail-badge"><?= e($movie["quality"] ?? "HD") ?></span>
+                        <span class="detail-badge"><?= e($premiumLabel) ?></span>
                     </div>
 
                     <div class="detail-tags">
-                        <span>#SpiderMan</span>
-                        <span>#trailer</span>
-                        <span>#marvel</span>
-                        <span>#Sony</span>
+                        <?php foreach ($genres as $genre): ?>
+                            <span>#<?= e($genre["name"]) ?></span>
+                        <?php endforeach; ?>
                     </div>
 
-                    <div class="detail-status status-warning">
-                        <span>Chưa ra mắt</span>
+                    <div class="detail-status <?= e($statusClass) ?>">
+                        <span><?= e(statusText($movie["status"])) ?></span>
                     </div>
 
                     <div class="detail-desc-block">
                         <h3>Giới thiệu</h3>
-                        <p>
-                            Watch the new trailer for #SpiderManBrandNewDay, in theatres July 31. Tickets on sale NOW.
-                        </p>
+                        <p><?= e($movie["description"] ?? "Nội dung phim đang được cập nhật.") ?></p>
                     </div>
 
                     <div class="detail-info-list">
-                        <p><strong>Thời lượng:</strong> 2h25p</p>
-                        <p><strong>Quốc gia:</strong> USA</p>
-                        <p><strong>Sản xuất:</strong> Marvel Studios & Sony Pictures</p>
-                        <p><strong>Diễn viên:</strong> Tom Holland, Zendaya, Jon Bernthal,...</p>
+                        <p><strong>Quốc gia:</strong> <?= e($movie["country_name"] ?? "Đang cập nhật") ?></p>
+                        <p><strong>Năm:</strong> <?= e($movie["release_year"] ?? "Đang cập nhật") ?></p>
+                        <p><strong>Loại phim:</strong> <?= e($typeLabel) ?></p>
+                        <p><strong>Diễn viên:</strong>
+                            <?= e(implode(", ", array_column($actors, "name")) ?: "Đang cập nhật") ?></p>
                     </div>
                 </div>
             </div>
@@ -74,10 +266,27 @@ $currentUserName = $_SESSION["username"] ?? "Bạn";
 
         <section class="detail-main-content">
             <section class="detail-actions">
-                <a class="play-btn" id="watchNowBtn" href="watch.php?movie_id=<?= $movieId ?>&ep=1">▶ Xem Ngay</a>
 
-                <button class="detail-action-btn" id="favoriteBtn" type="button">♡ Yêu thích</button>
-                <button class="detail-action-btn" id="addListBtn" type="button">＋ Thêm vào</button>
+                <?php if ($firstEpisode): ?>
+                    <a class="play-btn" id="watchNowBtn"
+                        href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $firstEpisode["id"] ?>">
+                        ▶ Xem Ngay
+                    </a>
+                <?php else: ?>
+                    <button class="play-btn" type="button" disabled>Chưa có tập</button>
+                <?php endif; ?>
+
+                <?php if ($continueWatching): ?>
+                    <a class="continue-watch-btn"
+                        href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $continueWatching["episode_id"] ?>">
+                        ↻ Tiếp tục xem
+                        <?= $movie["type"] === "series" ? "- Tập " . e($continueWatching["episode_number"]) : e($continueWatching["episode_title"]) ?>
+                    </a>
+                <?php endif; ?>
+
+                <button class="detail-action-btn" id="favoriteBtn" type="button" data-ui-placeholder>♡ Yêu
+                    thích</button>
+                <button class="detail-action-btn" id="addListBtn" type="button" data-ui-placeholder>＋ Thêm vào</button>
                 <button class="detail-action-btn" id="shareBtn" type="button">↗ Chia sẻ</button>
                 <button class="detail-action-btn" id="commentBtn" type="button">💬 Bình luận</button>
             </section>
@@ -101,7 +310,16 @@ $currentUserName = $_SESSION["username"] ?? "Bạn";
                 </div>
 
                 <div class="episode-list" id="episodeList">
-                    <a class="episode-btn" href="watch.php?movie_id=<?= $movieId ?>&ep=1">▶ Tập 1</a>
+                    <?php if (empty($episodes)): ?>
+                        <p class="detail-empty">Chưa có tập phim.</p>
+                    <?php else: ?>
+                        <?php foreach ($episodes as $episode): ?>
+                            <a class="episode-btn" href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $episode["id"] ?>">
+                                ▶
+                                <?= $movie["type"] === "series" ? "Tập " . e($episode["episode_number"]) : e($episode["title"]) ?>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </section>
 
@@ -127,7 +345,28 @@ $currentUserName = $_SESSION["username"] ?? "Bạn";
                 </div>
 
                 <div class="detail-placeholder" id="actorsPanel">
-                    Đang cập nhật
+                    <?= e(implode(", ", array_column($actors, "name")) ?: "Đang cập nhật") ?>
+                </div>
+            </section>
+
+            <section class="movie-section related-section detail-tab-panel" id="related-section">
+                <div class="section-head">
+                    <h2>Có thể bạn sẽ thích</h2>
+                    <a href="#" class="view-more">Xem thêm</a>
+                </div>
+
+                <div class="related-movie-grid" id="relatedMovies">
+                    <?php if (empty($relatedMovies)): ?>
+                        <p class="detail-empty">Chưa có phim đề xuất phù hợp.</p>
+                    <?php else: ?>
+                        <?php foreach ($relatedMovies as $related): ?>
+                            <a class="related-movie-card" href="movie-detail.php?id=<?= $related["id"] ?>">
+                                <img src="<?= e(assetPath($related["poster"], "../assets/images/poster_movie.jpg")) ?>"
+                                    alt="<?= e($related["title"]) ?>">
+                                <h3><?= e($related["title"]) ?></h3>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </section>
 
@@ -185,31 +424,13 @@ $currentUserName = $_SESSION["username"] ?? "Bạn";
                             <button type="button" data-rating="5">☆</button>
                         </div>
 
-                        <p class="rating-message" id="ratingMessage">Chọn số sao để đánh giá phim.</p>
+                        <p class="rating-message" id="ratingMessage">Hãy chọn sao để đánh giá.</p>
                     <?php endif; ?>
                 </div>
-            </section>
-
-            <section class="movie-section related-section" id="related-section">
-                <div class="section-head">
-                    <h2>Có thể bạn sẽ thích</h2>
-                    <a href="#" class="view-more">Xem thêm</a>
-                </div>
-
-                <div class="related-movie-grid" id="relatedMovies"></div>
             </section>
         </section>
     </section>
 </main>
-
-<script>
-    const TMDB_API_KEY = "9b4592d22d37d5f7ac7a5f6514fbdc0b";
-
-    window.currentUser = {
-        id: <?= json_encode($currentUserId) ?>,
-        name: <?= json_encode($currentUserName) ?>
-    };
-</script>
 
 <script src="../assets/js/main.js"></script>
 <script src="../assets/js/movie-detail.js"></script>
