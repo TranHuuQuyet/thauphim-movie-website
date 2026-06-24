@@ -6,7 +6,7 @@ $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
 $params = [
-    'q'            => $_GET['keyword'] ?? '',
+    'q'            => $_GET['q'] ?? '',
     'type'         => $_GET['type'] ?? '', 
     'genre_id'     => $_GET['genre'] ?? '',
     'country'      => $_GET['country'] ?? '',
@@ -155,16 +155,16 @@ $countries = getAllCountriesFromDB();
         <?php if ($totalPages > 1): ?>
             <nav class="pagination-container" aria-label="Phân trang" style="margin-top: 40px; display: flex; justify-content: center;">
                 <ul style="display: flex; list-style: none; padding: 0; margin: 0; gap: 8px;">
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                        <li>
-                            <a href="?page=<?= $i ?>" 
-                               class="page-link <?= $page == $i ? 'active-page' : '' ?>"
-                               style="display: block; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;
-                                      <?= $page == $i ? 'background: #e50914; color: #fff;' : 'background: #222; color: #ccc; border: 1px solid #333;' ?>">
-                                <?= $i ?>
-                            </a>
-                        </li>
-                    <?php endfor; ?>
+                    <?php 
+                    $queryParams = $_Get;
+                    ?>
+                    <?php
+                    $queryParams['page'] = $i;
+                    ?>
+                    <a href="?<?= http_build_query($queryParams) ?>"
+                        class="page-link <?= $page == $i ? 'active-page' : '' ?>">
+                            <?= $i ?>
+                    </a>
                 </ul>
             </nav>
         <?php endif; ?>
@@ -177,6 +177,4 @@ $countries = getAllCountriesFromDB();
 <?php include __DIR__ . '/../includes/footer.php'; ?>
     </div>
 </main>
-
-<script src="/thauphim-movie-website/assets/js/browse.js"></script>
 
