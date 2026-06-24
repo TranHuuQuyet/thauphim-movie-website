@@ -562,40 +562,58 @@ Ghi chu: poster/backdrop hien uu tien lay tu TMDB path va TMDB Image CDN. Thu mu
 - Dark Mode / Light Mode Toggle.
 - Chuan hoa CSS component cho card phim, button, form.
 
-### Main Task 2 - TMDB Import, Database & API
+### Main Task 2 - Browse, Search & Filter
 
-- Thiet ke schema phu hop TMDB + admin.
-- Tao `seed.sql` toi thieu cho admin.
-- Tao `tools/import_tmdb.php`.
-- Import 100 phim/phim bo vao MySQL.
-- Tao API PHP doc MySQL.
-- Kiem tra khong trung `tmdb_id + tmdb_type`.
-
-### Main Task 3 - Browse, Search & Filter
-
-- Chuyen frontend sang doc `/api/movies.php`.
 - Trang danh sach phim.
 - Tim kiem theo ten phim.
 - Loc theo the loai, quoc gia, nam, loai phim.
 - Sap xep va phan trang.
+- Toi uu query MySQL cho danh sach phim.
+- Chuyen du lieu trang danh sach/tim kiem/loc sang doc `/api/movies.php` sau khi API o Main Task 5 on dinh.
 
-### Main Task 4 - Movie Detail, Episodes & Watch Page
+### Main Task 3 - Movie Detail & Watch Page
 
+- Trang chi tiet phim.
+- Danh sach tap phim.
+- Trang xem phim.
+- YouTube iframe player.
+- Phim lien quan.
+- Xu ly luu lich su xem khi user dang nhap.
 - Chuyen trang chi tiet sang doc `/api/movie-detail.php`.
-- Hien danh sach tap phim tu `/api/episodes.php`.
-- Tao watch page.
-- Phat video bang YouTube iframe tu `episodes.youtube_url`.
-- Luu lich su xem neu user dang nhap.
+- Chuyen danh sach tap phim sang doc `/api/episodes.php`.
+- Phat video tu `episodes.youtube_url` do admin nhap.
 
-### Main Task 5 - Admin, Auth & User Features
+### Main Task 4 - User Features & Metadata Pages
 
-- Dang ky, dang nhap, dang xuat bang bang `users`.
+- Dang ky, dang nhap, dang xuat.
+- Session user.
+- Phim yeu thich.
+- Lich su xem.
+- Binh luan phim.
+- Danh gia phim.
+- Trang quoc gia.
+- Trang dien vien.
+- Xem thong bao phim sap chieu tu icon chuong.
+- Chuyen trang quoc gia/dien vien sang doc API MySQL khi backend san sang.
+
+### Main Task 5 - Backend, Database, API, Admin & Deployment
+
+- Thiet ke schema phu hop TMDB + admin.
+- Tao `database/schema.sql` va `database/seed.sql`.
+- Tao admin seed toi thieu.
+- Ket noi database bang PDO.
+- Tao `tools/import_tmdb.php`.
+- Import 100 phim/phim bo vao MySQL.
+- Kiem tra khong trung `tmdb_id + tmdb_type`.
+- Tao API PHP doc MySQL trong `/api`.
+- Admin dashboard.
+- Dang nhap/dang xuat bang bang `users`.
 - Admin auth check theo role admin.
-- Admin CRUD movies.
-- Admin CRUD episodes va YouTube URL.
-- Admin CRUD genres/countries/actors.
-- Quan ly user, membership.
-- Binh luan, danh gia, yeu thich, lich su xem.
+- CRUD phim, tap phim, the loai, quoc gia, dien vien.
+- Admin nhap va publish `episodes.youtube_url`.
+- Quan ly user va membership.
+- Quan ly binh luan va thong ke danh gia khi cac tinh nang user duoc trien khai.
+- Deploy len hosting va cau hinh ten mien.
 
 ## 13. Ke hoach 1 thang
 
