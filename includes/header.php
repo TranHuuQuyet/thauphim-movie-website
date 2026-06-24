@@ -76,7 +76,7 @@ $notificationCount = count($upcomingNotifications);
                 <form class="search-form" action="/thauphim-movie-website/pages/browse.php" method="get" role="search">
                     <label class="sr-only" for="header-search">Tìm phim,diễn viên...</label>
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                    <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off">
+                    <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off"
                         value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q'], ENT_QUOTES, 'UTF-8') : '' ?>">
                 </form>
 
