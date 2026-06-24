@@ -1,9 +1,11 @@
+/* ---- Trang browse ----*/
 .browse-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 40px 15px;
   }
-  
+
+ /* Bo loc tim kiem */ 
 .filter-section {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--color-input-border);
@@ -69,7 +71,8 @@
     appearance: none;
     -webkit-appearance: none;
   }
-  
+ 
+ /* Nut chuc nang */ 
   .filter-actions {
     display: flex;
     gap: 10px;
@@ -125,6 +128,7 @@
     box-shadow: var(--component-focus-shadow);
   }
   
+ /* Danh sach phim */ 
  .result-title {
     font-size: 24px;
     font-weight: 700;
@@ -192,7 +196,8 @@
     margin-right: 4px;
     font-size: 11px;
   }
-  
+ 
+/* Trang thai khong co ket qua */
   .no-results-box {
     text-align: center;
     padding: 80px 20px;
@@ -220,7 +225,8 @@
     color: var(--color-input-placeholder);
     margin: 0;
   }
-  
+ 
+  /* Phan trang */
 .pagination-container {
     margin-top: 48px;
     display: flex;
@@ -262,6 +268,7 @@
     transform: scale(0.95);
   }
 
+  /* Responsive tablet */
   @media (max-width: 768px) {
     .browse-container {
       padding: 24px 16px;
@@ -296,6 +303,7 @@
     }
   }
   
+  /* Responsive mobile */
   @media (max-width: 480px) {
     .filter-group {
       min-width: 100%; 
