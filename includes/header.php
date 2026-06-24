@@ -3,6 +3,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+require_once __DIR__ . "/config.php";
 require_once __DIR__ . "/upcoming_notifications.php";
 
 $tmdbCountries = $TMDB_COUNTRIES ?? [];
@@ -34,7 +35,7 @@ $notificationCount = count($upcomingNotifications);
 <body>
     <header class="site-header">
         <div class="header-inner">
-            <a class="brand" href="/thauphim-movie-website/index.php" aria-label="ThauPhim trang chủ">
+            <a class="brand" href="/thauphim-movie-website/index.php#hero" aria-label="ThauPhim trang chủ">
                 <span class="brand-icon" aria-hidden="true">
                     <img src="/thauphim-movie-website/assets/images/favicon.png" alt="">
                 </span>
@@ -53,10 +54,10 @@ $notificationCount = count($upcomingNotifications);
 
             <div class="header-actions" id="primary-menu">
                 <nav class="main-nav" aria-label="Điều hướng chính">
-                    <a href="/thauphim-movie-website/pages/browse.php?genre=all">Chủ đề</a>
-                    <a href="/thauphim-movie-website/pages/browse.php">Bộ lọc</a>
-                    <a href="/thauphim-movie-website/pages/browse.php?type=movie">Phim lẻ</a>
-                    <a href="/thauphim-movie-website/pages/browse.php?type=series">Phim bộ</a>
+                    <a href="/thauphim-movie-website/index.php#hot-genres">Chủ đề</a>
+                    <a href="/thauphim-movie-website/index.php#featured">Bộ lọc</a>
+                    <a href="/thauphim-movie-website/index.php#single-movies">Phim lẻ</a>
+                    <a href="/thauphim-movie-website/index.php#series-movies">Phim bộ</a>
                     <details class="nav-dropdown">
                         <summary>
                             Quốc gia
@@ -73,8 +74,9 @@ $notificationCount = count($upcomingNotifications);
                     <a href="/thauphim-movie-website/pages/actor.php">Diễn viên</a>
                 </nav>
 
-                <form class="search-form" action="/thauphim-movie-website/pages/browse.php" method="get" role="search">
-                    <label class="sr-only" for="header-search">Tìm phim,diễn viên...</label>
+                <form class="search-form" action="/thauphim-movie-website/index.php#featured" method="get"
+                    role="search" data-home-search>
+                    <label class="sr-only" for="header-search">Tìm phim, diễn viên</label>
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off"
                         value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q'], ENT_QUOTES, 'UTF-8') : '' ?>">
@@ -82,17 +84,8 @@ $notificationCount = count($upcomingNotifications);
 
                 <div class="header-icon-actions">
                     <button id="themeToggle" class="theme-toggle" type="button" aria-label="Chuyển giao diện sáng tối">
-                        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-                            aria-hidden="true">
-                            <path
-                                d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z" />
-                        </svg>
-
-                        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-                            aria-hidden="true">
-                            <path
-                                d="M565-395q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35Zm-226.5 56.5Q280-397 280-480t58.5-141.5Q397-680 480-680t141.5 58.5Q680-563 680-480t-58.5 141.5Q563-280 480-280t-141.5-58.5ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z" />
-                        </svg>
+                        <i class="fa-solid fa-moon icon-moon" aria-hidden="true"></i>
+                        <i class="fa-solid fa-sun icon-sun" aria-hidden="true"></i>
                     </button>
 
                     <div class="notification-wrapper" data-notification-root>
@@ -122,7 +115,7 @@ $notificationCount = count($upcomingNotifications);
                             <div class="notification-state notification-state--login">
                                 <i class="fa-regular fa-bell" aria-hidden="true"></i>
                                 <p>
-                                    <a href="#" data-open-login>Đăng nhập</a>
+                                    <a href="#authModal" data-open-login>Đăng nhập</a>
                                     để xem thông báo.
                                 </p>
                             </div>
@@ -135,14 +128,13 @@ $notificationCount = count($upcomingNotifications);
                             <div class="notification-list">
                                 <?php foreach ($upcomingNotifications as $notification): ?>
                                 <?php
-                                $movieId = (string) ($notification["movie_id"] ?? "");
                                 $title = (string) ($notification["title"] ?? "Phim sắp chiếu");
                                 $poster = (string) ($notification["poster"] ?? "/thauphim-movie-website/assets/images/poster_movie.jpg");
                                 $showDate = (string) ($notification["show_date"] ?? "");
                                 $showTime = (string) ($notification["show_time"] ?? "");
                                 $dateObject = date_create($showDate);
                                 $displayDate = $dateObject ? date_format($dateObject, "d/m/Y") : "Đang cập nhật";
-                                $detailUrl = "/thauphim-movie-website/pages/movie-detail.php?id=" . rawurlencode($movieId);
+                                $detailUrl = "/thauphim-movie-website/index.php#featured";
                                 ?>
                                 <a class="notification-item" href="<?= htmlspecialchars($detailUrl, ENT_QUOTES, "UTF-8") ?>">
                                     <span class="notification-item__poster">
@@ -170,7 +162,7 @@ $notificationCount = count($upcomingNotifications);
                         </div>
                     </div>
 
-                    <?php if($isMember): ?>
+                    <?php if ($isMember): ?>
                     <div class="account-wrapper" data-account-root>
                         <button id="accountToggle" class="account-toggle" type="button" aria-label="Tài khoản"
                             aria-haspopup="menu" aria-expanded="false" aria-controls="accountPanel"
@@ -180,11 +172,11 @@ $notificationCount = count($upcomingNotifications);
 
                         <div class="account-panel" id="accountPanel" role="menu" aria-label="Tài khoản" hidden
                             data-account-panel>
-                            <button class="account-menu-item" type="button" role="menuitem">
+                            <button class="account-menu-item" type="button" role="menuitem" aria-disabled="true">
                                 <i class="fa-solid fa-heart" aria-hidden="true"></i>
                                 <span>Phim yêu thích</span>
                             </button>
-                            <button class="account-menu-item" type="button" role="menuitem">
+                            <button class="account-menu-item" type="button" role="menuitem" aria-disabled="true">
                                 <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
                                 <span>Lịch sử xem</span>
                             </button>
@@ -196,7 +188,7 @@ $notificationCount = count($upcomingNotifications);
                         </div>
                     </div>
                     <?php else: ?>
-                    <a class="member-button" href="#" id="openLogin" data-open-login>
+                    <a class="member-button" href="#authModal" id="openLogin" data-open-login>
                         Đăng nhập
                     </a>
                     <?php endif; ?>

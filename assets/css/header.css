@@ -282,12 +282,7 @@
   transform: scale(0.98);
 }
 
-.theme-toggle svg {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-}
-
+.theme-toggle i,
 .notification-toggle i,
 .account-toggle i {
   font-size: 1.08rem;
@@ -415,6 +410,18 @@
 
 .account-menu-item:active {
   transform: scale(0.99);
+}
+
+.account-menu-item[aria-disabled="true"] {
+  color: var(--color-text-soft);
+  cursor: default;
+}
+
+.account-menu-item[aria-disabled="true"]:hover,
+.account-menu-item[aria-disabled="true"]:focus-visible {
+  background: transparent;
+  color: var(--color-text-soft);
+  transform: none;
 }
 
 .notification-panel__head {
