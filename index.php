@@ -57,12 +57,8 @@ require_once __DIR__ . "/includes/config.php";
 
     <section class="movie-top" id="top-week" aria-labelledby="top-week-title">
         <div class="section-head">
-            <<<<<<< HEAD <h2>Phim top của tuần</h2>
-                <a href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
-                =======
-                <h2 id="top-week-title">Phim top của tuần</h2>
-                <a href="#top-week" class="view-more">Xem thêm</a>
-                >>>>>>> quyet-task1-4
+            <h2 id="top-week-title">Phim top của tuần</h2>
+            <a href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
         </div>
 
         <div class="swiper bannerSwiper">
