@@ -22,11 +22,10 @@ $notificationCount = count($upcomingNotifications);
     </style>
     <link rel="icon" type="image/png" sizes="512x512" href="/thauphim-movie-website/assets/images/favicon-tab.png">
 
-    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/style.css">
-    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/reponsive.css">
-    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
+    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/style.css">
+    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/auth.css">
     <script src="/thauphim-movie-website/assets/js/auth_login.js" defer></script>
     <script src="/thauphim-movie-website/assets/js/notifications.js" defer></script>
     <script src="/thauphim-movie-website/assets/js/account-menu.js" defer></script>
