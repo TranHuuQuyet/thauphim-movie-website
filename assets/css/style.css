@@ -597,6 +597,7 @@ button {
     transform 0.2s ease;
 }
 
+
 .theme-toggle:hover,
 .notification-toggle:hover {
   border-color: var(--color-primary);
@@ -2096,3 +2097,12 @@ input[type="text"] {
     color: #10b981 ;
     border-left: 4px solid #10b981 ;
 }
+
+@import url("./tokens.css");
+@import url("./base.css");
+@import url("./components.css");
+@import url("./header.css");
+@import url("./footer.css");
+@import url("./responsive.css");
+
+

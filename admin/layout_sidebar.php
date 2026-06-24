@@ -4,7 +4,7 @@
             <a href="/thauphim-movie-website/admin/dashboard.php" class="text-decoration-none d-flex align-items-center">
                 <img class="me-2" src="/thauphim-movie-website/assets/images/favicon.png" alt="Logo" style="width: 38px; height: auto;">
                 <div class="d-flex flex-column">
-                    <!-- TUI ĐÃ SỬA CHỖ NÀY: Thay <strong class="logo-badge"> bằng <span class="logo-gold-text"> để chữ Phim hiện hình -->
+                    
                     <h2 class="admin-logo-title m-0">Thau<strong>Phim</strong></h2>
                     <span class="logo-slogan text-muted" style="font-size: 10px; letter-spacing: 0.5px; margin-top: 2px;">Phim hay cả thau</span>
                 </div>

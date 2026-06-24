@@ -1,0 +1,94 @@
+.ui-button,
+.play-btn,
+.member-button,
+.auth-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--component-transition),
+    border-color var(--component-transition),
+    box-shadow var(--component-transition),
+    color var(--component-transition),
+    transform var(--component-transition);
+}
+
+.ui-button:focus-visible,
+.play-btn:focus-visible,
+.member-button:focus-visible,
+.auth-form button:focus-visible {
+  outline: none;
+  box-shadow: var(--component-focus-shadow);
+}
+
+.ui-button:active,
+.play-btn:active,
+.member-button:active,
+.auth-form button:active {
+  transform: scale(0.98);
+}
+
+.ui-field,
+.search-form input,
+.auth-form input {
+  width: 100%;
+  min-height: var(--control-height);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-control);
+  background: var(--color-input-bg);
+  color: var(--color-text);
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  transition:
+    background-color var(--component-transition),
+    border-color var(--component-transition),
+    box-shadow var(--component-transition);
+}
+
+.ui-field::placeholder,
+.search-form input::placeholder,
+.auth-form input::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.ui-field:focus,
+.search-form input:focus,
+.auth-form input:focus {
+  border-color: var(--color-primary);
+  box-shadow: var(--component-focus-shadow);
+}
+
+.ui-movie-poster,
+.movie-card,
+.country-movie-card__poster {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--card-poster-bg);
+  box-shadow: var(--card-poster-shadow);
+}
+
+.ui-movie-poster img,
+.movie-card img,
+.country-movie-card__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--component-transition);
+}
+
+.ui-movie-poster:hover img,
+.movie-card:hover img,
+.country-movie-card:hover .country-movie-card__poster img {
+  transform: scale(var(--card-hover-scale));
+}
