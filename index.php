@@ -64,7 +64,7 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-top">
         <div class="section-head">
             <h2>Phim top của tuần</h2>
-            <a href="#" class="view-more">Xem thêm</a>
+            <a href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
         </div>
         <div class="swiper bannerSwiper">
             <div class="swiper-wrapper" id="topMovies">
@@ -80,7 +80,7 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-slides">
         <div class="movie-slides-head">
             <h2>Phim mới gần đây</h2>
-            <a href="#" class="view-more">Xem thêm</a>
+            <a href="/thauphim-movie-website/pages/browse.php?sort=newest" class="view-more">Xem thêm</a>
         </div>
 
         <div class="swiper movieHeroSwiper">
