@@ -3,6 +3,7 @@ session_start();
 require_once __DIR__ . "/includes/config.php";
 ?>
 <?php include __DIR__ . '/includes/header.php'; ?>
+<link rel="stylesheet" href="/thauphim-movie-website/assets/css/home.css">
 <main class="page-shell" aria-label="Nội dung chính">
     <section class="hero">
         <div class="video-bg">
