@@ -19,6 +19,21 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const openPanel = () => {
+    document.querySelectorAll("[data-account-root].is-open").forEach((accountRoot) => {
+      const accountToggle = accountRoot.querySelector("[data-account-toggle]");
+      const accountPanel = accountRoot.querySelector("[data-account-panel]");
+
+      accountRoot.classList.remove("is-open");
+
+      if (accountPanel) {
+        accountPanel.hidden = true;
+      }
+
+      if (accountToggle) {
+        accountToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+
     root.classList.add("is-open");
     panel.hidden = false;
     toggle.setAttribute("aria-expanded", "true");
