@@ -176,6 +176,18 @@
 
     .header-icon-actions {
         align-self: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .header-icon-actions .member-button {
+        width: auto;
+    }
+
+    .account-panel {
+        right: auto;
+        left: 50%;
+        width: min(230px, calc(100vw - 36px));
+        transform: translateX(-50%);
     }
 
     .notification-panel {
@@ -189,7 +201,9 @@
     .menu-toggle,
     .menu-toggle span,
     .theme-toggle,
-    .notification-toggle {
+    .notification-toggle,
+    .account-toggle,
+    .account-menu-item {
         transition: none;
     }
 }
@@ -217,4 +231,24 @@
     .notification-panel {
         width: calc(100vw - 28px);
     }
+}
+
+/* --- ĐÁP ỨNG GIAO DIỆN DI ĐỘNG (RESPONSIVE) --- */
+@media (max-width: 992px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-top {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
 }
