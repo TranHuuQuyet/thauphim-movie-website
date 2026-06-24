@@ -24,24 +24,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 DROP TABLE IF EXISTS movies;
-CREATE TABLE movies (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    poster VARCHAR(255),
-    backdrop VARCHAR(255),
-    release_year INT,
-    type ENUM('movie', 'series'),
-    quality VARCHAR(50),
-    country_id INT,
-    status VARCHAR(50),
-    is_premium BOOLEAN DEFAULT FALSE,
-    views INT DEFAULT 0,
-    rating_average DECIMAL(3,2) DEFAULT 0.00,
-    rating_count INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+
 CREATE TABLE users (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
@@ -55,7 +38,7 @@ CREATE TABLE users (
   UNIQUE KEY uq_users_username (username),
   UNIQUE KEY uq_users_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
->>>>>>> main
+
 
 CREATE TABLE genres (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
