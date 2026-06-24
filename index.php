@@ -110,39 +110,6 @@ require_once __DIR__ . "/includes/config.php";
         <div class="movie-grid" id="seriesMovies" aria-live="polite"></div>
     </section>
 
-    <section class="genre-section" id="hot-genres" aria-labelledby="hot-genres-title">
-        <div class="section-head">
-            <h2 id="hot-genres-title">Thể loại hot</h2>
-            <a href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
-        </div>
-
-        <div class="genre-grid" id="hotGenres">
-            <a class="genre-card" href="#featured" data-genre-id="28">
-                <i class="fa-solid fa-bolt" aria-hidden="true"></i>
-                <span>Hành động</span>
-            </a>
-            <a class="genre-card" href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" data-genre-id="35">
-                <i class="fa-solid fa-face-laugh" aria-hidden="true"></i>
-                <span>Hài</span>
-            </a>
-            <a class="genre-card" href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" data-genre-id="18">
-                <i class="fa-solid fa-clapperboard" aria-hidden="true"></i>
-                <span>Tâm lý</span>
-            </a>
-            <a class="genre-card" href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" data-genre-id="27">
-                <i class="fa-solid fa-ghost" aria-hidden="true"></i>
-                <span>Kinh dị</span>
-            </a>
-            <a class="genre-card" href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" data-genre-id="16">
-                <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-                <span>Hoạt hình</span>
-            </a>
-            <a class="genre-card" href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" data-genre-id="878">
-                <i class="fa-solid fa-rocket" aria-hidden="true"></i>
-                <span>Khoa học viễn tưởng</span>
-            </a>
-        </div>
-    </section>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>

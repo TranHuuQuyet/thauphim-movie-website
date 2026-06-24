@@ -167,8 +167,7 @@
 
 .movie-section,
 .movie-top,
-.movie-slides,
-.genre-section {
+.movie-slides {
   position: relative;
   z-index: 2;
   padding: 42px 30px 44px;
@@ -545,13 +544,8 @@
   object-fit: cover;
 }
 
-.movie-grid-section .ui-state,
-.genre-section .ui-state {
+.movie-grid-section .ui-state {
   grid-column: 1 / -1;
-}
-
-.genre-section {
-  padding-bottom: 70px;
 }
 
 body.light-mode .hero-overlay {
@@ -614,8 +608,7 @@ body.light-mode .hero-overlay {
 
   .movie-section,
   .movie-top,
-  .movie-slides,
-  .genre-section {
+  .movie-slides {
     padding: 30px 16px 36px;
     scroll-margin-top: 90px;
   }
