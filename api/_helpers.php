@@ -4,7 +4,10 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-const APP_BASE_PATH = '/thauphim-movie-website/';
+if (!defined('APP_BASE_PATH')) {
+    define('APP_BASE_PATH', '/thauphim-movie-website/');
+}
+
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
 
 function apiSend(array $payload, int $statusCode = 200): void
