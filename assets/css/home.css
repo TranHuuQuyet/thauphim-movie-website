@@ -175,6 +175,36 @@
   scroll-margin-top: 96px;
 }
 
+.movie-grid-section {
+  width: min(100%, 1280px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 24px 18px;
+}
+
+.movie-grid-card {
+  min-width: 0;
+}
+
+.movie-card {
+  display: block;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.movie-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 #featured::before {
   content: "";
   position: absolute;
@@ -715,6 +745,13 @@ body.light-mode .hero-overlay {
   .movieThumbSwiper .swiper-slide {
     width: 70px;
     height: 104px;
+  }
+}
+
+@media (max-width: 640px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 12px;
   }
 }
 
