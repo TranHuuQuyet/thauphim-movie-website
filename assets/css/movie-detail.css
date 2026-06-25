@@ -245,6 +245,7 @@
     margin-top: 1rem;
     border: none;
     color: var(--color-text);
+    text-decoration: none;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 700;
@@ -380,6 +381,15 @@
 .episode-btn:hover {
     color: var(--color-link-hover);
     background: var(--color-primary-soft);
+}
+
+.episode-btn--locked {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+a.episode-btn--locked {
+    cursor: pointer;
 }
 
 

@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const favoriteBtn = document.querySelector("#favoriteBtn");
-    const addListBtn = document.querySelector("#addListBtn");
     const shareBtn = document.querySelector("#shareBtn");
     const commentBtn = document.querySelector("#commentBtn");
     const commentSection = document.querySelector(".comment-section");
@@ -10,8 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const commentInput = document.querySelector("#commentInput");
     const commentCount = document.querySelector("#commentCount");
-    const sendCommentBtn = document.querySelector("#sendCommentBtn");
-
     if (shareBtn) {
         shareBtn.addEventListener("click", async () => {
             try {
@@ -62,17 +58,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    [favoriteBtn, addListBtn, sendCommentBtn].forEach((button) => {
-        if (!button) return;
-
-        button.addEventListener("click", () => {
-            alert("Main Task 4");
-        });
-    });
-
-    document.querySelectorAll("[data-rating]").forEach((button) => {
-        button.addEventListener("click", () => {
-            alert("Main Task 4");
-        });
-    });
 });

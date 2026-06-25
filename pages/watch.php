@@ -2,8 +2,11 @@
 
 <?php
 require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 $pdo = getDatabaseConnection();
+$currentUser = auth_current_user($pdo);
+$currentUserDbId = $currentUser ? (int) $currentUser["id"] : null;
 
 $movieId = isset($_GET["movie_id"]) ? (int) $_GET["movie_id"] : 0;
 $episodeId = isset($_GET["episode_id"]) ? (int) $_GET["episode_id"] : 0;
@@ -78,24 +81,6 @@ function youtubeEmbedUrl($url, $startSeconds = 0)
 
     return "https://www.youtube.com/embed/" . $videoId . "?enablejsapi=1&autoplay=1&mute=0&playsinline=1&rel=0&start=" . $startSeconds;
 }
-function getCurrentUserId($pdo)
-{
-    if (empty($_SESSION["is_login"]) || empty($_SESSION["username"])) {
-        return null;
-    }
-
-    $stmt = $pdo->prepare("
-        SELECT id
-        FROM users
-        WHERE LOWER(username) = LOWER(?)
-        LIMIT 1
-    ");
-    $stmt->execute([$_SESSION["username"]]);
-    $user = $stmt->fetch();
-
-    return $user ? (int) $user["id"] : null;
-}
-
 if ($movieId <= 0) {
     echo "<main class='page-shell watch-page'><p>Thiếu thông tin phim.</p></main>";
     include __DIR__ . '/../includes/footer.php';
@@ -114,6 +99,32 @@ $movie = $stmt->fetch();
 
 if (!$movie) {
     echo "<main class='page-shell watch-page'><p>Không tìm thấy phim.</p></main>";
+    include __DIR__ . '/../includes/footer.php';
+    exit;
+}
+
+$watchAccess = auth_can_watch_movie($movie, $currentUser);
+
+if (!$watchAccess["allowed"]) {
+    ?>
+    <link rel="stylesheet" href="../assets/css/watch.css">
+    <main class="page-shell watch-page">
+        <section class="watch-container">
+            <section class="watch-access-card">
+                <h1>Không thể phát phim</h1>
+                <p><?= e($watchAccess["message"]) ?></p>
+                <div class="watch-access-actions">
+                    <a href="movie-detail.php?id=<?= $movieId ?>">Quay lại chi tiết</a>
+                    <?php if ($watchAccess["code"] === "login_required"): ?>
+                        <a href="#authModal" data-open-login>Đăng nhập</a>
+                    <?php elseif ($currentUser !== null): ?>
+                        <a href="account.php">Tài khoản</a>
+                    <?php endif; ?>
+                </div>
+            </section>
+        </section>
+    </main>
+    <?php
     include __DIR__ . '/../includes/footer.php';
     exit;
 }
@@ -200,7 +211,6 @@ if (empty($relatedMovies)) {
     $relatedMovies = $stmt->fetchAll();
 }
 
-$currentUserDbId = getCurrentUserId($pdo);
 $startSeconds = 0;
 
 if ($currentUserDbId) {
@@ -232,6 +242,52 @@ if ($currentUserDbId) {
     ]);
 }
 
+$isFavorite = false;
+$userRating = null;
+
+if ($currentUserDbId !== null) {
+    $stmt = $pdo->prepare("
+        SELECT id
+        FROM favorites
+        WHERE user_id = ? AND movie_id = ?
+        LIMIT 1
+    ");
+    $stmt->execute([$currentUserDbId, $movieId]);
+    $isFavorite = (bool) $stmt->fetch();
+
+    $stmt = $pdo->prepare("
+        SELECT rating
+        FROM ratings
+        WHERE user_id = ? AND movie_id = ?
+        LIMIT 1
+    ");
+    $stmt->execute([$currentUserDbId, $movieId]);
+    $ratingValue = $stmt->fetchColumn();
+    $userRating = $ratingValue !== false ? (int) $ratingValue : null;
+}
+
+$stmt = $pdo->prepare("
+    SELECT comments.*, users.username
+    FROM comments
+    INNER JOIN users ON comments.user_id = users.id
+    WHERE comments.movie_id = ?
+      AND comments.status = 'visible'
+    ORDER BY comments.created_at DESC
+    LIMIT 50
+");
+$stmt->execute([$movieId]);
+$comments = $stmt->fetchAll();
+
+$stmt = $pdo->prepare("
+    SELECT AVG(rating) AS rating_average, COUNT(*) AS rating_count
+    FROM ratings
+    WHERE movie_id = ?
+");
+$stmt->execute([$movieId]);
+$ratingSummary = $stmt->fetch() ?: ["rating_average" => 0, "rating_count" => 0];
+$ratingAverage = round((float) ($ratingSummary["rating_average"] ?? 0), 2);
+$ratingCount = (int) ($ratingSummary["rating_count"] ?? 0);
+
 $currentEpisodeLabel = episodeLabel($movie["type"], $currentEpisode);
 $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 ?>
@@ -259,10 +315,13 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
             </div>
 
             <div class="watch-actions">
-                <button type="button" data-ui-placeholder>♡ Yêu thích</button>
-                <button type="button" data-ui-placeholder>＋ Thêm vào</button>
+                <button class="<?= $isFavorite ? "is-favorite" : "" ?>" type="button"
+                    data-favorite-toggle data-movie-id="<?= $movieId ?>" aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
+                    <?= $isFavorite ? "♥" : "♡" ?> Yêu thích
+                </button>
+                <a href="account.php?tab=favorites">＋ Danh sách</a>
                 <button type="button" id="shareBtn">↗ Chia sẻ</button>
-                <button type="button" data-ui-placeholder>⚑ Báo lỗi</button>
+                <button type="button" disabled>⚑ Báo lỗi</button>
             </div>
 
             <div class="watch-episode-nav">
@@ -341,16 +400,51 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                 <section class="watch-comment-box">
                     <h2> Bình luận</h2>
 
-                    <div class="watch-comment-input">
-                        <textarea placeholder="Viết bình luận"></textarea>
-                        <div>
-                            <span>0 / 1000</span>
-                            <button type="button" data-ui-placeholder>Gửi</button>
+                    <?php if ($currentUserDbId === null): ?>
+                        <div class="watch-comment-input">
+                            <textarea placeholder="Viết bình luận" disabled></textarea>
+                            <div>
+                                <span>0 / 1000</span>
+                                <button type="button" disabled>Gửi</button>
+                            </div>
                         </div>
-                    </div>
+                    <?php else: ?>
+                        <div class="watch-comment-input">
+                            <textarea id="commentInput" placeholder="Viết bình luận"></textarea>
+                            <div>
+                                <span id="commentCount">0 / 1000</span>
+                                <button id="sendCommentBtn" type="button">Gửi</button>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
-                    <div class="watch-empty-comment">
-                        Chưa có bình luận nào
+                    <div class="watch-empty-comment <?= !empty($comments) ? "has-comments" : "" ?>" id="commentList">
+                        <?php if (empty($comments)): ?>
+                            Chưa có bình luận nào
+                        <?php else: ?>
+                            <?php foreach ($comments as $comment): ?>
+                                <?php
+                                $commentTime = !empty($comment["created_at"]) ? strtotime($comment["created_at"]) : false;
+                                $canDeleteComment = $currentUserDbId !== null && (
+                                    $currentUserDbId === (int) $comment["user_id"] ||
+                                    (($currentUser["role"] ?? "") === "admin")
+                                );
+                                ?>
+                                <article class="comment-item" data-comment-id="<?= (int) $comment["id"] ?>">
+                                    <div class="comment-item-head">
+                                        <div class="comment-author">
+                                            <strong><?= e($comment["username"]) ?></strong>
+                                            <span><?= $commentTime ? e(date("d/m/Y H:i", $commentTime)) : "" ?></span>
+                                        </div>
+                                        <?php if ($canDeleteComment): ?>
+                                            <button class="delete-comment-btn" type="button"
+                                                data-delete-comment="<?= (int) $comment["id"] ?>">Xóa</button>
+                                        <?php endif; ?>
+                                    </div>
+                                    <p><?= e($comment["content"]) ?></p>
+                                </article>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </section>
             </section>
@@ -360,24 +454,26 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                     <h2>Đánh giá phim</h2>
                     <div class="watch-rating-content">
                         <div class="rating-summary">
-                            <strong id="ratingAverage">Chưa có đánh giá</strong>
-                            <span id="ratingTotal">0 lượt đánh giá</span>
+                            <strong id="ratingAverage"><?= $ratingCount > 0 ? e(number_format($ratingAverage, 1) . " / 5") : "Chưa có đánh giá" ?></strong>
+                            <span id="ratingTotal"><?= (int) $ratingCount ?> lượt đánh giá</span>
                         </div>
 
-                        <?php if (empty($_SESSION["is_login"])): ?>
+                        <?php if ($currentUserDbId === null): ?>
                             <p class="rating-login-note">
                                 Vui lòng <a href="../login.php">đăng nhập</a> để đánh giá.
                             </p>
                         <?php else: ?>
                             <div class="rating-stars" id="ratingStars">
-                                <button type="button" data-rating="1">☆</button>
-                                <button type="button" data-rating="2">☆</button>
-                                <button type="button" data-rating="3">☆</button>
-                                <button type="button" data-rating="4">☆</button>
-                                <button type="button" data-rating="5">☆</button>
+                                <?php for ($star = 1; $star <= 5; $star++): ?>
+                                    <button type="button" data-rating="<?= $star ?>" class="<?= $userRating !== null && $star <= $userRating ? "active" : "" ?>">
+                                        <?= $userRating !== null && $star <= $userRating ? "★" : "☆" ?>
+                                    </button>
+                                <?php endfor; ?>
                             </div>
 
-                            <p class="rating-message" id="ratingMessage">Chọn số sao để đánh giá phim.</p>
+                            <p class="rating-message" id="ratingMessage">
+                                <?= $userRating !== null ? "Bạn đã đánh giá " . (int) $userRating . " sao." : "Chọn số sao để đánh giá phim." ?>
+                            </p>
                         <?php endif; ?>
                     </div>
                 </section>
@@ -432,11 +528,19 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
         movieId: <?= json_encode($movieId) ?>,
         episodeId: <?= json_encode($episodeId) ?>,
         progressSeconds: <?= json_encode($startSeconds) ?>,
-        isLoggedIn: <?= !empty($_SESSION["is_login"]) ? "true" : "false" ?>
+        isLoggedIn: <?= $currentUserDbId !== null ? "true" : "false" ?>
+    };
+
+    window.movieInteractionData = {
+        movieId: <?= json_encode($movieId) ?>,
+        isLoggedIn: <?= $currentUserDbId !== null ? "true" : "false" ?>,
+        endpointsBase: "../api/",
+        loginUrl: "/thauphim-movie-website/index.php#authModal"
     };
 </script>
 
 <script src="../assets/js/main.js"></script>
 <script src="../assets/js/watch.js"></script>
+<script src="../assets/js/movie-interactions.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

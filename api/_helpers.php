@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 const APP_BASE_PATH = '/thauphim-movie-website/';
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
@@ -34,6 +35,55 @@ function apiError(string $message, int $statusCode = 500): void
         'success' => false,
         'message' => $message,
     ], $statusCode);
+}
+
+function apiReadJson(): array
+{
+    $rawInput = file_get_contents('php://input');
+    if ($rawInput === false || trim($rawInput) === '') {
+        return [];
+    }
+
+    $payload = json_decode($rawInput, true);
+
+    if (!is_array($payload)) {
+        apiError('JSON khong hop le', 400);
+    }
+
+    return $payload;
+}
+
+function apiCurrentUser(PDO $pdo): ?array
+{
+    return auth_current_user($pdo);
+}
+
+function apiRequireUser(PDO $pdo): array
+{
+    $user = apiCurrentUser($pdo);
+
+    if ($user === null) {
+        apiError('Vui long dang nhap', 401);
+    }
+
+    return $user;
+}
+
+function apiMovieExists(PDO $pdo, int $movieId): bool
+{
+    if ($movieId <= 0) {
+        return false;
+    }
+
+    $stmt = $pdo->prepare("
+        SELECT id
+        FROM movies
+        WHERE id = ?
+        LIMIT 1
+    ");
+    $stmt->execute([$movieId]);
+
+    return (bool) $stmt->fetch();
 }
 
 function apiIntParam(string $name, int $default, int $min, int $max): int

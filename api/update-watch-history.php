@@ -4,8 +4,10 @@ session_start();
 header("Content-Type: application/json; charset=utf-8");
 
 require_once __DIR__ . "/../includes/db.php";
+require_once __DIR__ . "/../includes/auth.php";
 
 $pdo = getDatabaseConnection();
+$currentUser = auth_current_user($pdo);
 
 function sendJson($data, $statusCode = 200)
 {
@@ -14,7 +16,7 @@ function sendJson($data, $statusCode = 200)
     exit;
 }
 
-if (empty($_SESSION["is_login"]) || empty($_SESSION["username"])) {
+if ($currentUser === null) {
     sendJson([
         "success" => false,
         "message" => "Chưa đăng nhập"
@@ -50,25 +52,26 @@ if (!$episode) {
     ], 400);
 }
 
-$progressSeconds = max(0, $progressSeconds);
-
 $stmt = $pdo->prepare("
-    SELECT id
-    FROM users
-    WHERE LOWER(username) = LOWER(?)
+    SELECT *
+    FROM movies
+    WHERE id = ?
     LIMIT 1
 ");
-$stmt->execute([$_SESSION["username"]]);
-$user = $stmt->fetch();
+$stmt->execute([$movieId]);
+$movie = $stmt->fetch();
+$watchAccess = $movie ? auth_can_watch_movie($movie, $currentUser) : ["allowed" => false, "message" => "Phim khong hop le"];
 
-if (!$user) {
+if (!$watchAccess["allowed"]) {
     sendJson([
         "success" => false,
-        "message" => "Không tìm thấy user"
-    ], 404);
-}   
+        "message" => $watchAccess["message"]
+    ], 403);
+}
 
-$userId = (int) $user["id"];
+$progressSeconds = max(0, $progressSeconds);
+
+$userId = (int) $currentUser["id"];
 
 $stmt = $pdo->prepare("
     INSERT INTO watch_history (user_id, movie_id, episode_id, progress_seconds, watched_at)

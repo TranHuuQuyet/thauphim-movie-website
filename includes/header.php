@@ -4,10 +4,12 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 require_once __DIR__ . "/config.php";
+require_once __DIR__ . "/auth.php";
 require_once __DIR__ . "/upcoming_notifications.php";
 
 $tmdbCountries = $TMDB_COUNTRIES ?? [];
-$isMember = !empty($_SESSION["is_login"]);
+$currentUser = auth_current_user();
+$isMember = $currentUser !== null;
 $upcomingNotifications = get_published_upcoming_notifications();
 $notificationCount = count($upcomingNotifications);
 ?>
@@ -134,7 +136,8 @@ $notificationCount = count($upcomingNotifications);
                                 $showTime = (string) ($notification["show_time"] ?? "");
                                 $dateObject = date_create($showDate);
                                 $displayDate = $dateObject ? date_format($dateObject, "d/m/Y") : "Đang cập nhật";
-                                $detailUrl = "/thauphim-movie-website/index.php#featured";
+                                $displayTime = $showTime !== "" ? $showTime : "Cập nhật";
+                                $detailUrl = "/thauphim-movie-website/pages/movie-detail.php?id=" . urlencode((string) ($notification["movie_id"] ?? ""));
                                 ?>
                                 <a class="notification-item" href="<?= htmlspecialchars($detailUrl, ENT_QUOTES, "UTF-8") ?>">
                                     <span class="notification-item__poster">
@@ -151,7 +154,7 @@ $notificationCount = count($upcomingNotifications);
                                             </span>
                                             <span>
                                                 <i class="fa-regular fa-clock" aria-hidden="true"></i>
-                                                <?= htmlspecialchars($showTime, ENT_QUOTES, "UTF-8") ?>
+                                                <?= htmlspecialchars($displayTime, ENT_QUOTES, "UTF-8") ?>
                                             </span>
                                         </span>
                                     </span>
@@ -172,14 +175,18 @@ $notificationCount = count($upcomingNotifications);
 
                         <div class="account-panel" id="accountPanel" role="menu" aria-label="Tài khoản" hidden
                             data-account-panel>
-                            <button class="account-menu-item" type="button" role="menuitem" aria-disabled="true">
+                            <a class="account-menu-item" href="/thauphim-movie-website/pages/account.php" role="menuitem">
+                                <i class="fa-solid fa-user" aria-hidden="true"></i>
+                                <span>Tài khoản</span>
+                            </a>
+                            <a class="account-menu-item" href="/thauphim-movie-website/pages/account.php?tab=favorites" role="menuitem">
                                 <i class="fa-solid fa-heart" aria-hidden="true"></i>
                                 <span>Phim yêu thích</span>
-                            </button>
-                            <button class="account-menu-item" type="button" role="menuitem" aria-disabled="true">
+                            </a>
+                            <a class="account-menu-item" href="/thauphim-movie-website/pages/account.php?tab=history" role="menuitem">
                                 <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
                                 <span>Lịch sử xem</span>
-                            </button>
+                            </a>
                             <a class="account-menu-item account-menu-item--logout"
                                 href="/thauphim-movie-website/logout.php" role="menuitem">
                                 <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>

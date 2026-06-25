@@ -16,12 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    document.querySelectorAll("[data-ui-placeholder]").forEach((button) => {
-        button.addEventListener("click", () => {
-            alert("Chức năng này thuộc Main Task 4, sẽ kết nối Database sau.");
-        });
-    });
-
     const watchHistoryData = window.watchHistoryData || {};
     let watchPlayer = null;
     let saveProgressTimer = null;

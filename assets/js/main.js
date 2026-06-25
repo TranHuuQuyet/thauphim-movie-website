@@ -1,4 +1,5 @@
 const APP_ROOT = "/thauphim-movie-website/";
+const MOVIES_API_ENDPOINT = `${APP_ROOT}api/movies.php`;
 const IMAGE_ROOT = "https://image.tmdb.org/t/p/";
 const FALLBACK_POSTER = `${APP_ROOT}assets/images/poster_movie.jpg`;
 const FALLBACK_BACKDROP = `${APP_ROOT}assets/images/pic1.webp`;
@@ -19,8 +20,29 @@ const movieYear = (movie) => movieDate(movie).slice(0, 4) || "Đang cập nhật
 const movieRating = (movie) =>
   Number.isFinite(movie.vote_average) ? movie.vote_average.toFixed(1) : "N/A";
 
-const imageUrl = (path, size, fallback) =>
-  path ? `${IMAGE_ROOT}${size}${path}` : fallback;
+const imageUrl = (path, size, fallback) => {
+  const value = String(path || "").trim();
+
+  if (!value) {
+    return fallback;
+  }
+
+  if (/^(https?:)?\/\//i.test(value) || value.startsWith("/") || value.startsWith("data:")) {
+    return value;
+  }
+
+  if (value.includes("/")) {
+    return `${APP_ROOT}${value.replace(/^\/+/, "")}`;
+  }
+
+  return `${IMAGE_ROOT}${size}${value}`;
+};
+
+const moviePosterUrl = (movie, size = "w500") =>
+  imageUrl(movie.poster_url || movie.poster || movie.poster_path, size, FALLBACK_POSTER);
+
+const movieBackdropUrl = (movie, size = "original") =>
+  imageUrl(movie.backdrop_url || movie.backdrop || movie.backdrop_path, size, FALLBACK_BACKDROP);
 
 const stateMarkup = (type, text) => `
   <div class="ui-state ui-state--${type}">
@@ -52,18 +74,11 @@ const initSwiper = (selector, options) => {
   return new Swiper(selector, options);
 };
 
-const fetchTmdb = async (path, params = {}) => {
-  if (typeof TMDB_API_KEY === "undefined" || !TMDB_API_KEY) {
-    throw new Error("TMDB API key is missing.");
-  }
-
-  const url = new URL(`https://api.themoviedb.org/3/${path}`);
-  url.searchParams.set("api_key", TMDB_API_KEY);
-  url.searchParams.set("language", params.language || "vi-VN");
-  url.searchParams.set("include_adult", "false");
+const fetchMovies = async (params = {}) => {
+  const url = new URL(MOVIES_API_ENDPOINT, window.location.origin);
 
   Object.entries(params).forEach(([key, value]) => {
-    if (key !== "language" && value !== undefined && value !== null) {
+    if (value !== undefined && value !== null && value !== "") {
       url.searchParams.set(key, value);
     }
   });
@@ -71,16 +86,22 @@ const fetchTmdb = async (path, params = {}) => {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`TMDB request failed: ${response.status}`);
+    throw new Error(`Movies API request failed: ${response.status}`);
   }
 
-  return response.json();
+  const payload = await response.json();
+
+  if (!payload.success || !Array.isArray(payload.data)) {
+    throw new Error(payload.message || "Movies API response is invalid.");
+  }
+
+  return payload.data;
 };
 
 const movieCardMarkup = (movie, anchorId) => {
   const title = escapeHtml(movieTitle(movie));
   const original = escapeHtml(movieOriginalTitle(movie));
-  const poster = imageUrl(movie.poster_path, "w500", FALLBACK_POSTER);
+  const poster = moviePosterUrl(movie, "w500");
   const year = escapeHtml(movieYear(movie));
   const rating = escapeHtml(movieRating(movie));
 
@@ -115,8 +136,12 @@ const loadTrendingMovies = async () => {
   setState(container, "loading", "Đang tải phim nổi bật...", true);
 
   try {
-    const data = await fetchTmdb("trending/movie/day", { language: "vi-VN" });
-    const movies = (data.results || []).filter(Boolean).slice(0, 18);
+    const movies = (await fetchMovies({
+      type: "movie",
+      sort: "popular",
+      page: 1,
+      limit: 18,
+    })).filter(Boolean);
 
     if (!movies.length) {
       setState(container, "empty", "Chưa có phim nổi bật để hiển thị.", true);
@@ -160,8 +185,12 @@ const loadTopMovies = async () => {
   setState(container, "loading", "Đang tải phim top tuần...", true);
 
   try {
-    const data = await fetchTmdb("movie/top_rated", { page: 1 });
-    const movies = (data.results || []).filter(Boolean).slice(0, 10);
+    const movies = (await fetchMovies({
+      type: "movie",
+      sort: "most_viewed",
+      page: 1,
+      limit: 10,
+    })).filter(Boolean);
 
     if (!movies.length) {
       setState(container, "empty", "Chưa có phim top tuần để hiển thị.", true);
@@ -171,7 +200,7 @@ const loadTopMovies = async () => {
     container.innerHTML = movies
       .map((movie, index) => {
         const title = escapeHtml(movieTitle(movie));
-        const backdrop = imageUrl(movie.backdrop_path, "w780", FALLBACK_BACKDROP);
+        const backdrop = movieBackdropUrl(movie, "w780");
         const overview = escapeHtml(
           movie.overview || "Nội dung phim đang được cập nhật.",
         );
@@ -238,8 +267,12 @@ const loadNewMovies = async () => {
   thumbContainer.innerHTML = "";
 
   try {
-    const data = await fetchTmdb("movie/now_playing", { page: 1 });
-    const movies = (data.results || []).filter(Boolean).slice(0, 10);
+    const movies = (await fetchMovies({
+      type: "movie",
+      sort: "newest",
+      page: 1,
+      limit: 10,
+    })).filter(Boolean);
 
     if (!movies.length) {
       setState(heroContainer, "empty", "Chưa có phim mới để hiển thị.", true);
@@ -250,7 +283,7 @@ const loadNewMovies = async () => {
       .map((movie) => {
         const title = escapeHtml(movieTitle(movie));
         const original = escapeHtml(movieOriginalTitle(movie));
-        const backdrop = imageUrl(movie.backdrop_path, "original", FALLBACK_BACKDROP);
+        const backdrop = movieBackdropUrl(movie, "original");
         const overview = escapeHtml(
           movie.overview || "Nội dung phim đang được cập nhật.",
         );
@@ -292,7 +325,7 @@ const loadNewMovies = async () => {
     thumbContainer.innerHTML = movies
       .map((movie) => {
         const title = escapeHtml(movieTitle(movie));
-        const poster = imageUrl(movie.poster_path, "w300", FALLBACK_POSTER);
+        const poster = moviePosterUrl(movie, "w300");
 
         return `
           <div class="swiper-slide">
@@ -330,15 +363,17 @@ const loadNewMovies = async () => {
   }
 };
 
-const loadMovieGrid = async ({ selector, endpoint, params, limit, anchorId }) => {
+const loadMovieGrid = async ({ selector, params, limit, anchorId }) => {
   const container = document.querySelector(selector);
   if (!container) return;
 
   setState(container, "loading", "Đang tải danh sách phim...");
 
   try {
-    const data = await fetchTmdb(endpoint, params);
-    const movies = (data.results || []).filter(Boolean).slice(0, limit);
+    const movies = (await fetchMovies({
+      ...params,
+      limit,
+    })).filter(Boolean);
 
     if (!movies.length) {
       setState(container, "empty", "Chưa có phim để hiển thị.");
@@ -461,9 +496,9 @@ document.addEventListener("DOMContentLoaded", () => {
   loadNewMovies();
   loadMovieGrid({
     selector: "#singleMovies",
-    endpoint: "discover/movie",
     params: {
-      sort_by: "popularity.desc",
+      type: "movie",
+      sort: "popular",
       page: 1,
     },
     limit: 12,
@@ -471,8 +506,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   loadMovieGrid({
     selector: "#seriesMovies",
-    endpoint: "tv/popular",
     params: {
+      type: "series",
+      sort: "popular",
       page: 1,
     },
     limit: 12,

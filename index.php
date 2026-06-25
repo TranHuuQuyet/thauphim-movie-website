@@ -109,9 +109,6 @@ require_once __DIR__ . "/includes/config.php";
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-<script>
-const TMDB_API_KEY = "<?= TMDB_API_KEY ?>";
-</script>
 <script src="assets/js/main.js"></script>
 
 <?php include __DIR__ . "/includes/footer.php"; ?>
