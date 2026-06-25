@@ -1,25 +1,33 @@
 <?php
-require_once __DIR__ . '/../includes/db.php';
+declare(strict_types=1);
 
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/_helpers.php';
 
 try {
     $pdo = getDatabaseConnection();
     $statement = $pdo->query(
-        'SELECT id, code, name
-         FROM countries
-         ORDER BY id ASC'
+        'SELECT
+            c.id,
+            c.code,
+            c.name,
+            COUNT(m.id) AS movie_count
+         FROM countries c
+         LEFT JOIN movies m ON m.country_id = c.id
+         GROUP BY c.id, c.code, c.name
+         ORDER BY c.name ASC'
     );
 
-    echo json_encode([
-        'success' => true,
-        'data' => $statement->fetchAll(),
-    ], JSON_UNESCAPED_UNICODE);
-} catch (Throwable $exception) {
-    http_response_code(500);
+    $countries = array_map(static function (array $country): array {
+        return [
+            'id' => (int) $country['id'],
+            'code' => $country['code'],
+            'name' => $country['name'],
+            'movie_count' => (int) $country['movie_count'],
+        ];
+    }, $statement->fetchAll());
 
-    echo json_encode([
-        'success' => false,
-        'message' => 'Không thể tải danh sách quốc gia.',
-    ], JSON_UNESCAPED_UNICODE);
+    apiSuccess($countries);
+} catch (Throwable $exception) {
+    error_log($exception->getMessage());
+    apiError('Khong the tai danh sach quoc gia.');
 }

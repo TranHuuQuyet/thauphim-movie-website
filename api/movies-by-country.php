@@ -1,18 +1,12 @@
 <?php
-require_once __DIR__ . '/../includes/db.php';
+declare(strict_types=1);
 
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/_helpers.php';
 
-$code = strtoupper(trim($_GET['code'] ?? ''));
+$code = strtoupper(apiStringParam('code'));
 
 if ($code === '' || !preg_match('/^[A-Z]{2}$/', $code)) {
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Mã quốc gia không hợp lệ.',
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
+    apiError('Ma quoc gia khong hop le.', 400);
 }
 
 try {
@@ -28,46 +22,31 @@ try {
     $country = $countryStatement->fetch();
 
     if (!$country) {
-        http_response_code(404);
-
-        echo json_encode([
-            'success' => false,
-            'message' => 'Không tìm thấy quốc gia.',
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
+        apiError('Khong tim thay quoc gia.', 404);
     }
 
     $movieStatement = $pdo->prepare(
         'SELECT
-            id,
-            title,
-            poster,
-            backdrop,
-            release_year,
-            type,
-            quality,
-            status,
-            is_premium,
-            views,
-            rating_average,
-            rating_count
-         FROM movies
-         WHERE country_id = :country_id
-         ORDER BY created_at DESC, id DESC
+            m.*,
+            c.code AS country_code,
+            c.name AS country_name
+         FROM movies m
+         LEFT JOIN countries c ON c.id = m.country_id
+         WHERE m.country_id = :country_id
+         ORDER BY m.release_date DESC, m.created_at DESC, m.id DESC
          LIMIT 24'
     );
-    $movieStatement->execute(['country_id' => $country['id']]);
+    $movieStatement->execute(['country_id' => (int) $country['id']]);
 
-    echo json_encode([
-        'success' => true,
-        'country' => $country,
-        'movies' => $movieStatement->fetchAll(),
-    ], JSON_UNESCAPED_UNICODE);
+    apiSuccess([
+        'country' => [
+            'id' => (int) $country['id'],
+            'code' => $country['code'],
+            'name' => $country['name'],
+        ],
+        'movies' => array_map('apiMovieRow', $movieStatement->fetchAll()),
+    ]);
 } catch (Throwable $exception) {
-    http_response_code(500);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Không thể tải phim theo quốc gia.',
-    ], JSON_UNESCAPED_UNICODE);
+    error_log($exception->getMessage());
+    apiError('Khong the tai phim theo quoc gia.');
 }
