@@ -1,18 +1,18 @@
 <?php
+declare(strict_types=1);
 
-require_once '../../includes/config.php';
-require_once '../../includes/db.php';
+require_once __DIR__ . '/../_helpers.php';
 
-$pdo = getDatabaseConnection();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    admin_redirect('movies/index.php');
+}
 
-$id = (int)$_GET['id'];
+admin_verify_csrf();
 
-$stmt = $pdo->prepare("
-    DELETE FROM movies
-    WHERE id = ?
-");
+$id = admin_get_id($_POST);
+if ($id > 0) {
+    $stmt = $pdo->prepare('DELETE FROM movies WHERE id = ?');
+    $stmt->execute([$id]);
+}
 
-$stmt->execute([$id]);
-
-header("Location: index.php");
-exit;
+admin_redirect('movies/index.php');
