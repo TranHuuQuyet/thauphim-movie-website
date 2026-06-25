@@ -23,7 +23,8 @@
                 <?php endif; ?>
 
                 <label class="sr-only" for="loginUsername">Ten dang nhap</label>
-                <input id="loginUsername" type="text" placeholder="username" name="username" autocomplete="username" />
+                <input id="loginUsername" type="text" placeholder="username/email" name="username" autocomplete="username"
+                    value="<?= htmlspecialchars((string) ($_SESSION["login_old"]["username"] ?? ""), ENT_QUOTES, "UTF-8") ?>" />
                 <label class="sr-only" for="loginPassword">Mat khau</label>
                 <input id="loginPassword" type="password" placeholder="password" name="password"
                     autocomplete="current-password" />
@@ -31,6 +32,7 @@
                 <p>Bạn chưa có tài khoản,<a href="/thauphim-movie-website/register.php">đăng ký ngay.</a></p>
                 <p class="forgot">QUÊN MẬT KHẨU?</p>
             </form>
+            <?php unset($_SESSION["login_old"]); ?>
         </div>
     </div>
 </div>

@@ -1,7 +1,12 @@
 <?php
+if (!defined("APP_BASE_PATH")) {
+    define("APP_BASE_PATH", "/thauphim-movie-website/");
+}
+
 define("TMDB_API_KEY", "9b4592d22d37d5f7ac7a5f6514fbdc0b");
 
 define("DB_HOST", "localhost");
+define("DB_PORT", 3306);
 define("DB_NAME", "thauphim");
 define("DB_USER", "root");
 define("DB_PASS", "");

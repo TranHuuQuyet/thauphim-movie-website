@@ -129,13 +129,12 @@
 .detail-status {
     display: inline-flex;
     align-items: center;
-    padding: 0.2rem 0.6rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 6px;
     margin-bottom: 1rem;
 }
 
 .detail-status span {
-    color: var(--color-warning); 
     background: transparent;
     font-size: 0.85rem;
     font-weight: 700;
@@ -152,12 +151,12 @@
 }
 
 .detail-status.status-success {
-    background: var(--color-primary-soft);
-    border: 1px solid var(--color-focus-ring);
+    background: var(--color-success-soft);
+    border: 1px solid var(--color-success-soft);
 }
 
 .detail-status.status-success span {
-    color: var(--color-link);
+    color: var(--color-success);
 }
 
 .detail-desc-block {
@@ -200,20 +199,63 @@
 }
 
 .detail-actions .play-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    margin-top: 1rem;
+    padding: 1rem 1.8rem;
+    border-radius: 999px;
+    background: var(--color-link);
+    color: var(--color-bg);
     text-decoration: none;
+    font-weight: 800;
+    box-shadow: var(--shadow-md);
+}
+
+.detail-actions .play-btn:hover {
+    background: var(--color-link-hover);
+    color: var(--color-bg);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.continue-watch-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    margin-top: 1rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 999px;
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+    border: 1px solid var(--color-border-muted); 
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.continue-watch-btn:hover {
+    color: var(--color-link-hover);
+    background: var(--color-primary-soft);
 }
 
 .detail-action-btn {
     background: transparent;
+    margin-top: 1rem;
     border: none;
     color: var(--color-text);
+    text-decoration: none;
     cursor: pointer;
     font-size: 0.9rem;
+    font-weight: 700;
     opacity: 0.9;
 }
 
 .detail-action-btn:hover {
     color: var(--color-link-hover);
+    opacity: 1;
+    transform: translateY(-2px);
 }
 
 .detail-action-btn.is-favorite {
@@ -244,7 +286,6 @@
 }
 
 .detail-tab {
-    position: relative;
     background: transparent;
     border: none;
     color: var(--color-text);
@@ -342,11 +383,35 @@
     background: var(--color-primary-soft);
 }
 
+.episode-btn--locked {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+a.episode-btn--locked {
+    cursor: pointer;
+}
+
 
 /* Comments */
 .section-head {
     margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
 }
+
+.view-more {
+    color: var(--color-text-soft);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.view-more:hover {
+    color: var(--color-link-hover);
+}
+
 .comment-login-note,
 .detail-empty {
     color: var(--color-text-soft);
@@ -484,14 +549,14 @@
 
 .rating-summary strong {
     color: var(--color-text);
-    font-size: 1.15rem;
+    font-size: 1.25rem;
 }
 
 .rating-summary span,
 .rating-message,
 .rating-login-note {
     color: var(--color-text-soft);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .rating-login-note a {

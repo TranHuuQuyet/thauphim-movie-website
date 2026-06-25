@@ -175,12 +175,19 @@
     }
 
     .header-icon-actions {
-        align-self: flex-start;
+        position: relative;
+        width: 100%;
+        align-self: stretch;
         flex-wrap: wrap;
     }
 
     .header-icon-actions .member-button {
         width: auto;
+    }
+
+    .notification-wrapper,
+    .account-wrapper {
+        position: static;
     }
 
     .account-panel {

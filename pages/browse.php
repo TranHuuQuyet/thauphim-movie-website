@@ -177,4 +177,3 @@ $countries = getAllCountriesFromDB();
 <?php include __DIR__ . '/../includes/footer.php'; ?>
     </div>
 </main>
-
