@@ -1,213 +1,167 @@
 # ThauPhim - Online Movie Streaming Website
 
-## 1. Gioi thieu du an
+ThauPhim la website xem phim truc tuyen cho do an Lap trinh Web. Du an dung PHP, MySQL/MariaDB, HTML, CSS va JavaScript, gom giao dien nguoi dung, API JSON noi bo, trang quan tri va cong cu import metadata tu TMDB.
 
-ThauPhim la website xem phim truc tuyen duoc xay dung cho do an mon Lap trinh Web. Du an su dung PHP, MySQL, HTML, CSS va JavaScript de tao mot he thong co trang user, API backend va trang quan tri.
-
-Huong du lieu chinh cua du an:
+## 1. Luong du lieu
 
 ```text
 TMDB API
 -> tools/import_tmdb.php
--> MySQL Database
--> PHP API noi bo
+-> MySQL database
+-> PHP API trong /api
 -> Website user + Admin
 ```
 
-TMDB chi duoc dung de import metadata phim ban dau. Sau khi import, MySQL la nguon du lieu chinh. Website user khong nen goi TMDB truc tiep nua. Admin co quyen sua toan bo du lieu phim da import va tu nhap link YouTube embed cho tung phim/tap phim.
+TMDB chi dung de import metadata ban dau. Sau khi import, MySQL la nguon du lieu chinh. Frontend khong goi TMDB truc tiep va khong expose `TMDB_API_KEY`.
 
-## 2. Muc tieu
+Video xem phim/tap phim duoc luu trong `episodes.youtube_url`. Admin nhap URL YouTube dang `watch`, `youtu.be`, `shorts/live` hoac `embed`; form admin se chuan hoa ve link embed.
 
-- Xay dung website xem phim co giao dien de su dung, ho tro desktop va mobile.
-- Dung TMDB API de import metadata phim le va phim bo vao MySQL.
-- Dung MySQL lam nguon du lieu chinh cho website va admin.
-- Dung PHP API noi bo de website lay du lieu tu MySQL.
-- Cho admin CRUD phim, tap phim, the loai, quoc gia va dien vien.
-- Cho admin tu nhap link YouTube iframe vao `episodes.youtube_url`.
-- Ho tro authentication, membership mo phong, binh luan, danh gia, yeu thich va lich su xem theo tien do.
-- Deploy len hosting PHP/MySQL de demo.
-
-## 3. Luong du lieu he thong
-
-### 3.1 Import metadata tu TMDB
-
-```text
-TMDB API
--> Lay movie + tv series
--> Loc trung theo tmdb_id + tmdb_type
--> Luu vao movies, genres, countries, actors
--> Luu quan he movie_genres, movie_actors
-```
-
-Script import:
-
-```text
-tools/import_tmdb.php
-```
-
-Script nay import khoang 100 phim/phim bo, uu tien can bang gan 50 phim le va 50 phim bo. Script khong tao episode va khong gan link YouTube. Link xem phim/tap phim se do admin nhap sau.
-
-### 3.2 Website doc tu MySQL
-
-```text
-MySQL
--> PHP API trong /api
--> Frontend user
-```
-
-Frontend nen goi API noi bo nhu:
-
-```text
-/api/movies.php
-/api/movie-detail.php?id=1
-/api/genres.php
-/api/countries.php
-/api/actors.php
-/api/episodes.php?movie_id=1
-```
-
-Khong expose `TMDB_API_KEY` ra JavaScript frontend trong flow chinh thuc.
-
-### 3.3 Admin quan ly du lieu
-
-```text
-Admin
--> CRUD movies/episodes/genres/countries/actors
--> Tu tim video tren YouTube
--> Copy link embed
--> Luu vao episodes.youtube_url
-```
-
-Vi du link hop le:
-
-```text
-https://www.youtube.com/embed/VIDEO_ID
-```
-
-## 4. Trang thai hien tai
-
-| Hang muc                                   | Trang thai | Ghi chu                                                   |
-| ------------------------------------------ | ---------- | --------------------------------------------------------- |
-| Schema MySQL phu hop TMDB + admin          | Done       | `database/schema.sql` da co field TMDB va episode YouTube |
-| Seed admin toi thieu                       | Done       | `database/seed.sql` chi tao admin mac dinh                |
-| Script import TMDB                         | Done       | `tools/import_tmdb.php`                                   |
-| Import 100 phim/phim bo vao local MySQL    | Done       | Da test 50 movie + 50 series, khong trung                 |
-| API PHP doc MySQL                          | Done       | Cac endpoint trong `/api`                                 |
-| Frontend doc API MySQL                     | Pending    | Hien frontend cu van can duoc chuyen dan                  |
-| Admin CRUD movies/episodes                 | Pending    | Can lam tiep de admin gan YouTube URL                     |
-| Login/register dung bang users             | Pending    | Login cu chua dong bo voi DB moi                          |
-| Favorite/comment/rating/history doc ghi DB | Pending    | Schema da co, can trien khai sau                          |
-
-## 5. Cong nghe su dung
-
-### Frontend
-
-- HTML5
-- CSS3
-- JavaScript ES6
-- Responsive layout voi Flexbox, CSS Grid va Media Queries
-- Dark Mode / Light Mode voi CSS variables va localStorage
-- Font Awesome Icons
-
-### Backend
+## 2. Cong nghe
 
 - PHP 8+
+- MySQL/MariaDB
 - PDO prepared statements
 - Session-based authentication
-- PHP API tra JSON tu MySQL
+- HTML5, CSS3, JavaScript ES6
+- TMDB API de import metadata
+- YouTube iframe de phat video
+- Font Awesome icons
 
-### Database
+## 3. Trang thai hien tai
 
-- MySQL/MariaDB
-- `database/schema.sql` de tao cau truc DB
-- `database/seed.sql` de tao admin mac dinh
+| Hang muc | Trang thai | Ghi chu |
+| --- | --- | --- |
+| Schema MySQL | Done | `database/schema.sql` |
+| Seed admin | Done | `database/seed.sql` tao admin mac dinh |
+| Config mau | Done | `includes/config.example.php` |
+| Import TMDB | Done | `tools/import_tmdb.php` import metadata phim le/phim bo |
+| API doc MySQL | Done | Cac endpoint trong `/api` |
+| Trang chu/danh sach/loc | Done | Doc du lieu tu API/MySQL |
+| Trang chi tiet phim | Done | Hien genres, actors, episodes, favorite/comment/rating |
+| Trang xem phim | Done | YouTube iframe, chuyen tap, luu tien do xem |
+| Dang ky/dang nhap/dang xuat | Done | Dung bang `users`, `password_hash`, session |
+| Trang tai khoan | Done | Tong quan, phim yeu thich, lich su xem |
+| Admin dashboard | Done | Guard bang role admin |
+| Admin CRUD movies/episodes | Done | Co nhap/publish YouTube URL |
+| Admin CRUD genres/countries/actors | Done | Co create/edit/delete/list |
+| Admin users/comments/ratings | Done | Quan ly membership/status, an/xoa comment, xem/xoa rating |
+| Deploy docs | Done | `deploy/DEPLOYMENT.md`, `.htaccess` va vhost mau |
 
-### Third-party Services
+## 4. Chuc nang chinh
 
-- TMDB API: import metadata phim/phim bo ban dau.
-- TMDB Image CDN: hien thi poster/backdrop tu `poster_path` va `backdrop_path`.
-- YouTube iframe: phat video phim/tap phim bang link embed do admin nhap.
+### Website user
 
-## 6. Chuc nang chinh
+- Trang chu voi banner, danh sach phim moi, phim le, phim bo.
+- Duyet phim, tim kiem, loc theo the loai/quoc gia/nam/loai phim.
+- Trang quoc gia va trang dien vien.
+- Trang chi tiet phim voi poster, backdrop, metadata, dien vien, the loai, tap phim, phim lien quan.
+- Trang xem phim bang YouTube iframe.
+- Dang ky, dang nhap, dang xuat.
+- Tai khoan nguoi dung: thong ke, phim yeu thich, lich su xem.
+- Yeu thich phim.
+- Binh luan phim.
+- Danh gia 1-5 sao.
+- Luu tien do xem theo episode.
+- Kiem tra phim premium/free theo membership.
 
-### 6.1 Trang chu
-
-- Header va menu dieu huong.
-- Thanh tim kiem phim.
-- Banner phim noi bat.
-- Danh sach phim moi cap nhat.
-- Danh sach phim le.
-- Danh sach phim bo.
-- Footer thong tin website.
-- Nguon du lieu muc tieu: `/api/movies.php`.
-
-### 6.2 Duyet phim, tim kiem va loc
-
-- Danh sach tat ca phim.
-- Tim kiem theo ten phim.
-- Loc theo the loai.
-- Loc theo quoc gia.
-- Loc theo nam phat hanh.
-- Loc theo loai phim: phim le, phim bo.
-- Sap xep theo moi nhat, pho bien, top rated, luot xem.
-- Phan trang.
-- Nguon du lieu muc tieu: `/api/movies.php`.
-
-### 6.3 Trang chi tiet phim
-
-- Poster va anh nen phim.
-- Ten phim, ten goc, nam, quoc gia, thoi luong, trang thai, chat luong.
-- Mo ta phim.
-- Danh sach the loai.
-- Danh sach dien vien.
-- Danh sach tap phim da publish.
-- Nut xem phim.
-- Phim lien quan theo the loai hoac quoc gia.
-- Nguon du lieu muc tieu: `/api/movie-detail.php?id=...`.
-
-### 6.4 Trang xem phim
-
-- Video player bang YouTube iframe.
-- Danh sach tap phim.
-- Chuyen tap.
-- Luu lich su xem neu user da dang nhap.
-- Nguon video: `episodes.youtube_url`.
-- Nguon tap phim: `/api/episodes.php?movie_id=...`.
-
-### 6.5 Tai khoan nguoi dung
-
-- Dang ky.
-- Dang nhap.
-- Dang xuat.
-- Kiem tra session.
-- Trang thai tai khoan: active/locked.
-- Trang thai membership: free/premium.
-
-### 6.6 Trang quan tri
+### Admin
 
 - Dashboard tong quan.
-- CRUD phim.
-- CRUD tap phim va link YouTube embed.
-- CRUD the loai.
-- CRUD quoc gia.
-- CRUD dien vien.
-- Quan ly user va membership.
-- Quan ly binh luan/danh gia khi cac tinh nang user duoc trien khai.
-- Quan ly lich chieu/thong bao phim sap chieu bang `schedules`.
+- CRUD movies.
+- CRUD episodes va YouTube URL.
+- CRUD genres.
+- CRUD countries.
+- CRUD actors.
+- Quan ly users: membership va status.
+- Quan ly comments: an hoac xoa.
+- Quan ly ratings: xem/xoa.
 
-### 6.7 Binh luan, danh gia, yeu thich, lich su
+## 5. Cai dat local voi XAMPP
 
-- Schema da co cac bang `comments`, `ratings`, `favorites`, `watch_history`.
-- Cac chuc nang nay nen lam sau khi movie API, admin CRUD va watch page on dinh.
+### 5.1 Chuan bi config
 
-## 7. API PHP noi bo
+Copy file cau hinh mau:
 
-Tat ca API tra JSON voi format thanh cong:
+```powershell
+Copy-Item includes\config.example.php includes\config.php
+```
+
+Cap nhat `includes/config.php`:
+
+```php
+define("APP_BASE_PATH", "/");
+define("APP_DEBUG", true);
+
+define("TMDB_API_KEY", "your-tmdb-api-key");
+
+define("DB_HOST", "localhost");
+define("DB_PORT", 3306);
+define("DB_NAME", "thauphim");
+define("DB_USER", "root");
+define("DB_PASS", "");
+define("DB_CHARSET", "utf8mb4");
+```
+
+Neu chay trong subfolder cua Apache, cap nhat `APP_BASE_PATH` theo duong dan public cua project.
+
+### 5.2 Tao database va seed admin
+
+```powershell
+D:\Xampp\mysql\bin\mysql.exe -uroot -P3306 --default-character-set=utf8mb4 -e "SOURCE D:/Xampp/htdocs/thauphim-movie-website/database/schema.sql; SOURCE D:/Xampp/htdocs/thauphim-movie-website/database/seed.sql;"
+```
+
+### 5.3 Import metadata TMDB
+
+```powershell
+D:\Xampp\php\php.exe tools\import_tmdb.php
+```
+
+Script import se:
+
+- Goi cac endpoint TMDB popular/top rated/now playing/upcoming/trending cho movie va tv.
+- Luu movie/series vao MySQL.
+- Luu genres, countries, actors va bang lien ket.
+- Chong trung bang unique key `tmdb_id + tmdb_type`.
+- Khong tao episode va khong tu gan YouTube URL.
+- Dung som neu database da co du 100 phim/phim bo.
+
+### 5.4 Mo website
+
+Neu project nam tai:
+
+```text
+D:\Xampp\htdocs\thauphim-movie-website
+```
+
+Co the mo:
+
+```text
+http://localhost/thauphim-movie-website/
+```
+
+Hoac cau hinh virtual host theo `deploy/apache-vhost.example.conf`.
+
+## 6. Tai khoan demo
+
+```text
+Admin:
+Username: admin
+Email: admin@thauphim.local
+Password: admin123
+```
+
+Nen doi mat khau admin khi deploy that.
+
+## 7. API noi bo
+
+Tat ca API tra JSON.
+
+Thanh cong:
 
 ```json
 {
   "success": true,
-  "data": [],
+  "data": {},
   "meta": {
     "page": 1,
     "limit": 20,
@@ -216,28 +170,28 @@ Tat ca API tra JSON voi format thanh cong:
 }
 ```
 
-Format loi:
+Loi:
 
 ```json
 {
   "success": false,
-  "message": "Thong bao loi ngan gon"
+  "message": "Thong bao loi"
 }
 ```
 
-### Danh sach API
+### Endpoint danh sach phim va metadata
 
-| Endpoint                             | Chuc nang                                          |
-| ------------------------------------ | -------------------------------------------------- |
-| `/api/movies.php`                    | Danh sach phim, tim kiem, loc, sap xep, phan trang |
-| `/api/movie-detail.php?id=1`         | Chi tiet phim, genres, actors, episodes            |
-| `/api/genres.php`                    | Danh sach the loai                                 |
-| `/api/countries.php`                 | Danh sach quoc gia                                 |
-| `/api/actors.php`                    | Danh sach dien vien, co phan trang                 |
-| `/api/episodes.php?movie_id=1`       | Danh sach tap phim da publish                      |
-| `/api/movies-by-country.php?code=US` | Phim theo ma quoc gia                              |
+| Endpoint | Method | Chuc nang |
+| --- | --- | --- |
+| `/api/movies.php` | GET | Danh sach phim, tim kiem, loc, sap xep, phan trang |
+| `/api/movie-detail.php?id=1` | GET | Chi tiet phim, genres, actors, episodes |
+| `/api/genres.php` | GET | Danh sach the loai |
+| `/api/countries.php` | GET | Danh sach quoc gia |
+| `/api/actors.php` | GET | Danh sach dien vien, co phan trang |
+| `/api/episodes.php?movie_id=1` | GET | Danh sach tap phim da publish |
+| `/api/movies-by-country.php?code=US` | GET | Phim theo ma quoc gia |
 
-### Query cua `/api/movies.php`
+Query ho tro cho `/api/movies.php`:
 
 ```text
 type=movie|series
@@ -250,50 +204,129 @@ limit=20
 page=1
 ```
 
-## 8. Import TMDB
+### Endpoint tuong tac user
 
-### Dieu kien
+| Endpoint | Method | Chuc nang |
+| --- | --- | --- |
+| `/api/favorites.php?movie_id=1` | GET | Lay trang thai yeu thich cua user hien tai |
+| `/api/favorites.php` | POST | Toggle yeu thich phim |
+| `/api/comments.php?movie_id=1` | GET | Lay comment visible cua phim |
+| `/api/comments.php` | POST | Them comment, can dang nhap |
+| `/api/comments.php` | DELETE | Xoa comment cua chinh user hoac admin |
+| `/api/ratings.php?movie_id=1` | GET | Lay diem trung binh va diem cua user hien tai |
+| `/api/ratings.php` | POST | Tao/cap nhat danh gia 1-5 sao |
+| `/api/update-watch-history.php` | POST | Luu tien do xem episode |
 
-- MySQL dang chay.
-- `includes/config.php` co dung:
-  - `TMDB_API_KEY`
-  - `DB_HOST`
-  - `DB_PORT`
-  - `DB_NAME`
-  - `DB_USER`
-  - `DB_PASS`
+Payload mau:
 
-### Chay rebuild DB local
-
-```powershell
-D:\Xampp\mysql\bin\mysql.exe -uroot -P3306 --default-character-set=utf8mb4 -e "SOURCE D:/Xampp/htdocs/your-site/database/schema.sql; SOURCE D:/Xampp/htdocs/your-site/database/seed.sql;"
+```json
+{
+  "movie_id": 1,
+  "episode_id": 2,
+  "progress_seconds": 120
+}
 ```
 
-### Chay import TMDB
+## 8. Database
 
-```powershell
-D:\Xampp\php\php.exe tools\import_tmdb.php
+Bang chinh:
+
+- `users`: tai khoan, role, membership, status.
+- `movies`: metadata phim, TMDB id/type, poster/backdrop, type movie/series, rating, premium.
+- `episodes`: tap phim, YouTube URL, publish state.
+- `genres`: the loai.
+- `countries`: quoc gia.
+- `actors`: dien vien.
+- `movie_genres`: lien ket phim-the loai.
+- `movie_actors`: lien ket phim-dien vien.
+- `schedules`: lich/thong bao phim sap chieu.
+- `favorites`: phim yeu thich.
+- `watch_history`: lich su va tien do xem.
+- `comments`: binh luan.
+- `ratings`: danh gia 1-5 sao.
+
+Ghi chu quan trong:
+
+- `movies.tmdb_id + movies.tmdb_type` la unique key chong import trung.
+- `movies.type` dung cho website: `movie` hoac `series`.
+- `movies.tmdb_type` dung theo TMDB: `movie` hoac `tv`.
+- `episodes.youtube_url` co the rong khi moi import.
+- Chi episode co `is_published = 1` moi nen hien cho user qua API.
+- Moi user chi co mot rating cho moi phim.
+- Moi user chi co mot record watch history cho moi episode.
+
+## 9. Cau truc thu muc
+
+```text
+thauphim-movie-website/
+|-- admin/
+|   |-- dashboard.php
+|   |-- movies/
+|   |-- episodes/
+|   |-- genres/
+|   |-- countries/
+|   |-- actors/
+|   |-- users/
+|   |-- comments/
+|   |-- ratings/
+|
+|-- api/
+|   |-- _helpers.php
+|   |-- movies.php
+|   |-- movie-detail.php
+|   |-- genres.php
+|   |-- countries.php
+|   |-- actors.php
+|   |-- episodes.php
+|   |-- movies-by-country.php
+|   |-- favorites.php
+|   |-- comments.php
+|   |-- ratings.php
+|   |-- update-watch-history.php
+|
+|-- assets/
+|   |-- css/
+|   |-- js/
+|   |-- images/
+|
+|-- database/
+|   |-- schema.sql
+|   |-- seed.sql
+|
+|-- deploy/
+|   |-- DEPLOYMENT.md
+|   |-- htaccess.example
+|   |-- apache-vhost.example.conf
+|
+|-- includes/
+|   |-- config.php
+|   |-- config.example.php
+|   |-- db.php
+|   |-- auth.php
+|   |-- header.php
+|   |-- footer.php
+|   |-- functions.php
+|
+|-- pages/
+|   |-- movie-detail.php
+|   |-- watch.php
+|   |-- account.php
+|   |-- country.php
+|   |-- actor.php
+|
+|-- tools/
+|   |-- import_tmdb.php
+|
+|-- index.php
+|-- login.php
+|-- register.php
+|-- logout.php
+|-- README.md
 ```
 
-Script se:
+## 10. Kiem tra nhanh
 
-- Goi cac endpoint TMDB:
-  - `movie/popular`
-  - `movie/top_rated`
-  - `movie/now_playing`
-  - `movie/upcoming`
-  - `tv/popular`
-  - `tv/top_rated`
-  - `tv/on_the_air`
-  - `trending/movie/week`
-  - `trending/tv/week`
-- Loc trung theo `tmdb_id + tmdb_type`.
-- Luu metadata vao MySQL.
-- Khong tao episode.
-- Khong luu YouTube URL.
-- Neu DB da du 100 record thi dung ngay, khong import trung.
-
-### Kiem tra sau import
+### Database/import
 
 ```sql
 SELECT COUNT(*) FROM movies;
@@ -308,449 +341,83 @@ GROUP BY tmdb_id, tmdb_type
 HAVING COUNT(*) > 1;
 ```
 
-Ket qua mong muon:
+Ket qua mong muon sau import mac dinh:
 
 ```text
 movies: 100
-movie: 50
-series: 50
+movie: gan 50
+series: gan 50
 duplicate tmdb_id + tmdb_type: 0
-episodes: co the rong luc moi import
+episodes: co the rong neu admin chua tao
 ```
-
-## 9. Thiet ke database
-
-### users
-
-- id
-- username
-- email
-- password_hash
-- role: user/admin
-- membership: free/premium
-- status: active/locked
-- last_login_at
-- created_at
-- updated_at
-
-### movies
-
-- id
-- tmdb_id
-- tmdb_type: movie/tv
-- title
-- original_title
-- overview
-- description
-- poster
-- backdrop
-- poster_path
-- backdrop_path
-- release_date
-- release_year
-- runtime
-- type: movie/series
-- quality
-- country_id
-- status: coming_soon/ongoing/completed
-- is_premium
-- views
-- rating_average
-- rating_count
-- vote_average
-- vote_count
-- popularity
-- original_language
-- imported_at
-- last_synced_at
-- created_at
-- updated_at
-
-Ghi chu:
-
-- `tmdb_id + tmdb_type` la unique key de chong import trung.
-- `tmdb_type` la loai goc cua TMDB: `movie` hoac `tv`.
-- `type` la loai dung trong website: `movie` hoac `series`.
-- `overview` la mo ta goc tu TMDB.
-- `description` la mo ta hien thi/admin co the sua.
-
-### episodes
-
-- id
-- movie_id
-- episode_number
-- title
-- youtube_url
-- duration_seconds
-- is_published
-- created_at
-- updated_at
-
-Ghi chu:
-
-- `youtube_url` co the rong luc moi import.
-- Admin se tu nhap link YouTube embed.
-- Chi episodes co `is_published = 1` moi nen hien cho user.
-
-### genres
-
-- id
-- tmdb_genre_id
-- name
-- slug
-- created_at
-- updated_at
-
-### countries
-
-- id
-- code
-- name
-- created_at
-- updated_at
-
-### actors
-
-- id
-- tmdb_actor_id
-- name
-- avatar
-- profile_path
-- biography
-- known_for_department
-- created_at
-- updated_at
-
-### movie_genres
-
-- movie_id
-- genre_id
-
-### movie_actors
-
-- movie_id
-- actor_id
-- character_name
-- cast_order
-
-### schedules
-
-- id
-- movie_id
-- release_date
-- note
-- is_published
-- created_at
-- updated_at
-
-Ghi chu: `schedules` dung cho lich chieu/thong bao phim sap chieu.
-
-### favorites
-
-- id
-- user_id
-- movie_id
-- created_at
-
-### watch_history
-
-- id
-- user_id
-- movie_id
-- episode_id
-- progress_seconds
-- watched_at
-
-### comments
-
-- id
-- user_id
-- movie_id
-- content
-- status: visible/hidden
-- created_at
-- updated_at
-
-### ratings
-
-- id
-- user_id
-- movie_id
-- rating: 1-5
-- created_at
-- updated_at
-
-## 10. Quan he database
-
-- Mot phim thuoc mot quoc gia.
-- Mot phim co nhieu tap.
-- Mot phim co nhieu the loai thong qua `movie_genres`.
-- Mot phim co nhieu dien vien thong qua `movie_actors`.
-- Mot phim co the co nhieu lich/thong bao sap chieu thong qua `schedules`.
-- Mot user co nhieu phim yeu thich.
-- Mot user co nhieu lich su xem.
-- Mot user co nhieu binh luan.
-- Mot user co nhieu danh gia phim.
-- Mot phim co nhieu binh luan va danh gia.
-- Mot admin co quyen quan ly du lieu he thong.
-
-## 11. Cau truc thu muc
-
-```text
-your-site/
-|-- admin/
-|   |-- dashboard.php
-|   |-- movies/
-|   |-- episodes/
-|   |-- genres/
-|   |-- countries/
-|   |-- actors/
-|   |-- users/
-|   |-- comments/
-|
-|-- api/
-|   |-- _helpers.php
-|   |-- movies.php
-|   |-- movie-detail.php
-|   |-- genres.php
-|   |-- countries.php
-|   |-- actors.php
-|   |-- episodes.php
-|   |-- movies-by-country.php
-|
-|-- assets/
-|   |-- css/
-|   |-- js/
-|   |-- images/
-|
-|-- database/
-|   |-- schema.sql
-|   |-- seed.sql
-|
-|-- includes/
-|   |-- config.php
-|   |-- db.php
-|   |-- header.php
-|   |-- footer.php
-|   |-- functions.php
-|
-|-- pages/
-|   |-- movie-detail.php
-|   |-- country.php
-|   |-- actor.php
-|
-|-- tools/
-|   |-- import_tmdb.php
-|
-|-- index.php
-|-- login.php
-|-- register.php
-|-- logout.php
-|-- README.md
-```
-
-Ghi chu: poster/backdrop hien uu tien lay tu TMDB path va TMDB Image CDN. Thu muc upload co the them sau neu admin can upload anh local.
-
-## 12. Main task cua du an
-
-### Main Task 1 - UI Layout & Homepage
-
-- Xay dung layout dung chung.
-- Header, navigation, footer.
-- Trang chu.
-- Responsive desktop/mobile.
-- Dark Mode / Light Mode Toggle.
-- Chuan hoa CSS component cho card phim, button, form.
-
-### Main Task 2 - Browse, Search, Filter & Metadata Listing
-
-- Trang danh sach phim: phim le, phim bo.
-- Tim kiem theo ten phim.
-- Loc theo the loai, quoc gia, nam, loai phim.
-- Trang quoc gia.
-- Trang dien vien.
-- Goi `/api/movies.php`.
-- Goi `/api/genres.php`.
-- Goi `/api/countries.php`.
-- Goi `/api/actors.php`.
-- Goi `/api/movies-by-country.php`.
-- UI phan trang, search query, filter state tren URL.
-- Toi uu query MySQL cho danh sach phim.
-- Chuyen du lieu trang danh sach/tim kiem/loc sang doc API MySQL sau khi API o Main Task 5 on dinh.
-
-### Main Task 3 - Movie Detail, Watch Page & Viewing Flow
-
-- Trang chi tiet phim.
-- Hien thi actors, genres, episodes trong chi tiet phim.
-- Danh sach tap phim.
-- Trang xem phim.
-- YouTube iframe player.
-- Phim lien quan.
-- UI favorite button tren trang chi tiet.
-- UI comment section tren trang chi tiet.
-- UI rating section tren trang chi tiet.
-- Chuyen trang chi tiet sang doc `/api/movie-detail.php`.
-- Chuyen danh sach tap phim sang doc `/api/episodes.php`.
-- Phat video tu `episodes.youtube_url` do admin nhap.
-- Ghi watch history co ban khi user xem phim.
-- Hien nut "tiep tuc xem" neu co history.
-- Kiem tra premium/free khi bam xem phim neu lam mo phong.
-
-### Main Task 4 - User Account & User Interactions
-
-- Dang ky, dang nhap, dang xuat.
-- Session user.
-- Trang tai khoan neu co.
-- Trang danh sach phim yeu thich cua user.
-- Trang lich su xem cua user.
-- Backend/action them xoa phim yeu thich.
-- Backend/action gui, hien thi, xoa binh luan.
-- Backend/action danh gia phim 1-5 sao.
-- Backend/action ghi lich su xem.
-- Rule user locked/free/premium.
-- Xem thong bao phim sap chieu tu icon chuong.
-
-### Main Task 5 - Backend, Database, API, Admin & Deployment
-
-- Thiet ke schema phu hop TMDB + admin.
-- Tao `database/schema.sql` va `database/seed.sql`.
-- Tao admin seed toi thieu.
-- Ket noi database bang PDO.
-- Tao `tools/import_tmdb.php`.
-- Import 100 phim/phim bo vao MySQL.
-- Kiem tra khong trung `tmdb_id + tmdb_type`.
-- Tao API PHP doc MySQL trong `/api`.
-- Admin dashboard.
-- Admin login/auth guard theo role admin.
-- CRUD phim, tap phim, the loai, quoc gia, dien vien.
-- Admin nhap va publish `episodes.youtube_url`.
-- Quan ly user va membership.
-- Quan ly binh luan va thong ke danh gia khi cac tinh nang user duoc trien khai.
-- Deploy len hosting va cau hinh ten mien.
-
-## 13. Ke hoach 1 thang
-
-| Tuan   | Muc tieu                              | Ket qua can co                                                     |
-| ------ | ------------------------------------- | ------------------------------------------------------------------ |
-| Tuan 1 | Chot yeu cau, UI, schema, TMDB import | Schema SQL, seed admin, import script, 100 phim trong MySQL        |
-| Tuan 2 | API va frontend user                  | API MySQL, trang chu/danh sach/chi tiet doc API                    |
-| Tuan 3 | Watch page va admin CRUD              | Admin movies/episodes, nhap YouTube URL, watch page                |
-| Tuan 4 | User features, test, deploy           | Auth, comment/rating/favorite/history, responsive, deploy, bao cao |
-
-## 14. Bao mat
-
-- Mat khau phai hash bang `password_hash()`.
-- Dang nhap kiem tra bang `password_verify()`.
-- Truy van database dung PDO prepared statements.
-- Validate du lieu dau vao tu form va query API.
-- Kiem tra quyen admin truoc khi vao trang quan tri.
-- Kiem tra user bi khoa truoc khi cho dang nhap.
-- Escape noi dung binh luan khi hien thi de tranh XSS.
-- Chi cho user dang nhap binh luan va danh gia.
-- Gioi han moi user mot danh gia cho moi phim.
-- Dung session de quan ly trang thai dang nhap.
-- Them CSRF token cho cac form admin.
-- Validate `youtube_url`, chi cho phep link YouTube embed hop le.
-- Khong expose `TMDB_API_KEY` ra frontend runtime.
-
-## 15. Deploy
-
-### Moi truong
-
-- Hosting ho tro PHP 8+ va MySQL/MariaDB.
-- cPanel, DirectAdmin hoac moi truong tu quan ly.
-- Custom domain.
-- SSL/HTTPS.
-
-### Checklist deploy
-
-- Tao database va user MySQL tren hosting.
-- Cau hinh `includes/config.php`:
-  - `TMDB_API_KEY`
-  - `DB_HOST`
-  - `DB_PORT`
-  - `DB_NAME`
-  - `DB_USER`
-  - `DB_PASS`
-- Import `database/schema.sql`.
-- Import `database/seed.sql`.
-- Chay `tools/import_tmdb.php` mot lan neu hosting cho phep CLI/network.
-- Neu hosting khong cho CLI, import DB local roi export SQL data len hosting.
-- Kiem tra cac API `/api/*.php`.
-- Kiem tra trang user.
-- Kiem tra trang admin.
-- Kiem tra dang nhap, tim kiem, chi tiet phim, xem phim va CRUD.
-
-## 16. Tai khoan demo
-
-```text
-Admin:
-Username: admin
-Email: admin@thauphim.local
-Password: admin123
-```
-
-Ghi chu: `seed.sql` hien chi tao admin. User Free/User Premium se tao sau qua register hoac admin.
-
-## 17. Checklist kiem thu
-
-### Database va import
-
-- Chay `database/schema.sql` thanh cong.
-- Chay `database/seed.sql` tao 1 admin.
-- Chay `tools/import_tmdb.php` import du 100 phim/phim bo.
-- Co 50 phim le va 50 phim bo.
-- Khong co trung `tmdb_id + tmdb_type`.
-- `genres`, `countries`, `actors`, `movie_genres`, `movie_actors` co du lieu.
-- `episodes` co the rong sau import.
 
 ### API
 
-- `/api/movies.php?type=movie` tra danh sach phim le.
-- `/api/movies.php?type=series` tra danh sach phim bo.
-- `/api/movies.php?sort=popular` sap xep theo popularity.
-- `/api/movie-detail.php?id=1` tra movie, genres, actors, episodes.
-- `/api/genres.php` tra danh sach the loai.
-- `/api/countries.php` tra danh sach quoc gia.
-- `/api/actors.php?limit=2` tra danh sach dien vien.
-- `/api/episodes.php?movie_id=1` tra mang rong neu admin chua nhap tap.
-- `/api/movies-by-country.php?code=US` tra phim theo quoc gia.
+- `/api/movies.php?type=movie`
+- `/api/movies.php?type=series`
+- `/api/movies.php?q=test`
+- `/api/movies.php?sort=popular`
+- `/api/movie-detail.php?id=1`
+- `/api/episodes.php?movie_id=1`
+- `/api/genres.php`
+- `/api/countries.php`
+- `/api/actors.php?limit=5`
+- `/api/movies-by-country.php?code=US`
 
-### Admin va user
+### User/admin
 
-- Admin dang nhap thanh cong.
-- Admin tao, sua, xoa phim.
-- Admin tao, sua, xoa tap phim.
-- Admin nhap `youtube_url` va publish episode.
-- API episodes tra episode da publish.
-- Watch page phat dung YouTube iframe.
-- Tim kiem, loc, phan trang hoat dong dung.
-- Binh luan, danh gia, yeu thich, lich su xem hoat dong khi duoc trien khai.
+- Dang ky user moi.
+- Dang nhap/dang xuat.
+- Admin dang nhap bang tai khoan seed.
+- Admin tao movie.
+- Admin tao episode voi YouTube URL va tick publish.
+- Trang chi tiet hien episode da publish.
+- Trang xem phim phat iframe YouTube.
+- User them yeu thich, binh luan, danh gia.
+- User xem lai tai khoan, favorites va history.
 
-## 18. San pham ban giao
+## 11. Bao mat
 
-- Source code day du.
-- File `database/schema.sql`.
-- File `database/seed.sql`.
-- Script `tools/import_tmdb.php`.
+- Mat khau hash bang `password_hash()`.
+- Dang nhap kiem tra bang `password_verify()`.
+- Truy van DB dung PDO prepared statements.
+- Validate input tu form va query API.
+- Escape output bang `htmlspecialchars()`.
+- Kiem tra role admin truoc khi vao `/admin`.
+- Kiem tra user locked truoc khi cho dang nhap.
+- Kiem tra membership khi xem phim premium.
+- Chi cho user dang nhap favorite/comment/rating/history.
+- Validate YouTube URL truoc khi luu episode.
+- Khong dua `TMDB_API_KEY` vao JavaScript frontend.
+
+## 12. Deploy
+
+Xem chi tiet trong:
+
+```text
+deploy/DEPLOYMENT.md
+```
+
+Checklist tom tat:
+
+- Tao database va user MySQL tren hosting.
+- Copy `includes/config.example.php` thanh `includes/config.php`.
+- Cap nhat `APP_BASE_PATH`, database credentials va `TMDB_API_KEY`.
+- Import `database/schema.sql`.
+- Import `database/seed.sql`.
+- Import data TMDB bang CLI neu hosting cho phep, hoac import local roi export SQL data.
+- Cau hinh web root/vhost/.htaccess theo moi truong.
+- Kiem tra API, trang user va trang admin.
+- Doi mat khau admin mac dinh.
+
+## 13. San pham ban giao
+
+- Source code website.
+- Database schema va seed.
+- Script import TMDB.
 - API PHP trong `/api`.
-- README.md.
-- Demo website tren production domain hoac local development host.
+- Trang admin.
+- Huong dan deploy.
+- README.
 - Tai khoan demo admin.
-- Bao cao do an.
-- Anh chup man hinh cac chuc nang chinh.
-
-## 19. Huong phat trien sau do an
-
-- Dong bo lai metadata TMDB thu cong tu admin.
-- Import them phim theo quoc gia/the loai.
-- Cap nhat poster/backdrop tu TMDB theo tung phim.
-- Reply binh luan.
-- Like/dislike binh luan.
-- Bao cao binh luan vi pham.
-- Goi y phim theo lich su xem.
-- Xac thuc email.
-- Thanh toan online that cho Premium.
-- PWA.
-- Da ngon ngu.
-- Toi uu SEO.
+- Anh chup man hinh va bao cao do an neu can nop kem.
