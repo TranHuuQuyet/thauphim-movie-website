@@ -7,7 +7,7 @@ $pdo = getDatabaseConnection();
 $currentUser = auth_current_user($pdo);
 
 if ($currentUser === null) {
-    header("Location: /thauphim-movie-website/index.php#authModal");
+    header("Location: /index.php#authModal");
     exit;
 }
 
@@ -30,7 +30,7 @@ function accountAssetPath($path, $fallback)
         return $fallback;
     }
 
-    if (preg_match('/^https?:\/\//i', (string) $path) || str_starts_with((string) $path, "/")) {
+    if (preg_match('/^https?:\/\//i', (string) $path) || str_starts_with((string) $path, "data:")) {
         return (string) $path;
     }
 
@@ -41,7 +41,7 @@ function accountAssetPath($path, $fallback)
         return $fallback;
     }
 
-    return "../" . $cleanPath;
+    return "/" . $cleanPath;
 }
 
 $stmt = $pdo->prepare("
@@ -93,7 +93,7 @@ $historyItems = $stmt->fetchAll();
 include __DIR__ . "/../includes/header.php";
 ?>
 
-<link rel="stylesheet" href="../assets/css/user.css">
+<link rel="stylesheet" href="/assets/css/user.css">
 
 <main class="page-shell account-page">
     <section class="account-hero">
@@ -146,7 +146,7 @@ include __DIR__ . "/../includes/header.php";
                 <div class="account-movie-grid">
                     <?php foreach ($previewFavorites as $movie): ?>
                         <a class="account-movie-card" href="movie-detail.php?id=<?= (int) $movie["id"] ?>">
-                            <img src="<?= e(accountAssetPath($movie["poster"], "../assets/images/poster_movie.jpg")) ?>" alt="<?= e($movie["title"]) ?>">
+                            <img src="<?= e(accountAssetPath($movie["poster"], "/assets/images/poster_movie.jpg")) ?>" alt="<?= e($movie["title"]) ?>">
                             <strong><?= e($movie["title"]) ?></strong>
                             <span><?= e(($movie["release_year"] ?? "N/A") . " · " . ($movie["quality"] ?? "HD")) ?></span>
                         </a>
@@ -166,7 +166,7 @@ include __DIR__ . "/../includes/header.php";
                 <div class="account-movie-grid">
                     <?php foreach ($favorites as $movie): ?>
                         <a class="account-movie-card" href="movie-detail.php?id=<?= (int) $movie["id"] ?>">
-                            <img src="<?= e(accountAssetPath($movie["poster"], "../assets/images/poster_movie.jpg")) ?>" alt="<?= e($movie["title"]) ?>">
+                            <img src="<?= e(accountAssetPath($movie["poster"], "/assets/images/poster_movie.jpg")) ?>" alt="<?= e($movie["title"]) ?>">
                             <strong><?= e($movie["title"]) ?></strong>
                             <span><?= e(($movie["release_year"] ?? "N/A") . " · " . ($movie["quality"] ?? "HD")) ?></span>
                         </a>
@@ -193,7 +193,7 @@ include __DIR__ . "/../includes/header.php";
                         ?>
                         <a class="account-history-item"
                             href="watch.php?movie_id=<?= (int) $item["movie_id"] ?>&episode_id=<?= (int) $item["episode_id"] ?>">
-                            <img src="<?= e(accountAssetPath($item["poster"], "../assets/images/poster_movie.jpg")) ?>" alt="<?= e($item["movie_title"]) ?>">
+                            <img src="<?= e(accountAssetPath($item["poster"], "/assets/images/poster_movie.jpg")) ?>" alt="<?= e($item["movie_title"]) ?>">
                             <span>
                                 <strong><?= e($item["movie_title"]) ?></strong>
                                 <small><?= e($episodeLabel) ?> · <?= (int) $item["progress_seconds"] ?>s</small>

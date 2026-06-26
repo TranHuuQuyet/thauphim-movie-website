@@ -8,7 +8,7 @@ $adminUser = auth_current_user($pdo);
 
 if (!auth_is_admin($adminUser)) {
     if ($adminUser === null) {
-        $basePath = defined('APP_BASE_PATH') ? APP_BASE_PATH : '/thauphim-movie-website/';
+        $basePath = defined('APP_BASE_PATH') ? APP_BASE_PATH : '/';
         header('Location: ' . rtrim($basePath, '/') . '/index.php#authModal');
         exit;
     }

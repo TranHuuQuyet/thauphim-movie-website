@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . "/includes/config.php";
 ?>
 <?php include __DIR__ . "/includes/header.php"; ?>
-<link rel="stylesheet" href="/thauphim-movie-website/assets/css/home.css">
+<link rel="stylesheet" href="/assets/css/home.css">
 
 <main class="page-shell" id="home" aria-label="Nội dung chính">
     <section class="hero" id="hero">
@@ -58,7 +58,7 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-top" id="top-week" aria-labelledby="top-week-title">
         <div class="section-head">
             <h2 id="top-week-title">Phim top của tuần</h2>
-            <a href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
+            <a href="/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
         </div>
 
         <div class="swiper bannerSwiper">
@@ -73,7 +73,7 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-slides" id="new-movies" aria-labelledby="new-movies-title">
         <div class="movie-slides-head">
             <h2 id="new-movies-title">Phim mới gần đây</h2>
-            <a href="/thauphim-movie-website/pages/browse.php?sort=newest" class="view-more">Xem thêm</a>
+            <a href="/pages/browse.php?sort=newest" class="view-more">Xem thêm</a>
         </div>
 
         <div class="swiper movieHeroSwiper">
@@ -91,7 +91,7 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-section movie-grid-section" id="single-movies" aria-labelledby="single-movies-title">
         <div class="section-head">
             <h2 id="single-movies-title">Danh sách phim lẻ</h2>
-            <a href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
+            <a href="/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
         </div>
 
         <div class="movie-grid" id="singleMovies" aria-live="polite"></div>
@@ -100,7 +100,7 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-section movie-grid-section" id="series-movies" aria-labelledby="series-movies-title">
         <div class="section-head">
             <h2 id="series-movies-title">Danh sách phim bộ</h2>
-            <a href="/thauphim-movie-website/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
+            <a href="/pages/browse.php?sort=most_viewed" class="view-more">Xem thêm</a>
         </div>
 
         <div class="movie-grid" id="seriesMovies" aria-live="polite"></div>
@@ -109,6 +109,6 @@ require_once __DIR__ . "/includes/config.php";
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
 
 <?php include __DIR__ . "/includes/footer.php"; ?>

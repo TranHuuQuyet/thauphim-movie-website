@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   document.title = "Quốc gia - ThauPhim";
 
-  const API_BASE = "/thauphim-movie-website/api";
+  const API_BASE = "/api";
   const movieTitle = document.querySelector("#country-movies-title");
   const movieStatus = document.querySelector("#countryMovieStatus");
   const movieList = document.querySelector("#countryMovieList");

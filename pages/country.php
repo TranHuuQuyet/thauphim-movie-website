@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/config.php';
 include __DIR__ . '/../includes/header.php';
 ?>
 
-<link rel="stylesheet" href="/thauphim-movie-website/assets/css/country.css">
+<link rel="stylesheet" href="/assets/css/country.css">
 
 <main class="country-page">
     <section class="country-movies" id="countryMovies" aria-labelledby="country-movies-title">
@@ -24,6 +24,6 @@ include __DIR__ . '/../includes/header.php';
     </noscript>
 </main>
 
-<script src="/thauphim-movie-website/assets/js/country.js"></script>
+<script src="/assets/js/country.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

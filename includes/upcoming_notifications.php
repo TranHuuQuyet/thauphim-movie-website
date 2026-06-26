@@ -9,7 +9,7 @@ function upcoming_notification_poster(?string $poster, ?string $posterPath): str
             return $poster;
         }
 
-        return "/thauphim-movie-website/" . ltrim($poster, "/");
+        return "/" . ltrim($poster, "/");
     }
 
     $posterPath = trim((string) $posterPath);
@@ -17,7 +17,7 @@ function upcoming_notification_poster(?string $poster, ?string $posterPath): str
         return "https://image.tmdb.org/t/p/w185" . $posterPath;
     }
 
-    return "/thauphim-movie-website/assets/images/poster_movie.jpg";
+    return "/assets/images/poster_movie.jpg";
 }
 
 function get_upcoming_notifications(): array

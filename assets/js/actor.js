@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const API_BASE = "/api";
   const actorList = document.querySelector("#actorList");
   const actorStatus = document.querySelector("#actorStatus");
 
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setStatus("Đang tải diễn viên...", "loading");
 
     try {
-      const response = await fetch("/thauphim-movie-website/api/actors.php?page=1&limit=20", {
+      const response = await fetch(`${API_BASE}/actors.php?page=1&limit=20`, {
         headers: {
           Accept: "application/json",
         },

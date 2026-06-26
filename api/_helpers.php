@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 
 if (!defined('APP_BASE_PATH')) {
-    define('APP_BASE_PATH', '/thauphim-movie-website/');
+    define('APP_BASE_PATH', '/');
 }
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
