@@ -24,10 +24,6 @@ include __DIR__ . '/../includes/header.php';
     </noscript>
 </main>
 
-<script>
-const TMDB_API_KEY = <?= json_encode(TMDB_API_KEY, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
-const TMDB_COUNTRIES = <?= json_encode($TMDB_COUNTRIES ?? [], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
-</script>
 <script src="/thauphim-movie-website/assets/js/country.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

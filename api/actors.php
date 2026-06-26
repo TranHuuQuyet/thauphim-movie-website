@@ -3,6 +3,18 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/_helpers.php';
 
+function apiActorProfileUrl(?string $avatar, ?string $profilePath): ?string
+{
+    $avatar = trim((string) $avatar);
+    $profilePath = trim((string) $profilePath);
+
+    if ($avatar !== '' && $profilePath !== '' && $avatar === $profilePath && str_starts_with($profilePath, '/')) {
+        return TMDB_IMAGE_BASE . 'w500' . $profilePath;
+    }
+
+    return apiImageUrl($avatar !== '' ? $avatar : null, $profilePath !== '' ? $profilePath : null, 'w500');
+}
+
 try {
     $pdo = getDatabaseConnection();
 
@@ -58,7 +70,7 @@ try {
             'name' => $actor['name'],
             'avatar' => $actor['avatar'],
             'profile_path' => $actor['profile_path'],
-            'profile_url' => apiImageUrl($actor['avatar'], $actor['profile_path'], 'w500'),
+            'profile_url' => apiActorProfileUrl($actor['avatar'], $actor['profile_path']),
             'biography' => $actor['biography'],
             'known_for_department' => $actor['known_for_department'],
             'movie_count' => (int) $actor['movie_count'],

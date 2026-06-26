@@ -1,10 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   document.title = "Quốc gia - ThauPhim";
 
-  const countries =
-    typeof TMDB_COUNTRIES !== "undefined" && Array.isArray(TMDB_COUNTRIES)
-      ? TMDB_COUNTRIES
-      : [];
+  const API_BASE = "/thauphim-movie-website/api";
   const movieTitle = document.querySelector("#country-movies-title");
   const movieStatus = document.querySelector("#countryMovieStatus");
   const movieList = document.querySelector("#countryMovieList");
@@ -70,6 +67,21 @@ document.addEventListener("DOMContentLoaded", () => {
     applyScrollState();
   };
 
+  const fetchApi = async (url) => {
+    const response = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+    const payload = await response.json().catch(() => null);
+
+    if (!response.ok || !payload?.success) {
+      throw new Error(payload?.message || "Internal API request failed");
+    }
+
+    return payload.data;
+  };
+
   const renderLoadingState = () => {
     movieStatus.className = "country-movie-status is-loading";
     movieStatus.textContent = "Đang tải phim...";
@@ -105,9 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const poster = document.createElement("div");
     poster.className = "country-movie-card__poster";
 
-    if (movie.posterPath) {
+    if (movie.posterUrl) {
       const image = document.createElement("img");
-      image.src = `https://image.tmdb.org/t/p/w342${movie.posterPath}`;
+      image.src = movie.posterUrl;
       image.alt = `Poster phim ${movie.title}`;
       image.loading = "lazy";
       image.width = 342;
@@ -125,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     title.textContent = movie.title;
 
     const year = document.createElement("p");
-    year.textContent = movie.releaseDate ? movie.releaseDate.slice(0, 4) : "Đang cập nhật";
+    year.textContent = movie.releaseYear || movie.releaseDate?.slice(0, 4) || "Đang cập nhật";
 
     content.append(title, year);
     article.append(poster, content);
@@ -135,8 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const normalizeMovie = (movie) => ({
     id: movie.id,
     title: movie.title || movie.original_title || "Chưa có tên tiếng Việt",
-    posterPath: movie.poster_path,
+    posterUrl: movie.poster_url || null,
     releaseDate: movie.release_date || "",
+    releaseYear: movie.release_year || null,
   });
 
   const renderCountryError = () => {
@@ -147,29 +160,41 @@ document.addEventListener("DOMContentLoaded", () => {
       '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><strong>Không có dữ liệu</strong><span>Hãy chọn lại một quốc gia trong menu.</span>';
   };
 
-  const loadMovies = async (country) => {
-    movieTitle.textContent = `Phim ${country.name}`;
+  const redirectToFirstCountry = async () => {
     renderLoadingState();
-    document.title = `${country.name} - ThauPhim`;
-
-    const params = new URLSearchParams({
-      api_key: TMDB_API_KEY,
-      language: "vi-VN",
-      sort_by: "popularity.desc",
-      include_adult: "false",
-      page: "1",
-      with_origin_country: country.code,
-    });
 
     try {
-      const response = await fetch(`https://api.themoviedb.org/3/discover/movie?${params}`);
+      const countries = await fetchApi(`${API_BASE}/countries.php`);
+      const firstCountry = Array.isArray(countries)
+        ? countries.find((country) => country.code)
+        : null;
 
-      if (!response.ok) {
-        throw new Error("TMDB request failed");
+      if (!firstCountry) {
+        renderCountryError();
+        return;
       }
 
-      const data = await response.json();
-      const movies = (data.results || []).map(normalizeMovie).slice(0, 12);
+      window.location.replace(
+        `${window.location.pathname}?code=${encodeURIComponent(firstCountry.code)}`,
+      );
+    } catch (error) {
+      console.error("Không thể tải danh sách quốc gia:", error);
+      renderCountryError();
+    }
+  };
+
+  const loadMovies = async (countryCode) => {
+    renderLoadingState();
+
+    try {
+      const data = await fetchApi(
+        `${API_BASE}/movies-by-country.php?code=${encodeURIComponent(countryCode)}`,
+      );
+      const country = data.country || { code: countryCode, name: countryCode };
+      const movies = Array.isArray(data.movies) ? data.movies.map(normalizeMovie) : [];
+
+      movieTitle.textContent = `Phim ${country.name}`;
+      document.title = `${country.name} - ThauPhim`;
       movieList.replaceChildren();
 
       if (movies.length === 0) {
@@ -197,26 +222,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const requestedCode = new URLSearchParams(window.location.search).get("code");
   if (!requestedCode) {
-    const firstCountry = countries[0];
-    if (firstCountry?.code) {
-      window.location.replace(
-        `${window.location.pathname}?code=${encodeURIComponent(firstCountry.code)}`,
-      );
-      return;
-    }
+    redirectToFirstCountry();
+    return;
+  }
 
+  const countryCode = requestedCode.trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(countryCode)) {
     renderCountryError();
     return;
   }
 
-  const selectedCountry = countries.find(
-    (country) => country.code === requestedCode.toUpperCase(),
-  );
-
-  if (!selectedCountry) {
-    renderCountryError();
-    return;
-  }
-
-  loadMovies(selectedCountry);
+  loadMovies(countryCode);
 });

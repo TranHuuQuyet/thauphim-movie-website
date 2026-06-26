@@ -67,7 +67,7 @@ $notificationCount = count($upcomingNotifications);
                         </summary>
                         <div class="nav-dropdown-menu">
                             <?php foreach ($tmdbCountries as $country): ?>
-                            <a href="/thauphim-movie-website/pages/browse.php?country=<?= urlencode($country['code']) ?>">
+                            <a href="/thauphim-movie-website/pages/country.php?code=<?= urlencode($country['code']) ?>">
                                 <?= htmlspecialchars($country['name'], ENT_QUOTES, 'UTF-8') ?>
                             </a>
                             <?php endforeach; ?>
