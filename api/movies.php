@@ -107,6 +107,5 @@ try {
 
     apiSuccess($movies, apiPaginationMeta($page, $limit, $total));
 } catch (Throwable $exception) {
-    error_log($exception->getMessage());
-    apiError('Khong the tai danh sach phim.');
+    apiServerError('Khong the tai danh sach phim.', $exception);
 }

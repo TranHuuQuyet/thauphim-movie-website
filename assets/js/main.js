@@ -85,12 +85,18 @@ const fetchMovies = async (params = {}) => {
   });
 
   const response = await fetch(url);
+  const payload = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(`Movies API request failed: ${response.status}`);
+    const debugMessage = payload?.debug?.message
+      ? ` (${payload.debug.message})`
+      : "";
+    throw new Error(
+      payload?.message
+        ? `${payload.message}${debugMessage}`
+        : `Movies API request failed: ${response.status}`,
+    );
   }
-
-  const payload = await response.json();
 
   if (!payload.success || !Array.isArray(payload.data)) {
     throw new Error(payload.message || "Movies API response is invalid.");

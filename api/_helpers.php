@@ -40,6 +40,25 @@ function apiError(string $message, int $statusCode = 500): void
     ], $statusCode);
 }
 
+function apiServerError(string $message, Throwable $exception, int $statusCode = 500): void
+{
+    error_log($exception->getMessage());
+
+    $payload = [
+        'success' => false,
+        'message' => $message,
+    ];
+
+    if (defined('APP_DEBUG') && APP_DEBUG) {
+        $payload['debug'] = [
+            'type' => get_class($exception),
+            'message' => $exception->getMessage(),
+        ];
+    }
+
+    apiSend($payload, $statusCode);
+}
+
 function apiReadJson(): array
 {
     $rawInput = file_get_contents('php://input');

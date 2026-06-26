@@ -33,6 +33,5 @@ try {
 
     apiSuccess($episodes);
 } catch (Throwable $exception) {
-    error_log($exception->getMessage());
-    apiError('Khong the tai danh sach tap phim.');
+    apiServerError('Khong the tai danh sach tap phim.', $exception);
 }

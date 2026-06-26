@@ -28,6 +28,5 @@ try {
 
     apiSuccess($countries);
 } catch (Throwable $exception) {
-    error_log($exception->getMessage());
-    apiError('Khong the tai danh sach quoc gia.');
+    apiServerError('Khong the tai danh sach quoc gia.', $exception);
 }

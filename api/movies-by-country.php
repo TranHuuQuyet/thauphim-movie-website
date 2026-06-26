@@ -47,6 +47,5 @@ try {
         'movies' => array_map('apiMovieRow', $movieStatement->fetchAll()),
     ]);
 } catch (Throwable $exception) {
-    error_log($exception->getMessage());
-    apiError('Khong the tai phim theo quoc gia.');
+    apiServerError('Khong the tai phim theo quoc gia.', $exception);
 }
