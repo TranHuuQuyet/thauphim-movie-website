@@ -45,6 +45,28 @@ const moviePosterUrl = (movie, size = "w500") =>
 const movieBackdropUrl = (movie, size = "original") =>
   imageUrl(movie.backdrop_url || movie.backdrop || movie.backdrop_path, size, FALLBACK_BACKDROP);
 
+const getMovieId = (movie) => Number(movie?.id || movie?.movie_id || 0);
+
+const movieDetailUrl = (movie, fallbackAnchor = "featured") => {
+  const movieId = getMovieId(movie);
+
+  if (!movieId) {
+    return `#${fallbackAnchor}`;
+  }
+
+  return `${APP_ROOT}pages/movie-detail.php?id=${encodeURIComponent(movieId)}`;
+};
+
+const movieWatchUrl = (movie, fallbackAnchor = "featured") => {
+  const movieId = getMovieId(movie);
+
+  if (!movieId) {
+    return `#${fallbackAnchor}`;
+  }
+
+  return `${APP_ROOT}pages/watch.php?movie_id=${encodeURIComponent(movieId)}`;
+};
+
 const stateMarkup = (type, text) => `
   <div class="ui-state ui-state--${type}">
     <i class="fa-solid ${
@@ -111,10 +133,11 @@ const movieCardMarkup = (movie, anchorId) => {
   const poster = moviePosterUrl(movie, "w500");
   const year = escapeHtml(movieYear(movie));
   const rating = escapeHtml(movieRating(movie));
+  const detailUrl = movieDetailUrl(movie, anchorId);
 
   return `
     <article class="movie-grid-card">
-      <a class="movie-card" href="#${anchorId}" aria-label="${title}">
+      <a class="movie-card" href="${detailUrl}" aria-label="${title}">
         <img src="${poster}" alt="${title}" loading="lazy">
         <span class="movie-status">HD</span>
       </a>
@@ -208,6 +231,7 @@ const loadTopMovies = async () => {
       .map((movie, index) => {
         const title = escapeHtml(movieTitle(movie));
         const backdrop = movieBackdropUrl(movie, "w780");
+        const watchUrl = movieWatchUrl(movie, "top-week");
         const overview = escapeHtml(
           movie.overview || "Nội dung phim đang được cập nhật.",
         );
@@ -222,7 +246,7 @@ const loadTopMovies = async () => {
                 <i class="fa-solid fa-star" aria-hidden="true"></i>
                 ${escapeHtml(movieRating(movie))}
               </div>
-              <a class="play-btn" href="#top-week">XEM NGAY</a>
+              <a class="play-btn" href="${watchUrl}" aria-label="Xem ${title}">XEM NGAY</a>
               <p>${overview}</p>
             </div>
           </div>
@@ -291,6 +315,9 @@ const loadNewMovies = async () => {
         const title = escapeHtml(movieTitle(movie));
         const original = escapeHtml(movieOriginalTitle(movie));
         const backdrop = movieBackdropUrl(movie, "original");
+        const movieId = getMovieId(movie);
+        const detailUrl = movieDetailUrl(movie, "new-movies");
+        const watchUrl = movieWatchUrl(movie, "new-movies");
         const overview = escapeHtml(
           movie.overview || "Nội dung phim đang được cập nhật.",
         );
@@ -313,13 +340,13 @@ const loadNewMovies = async () => {
               <p class="movie-summary">${overview}</p>
 
               <div class="movie-actions">
-                <a class="watch-button" href="#new-movies" aria-label="Xem khu vực phim mới">
+                <a class="watch-button" href="${watchUrl}" aria-label="Xem ${title}">
                   <i class="fa-solid fa-play" aria-hidden="true"></i>
                 </a>
-                <button type="button" data-ui-placeholder aria-label="Yêu thích UI tạm thời">
+                <button type="button" data-home-favorite="${movieId}" aria-pressed="false" aria-label="Yêu thích ${title}">
                   <i class="fa-solid fa-heart" aria-hidden="true"></i>
                 </button>
-                <button type="button" data-ui-placeholder aria-label="Chi tiết UI tạm thời">
+                <button type="button" data-home-link="${detailUrl}" aria-label="Chi tiết ${title}">
                   <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                 </button>
               </div>
@@ -477,16 +504,90 @@ const setupHomeSearch = () => {
   });
 };
 
+const openLoginModal = () => {
+  const trigger = document.querySelector("[data-open-login]");
+
+  if (trigger) {
+    trigger.click();
+    return;
+  }
+
+  window.location.href = `${APP_ROOT}index.php#authModal`;
+};
+
+const requestJson = async (url, options = {}) => {
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    ...options,
+  });
+
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok || !payload || payload.success === false) {
+    const error = new Error(payload?.message || "Không thể thực hiện yêu cầu.");
+    error.status = response.status;
+    throw error;
+  }
+
+  return payload.data;
+};
+
 const setupPlaceholderButtons = () => {
-  document.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-ui-placeholder]");
+  document.addEventListener("click", async (event) => {
+    const favoriteButton = event.target.closest("[data-home-favorite]");
+
+    if (favoriteButton) {
+      const movieId = Number(favoriteButton.dataset.homeFavorite || 0);
+
+      if (!movieId) {
+        return;
+      }
+
+      favoriteButton.disabled = true;
+
+      try {
+        const favorite = await requestJson(`${API_BASE}/favorites.php`, {
+          method: "POST",
+          body: JSON.stringify({ movie_id: movieId }),
+        });
+
+        favoriteButton.classList.toggle("is-favorite", Boolean(favorite.is_favorite));
+        favoriteButton.setAttribute(
+          "aria-pressed",
+          favorite.is_favorite ? "true" : "false",
+        );
+        favoriteButton.title = favorite.is_favorite
+          ? "Đã thêm vào yêu thích"
+          : "Đã bỏ khỏi yêu thích";
+      } catch (error) {
+        if (error.status === 401) {
+          openLoginModal();
+          return;
+        }
+
+        alert(error.message);
+      } finally {
+        favoriteButton.disabled = false;
+      }
+
+      return;
+    }
+
+    const button = event.target.closest("[data-home-link]");
 
     if (!button) {
       return;
     }
 
-    button.classList.add("is-touched");
-    window.setTimeout(() => button.classList.remove("is-touched"), 700);
+    const targetUrl = button.getAttribute("data-home-link");
+
+    if (targetUrl) {
+      window.location.href = targetUrl;
+    }
   });
 };
 
