@@ -51,7 +51,7 @@ function assetPath($path, $fallback)
         return $fallback;
     }
 
-    return "../" . $cleanPath;
+    return "/" . $cleanPath;
 }
 
 function episodeLabel($movieType, $episode)
@@ -247,7 +247,6 @@ if ($currentUserDbId) {
         INSERT INTO watch_history (user_id, movie_id, episode_id, progress_seconds, watched_at)
         VALUES (?, ?, ?, ?, NOW())
         ON DUPLICATE KEY UPDATE
-            progress_seconds = VALUES(progress_seconds),
             movie_id = VALUES(movie_id),
             watched_at = NOW()
     ");
@@ -343,13 +342,13 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 
             <div class="watch-episode-nav">
                 <?php if ($prevEpisode): ?>
-                    <a href="watch.php?episode_id=<?= (int) $prevEpisode["id"] ?>">
+                    <a href="watch.php?movie_id=<?= (int) $movieId ?>&episode_id=<?= (int) $prevEpisode["id"] ?>">
                         ← Tập trước
                     </a>
                 <?php endif; ?>
 
                 <?php if ($nextEpisode): ?>
-                    <a href="watch.php?episode_id=<?= (int) $nextEpisode["id"] ?>">
+                    <a href="watch.php?movie_id=<?= (int) $movieId ?>&episode_id=<?= (int) $nextEpisode["id"] ?>">
                         Tập sau →
                     </a>
                 <?php endif; ?>
@@ -407,7 +406,8 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                             $label = episodeLabel($movie["type"], $episode);
                             ?>
                             <a class="watch-episode-btn <?= $isActive ? "active" : "" ?>"
-                                href="watch.php?episode_id=<?= (int) $episode["id"] ?>"> ▶ <?= e($label) ?>
+                                href="watch.php?movie_id=<?= (int) $movieId ?>&episode_id=<?= (int) $episode["id"] ?>">
+                                ▶ <?= e($label) ?>
                             </a>
                         <?php endforeach; ?>
                     </div>
@@ -547,7 +547,6 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
         episodeId: <?= json_encode($episodeId) ?>,
         progressSeconds: <?= json_encode($startSeconds) ?>,
         isLoggedIn: <?= $currentUserDbId !== null ? "true" : "false" ?>,
-        updateUrl: "<?= APP_BASE_PATH ?>api/update-watch-history.php"
     };
 
     window.movieInteractionData = {
