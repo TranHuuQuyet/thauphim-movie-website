@@ -49,6 +49,7 @@
     aspect-ratio: 16 / 9;
     background: var(--color-surface-muted);
     overflow: hidden;
+    border-radius: 16px;
 }
 
 .watch-player iframe {
@@ -56,6 +57,7 @@
     height: 100%;
     display: block;
     border: none;
+    border-radius: inherit;
 }
 
 .watch-actions {
@@ -74,9 +76,11 @@
     background: transparent;
     color: var(--color-text);
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 800;
+    line-height: 1;
     cursor: pointer;
     padding: 0;
+    margin-left: 2rem;
 }
 
 .watch-actions a:hover,
@@ -228,7 +232,7 @@
     margin-top: 1rem;
     background: var(--color-card-bg);
     border: 1px solid var(--color-border-muted);
-    border-radius: 14px;
+    border-radius: 16px;
     padding: 0.8rem;
 }
 
@@ -305,7 +309,7 @@
 .rating-message,
 .rating-login-note {
     color: var(--color-text-soft);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .rating-login-note a {
@@ -526,17 +530,18 @@
     display: block;
     background: transparent;
     padding: 0;
+    border: none;
 }
 
 .watch-empty-comment .comment-item {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .comment-item {
     background: var(--color-surface-muted);
     border: 1px solid var(--color-border-muted);
-    border-radius: 8px;
-    padding: 14px;
+    border-radius: 16px;
+    padding: 16px;
 }
 
 .comment-item-head {
