@@ -16,6 +16,9 @@ if ($movieId <= 0 && $episodeId > 0) {
         SELECT movie_id
         FROM episodes
         WHERE id = ?
+            AND is_published = 1
+            AND youtube_url IS NOT NULL
+            AND youtube_url <> ''
         LIMIT 1
     ");
     $stmt->execute([$episodeId]);
@@ -48,7 +51,7 @@ function assetPath($path, $fallback)
         return $fallback;
     }
 
-    return "/" . $cleanPath;
+    return "../" . $cleanPath;
 }
 
 function episodeLabel($movieType, $episode)
@@ -137,6 +140,9 @@ $stmt = $pdo->prepare("
     SELECT *
     FROM episodes
     WHERE movie_id = ?
+        AND is_published = 1
+        AND youtube_url IS NOT NULL
+        AND youtube_url <> ''
     ORDER BY episode_number ASC
 ");
 $stmt->execute([$movieId]);
@@ -164,6 +170,12 @@ foreach ($episodes as $episode) {
 if (!$currentEpisode) {
     $currentEpisode = $episodes[0];
     $episodeId = (int) $currentEpisode["id"];
+}
+
+if (empty($currentEpisode["youtube_url"])) {
+    echo "<main class='page-shell watch-page'><p>Tập phim này hiện chưa có.</p></main>";
+    include __DIR__ . '/../includes/footer.php';
+    exit;
 }
 
 $currentEpisodeIndex = 0;
@@ -235,6 +247,7 @@ if ($currentUserDbId) {
         INSERT INTO watch_history (user_id, movie_id, episode_id, progress_seconds, watched_at)
         VALUES (?, ?, ?, ?, NOW())
         ON DUPLICATE KEY UPDATE
+            progress_seconds = VALUES(progress_seconds),
             movie_id = VALUES(movie_id),
             watched_at = NOW()
     ");
@@ -319,8 +332,8 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
             </div>
 
             <div class="watch-actions">
-                <button class="<?= $isFavorite ? "is-favorite" : "" ?>" type="button"
-                    data-favorite-toggle data-movie-id="<?= $movieId ?>" aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
+                <button class="<?= $isFavorite ? "is-favorite" : "" ?>" type="button" data-favorite-toggle
+                    data-movie-id="<?= $movieId ?>" aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
                     <?= $isFavorite ? "♥" : "♡" ?> Yêu thích
                 </button>
                 <a href="account.php?tab=favorites">＋ Danh sách</a>
@@ -330,13 +343,13 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 
             <div class="watch-episode-nav">
                 <?php if ($prevEpisode): ?>
-                    <a href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $prevEpisode["id"] ?>">
+                    <a href="watch.php?episode_id=<?= (int) $prevEpisode["id"] ?>">
                         ← Tập trước
                     </a>
                 <?php endif; ?>
 
                 <?php if ($nextEpisode): ?>
-                    <a href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $nextEpisode["id"] ?>">
+                    <a href="watch.php?episode_id=<?= (int) $nextEpisode["id"] ?>">
                         Tập sau →
                     </a>
                 <?php endif; ?>
@@ -394,8 +407,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                             $label = episodeLabel($movie["type"], $episode);
                             ?>
                             <a class="watch-episode-btn <?= $isActive ? "active" : "" ?>"
-                                href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $episode["id"] ?>"> ▶
-                                <?= e($label) ?>
+                                href="watch.php?episode_id=<?= (int) $episode["id"] ?>"> ▶ <?= e($label) ?>
                             </a>
                         <?php endforeach; ?>
                     </div>
@@ -458,7 +470,8 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                     <h2>Đánh giá phim</h2>
                     <div class="watch-rating-content">
                         <div class="rating-summary">
-                            <strong id="ratingAverage"><?= $ratingCount > 0 ? e(number_format($ratingAverage, 1) . " / 5") : "Chưa có đánh giá" ?></strong>
+                            <strong
+                                id="ratingAverage"><?= $ratingCount > 0 ? e(number_format($ratingAverage, 1) . " / 5") : "Chưa có đánh giá" ?></strong>
                             <span id="ratingTotal"><?= (int) $ratingCount ?> lượt đánh giá</span>
                         </div>
 
@@ -469,7 +482,8 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                         <?php else: ?>
                             <div class="rating-stars" id="ratingStars">
                                 <?php for ($star = 1; $star <= 5; $star++): ?>
-                                    <button type="button" data-rating="<?= $star ?>" class="<?= $userRating !== null && $star <= $userRating ? "active" : "" ?>">
+                                    <button type="button" data-rating="<?= $star ?>"
+                                        class="<?= $userRating !== null && $star <= $userRating ? "active" : "" ?>">
                                         <?= $userRating !== null && $star <= $userRating ? "★" : "☆" ?>
                                     </button>
                                 <?php endfor; ?>
@@ -532,7 +546,8 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
         movieId: <?= json_encode($movieId) ?>,
         episodeId: <?= json_encode($episodeId) ?>,
         progressSeconds: <?= json_encode($startSeconds) ?>,
-        isLoggedIn: <?= $currentUserDbId !== null ? "true" : "false" ?>
+        isLoggedIn: <?= $currentUserDbId !== null ? "true" : "false" ?>,
+        updateUrl: "<?= APP_BASE_PATH ?>api/update-watch-history.php"
     };
 
     window.movieInteractionData = {
