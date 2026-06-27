@@ -327,13 +327,23 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
         <section class="detail-main-content">
             <section class="detail-actions">
 
-                <?php if ($firstEpisode): ?>
+                <?php if ($firstEpisode && $watchAccess["allowed"]): ?>
                     <a class="play-btn" id="watchNowBtn"
-                        href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $firstEpisode["id"] ?>">
-                        ▶ Xem Ngay
+                        href="watch.php?movie_id=<?= (int) $movieId ?>&episode_id=<?= (int) $firstEpisode["id"] ?>">
+                        ▶ Xem ngay
                     </a>
+                <?php elseif ($firstEpisode && $watchAccess["code"] === "login_required"): ?>
+                    <a class="play-btn" id="watchNowBtn" href="#authModal" data-open-login>
+                        ▶ Đăng nhập để xem
+                    </a>
+                <?php elseif ($firstEpisode): ?>
+                    <button class="play-btn" type="button" disabled>
+                        <?= e($watchAccess["message"] ?? "Bạn chưa có quyền xem phim này") ?>
+                    </button>
                 <?php else: ?>
-                    <button class="play-btn" type="button" disabled>Chưa có tập</button>
+                    <button class="play-btn" type="button" disabled>
+                        Chưa có tập
+                    </button>
                 <?php endif; ?>
 
                 <?php if ($continueWatching): ?>
@@ -540,7 +550,17 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
     </section>
 </main>
 
+<script>
+    window.movieInteractionData = {
+        movieId: <?= json_encode($movieId) ?>,
+        isLoggedIn: <?= $isLoggedIn ? "true" : "false" ?>,
+        endpointsBase: "/api/",
+        loginUrl: "/index.php#authModal"
+    };
+</script>
+
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/movie-detail.js"></script>
+<script src="/assets/js/movie-interactions.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
