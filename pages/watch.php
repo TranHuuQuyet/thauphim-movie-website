@@ -34,24 +34,25 @@ function e($value)
     return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
 }
 
-function assetPath($path, $fallback)
+function assetPath($path, $fallback, $size = "w500")
 {
     if (empty($path)) {
         return $fallback;
     }
 
-    if (preg_match('/^https?:\/\//i', (string) $path) || str_starts_with((string) $path, "data:")) {
-        return (string) $path;
+    if (preg_match('/^https?:\/\//i', $path) || str_starts_with($path, "data:")) {
+        return $path;
     }
 
-    $cleanPath = ltrim((string) $path, "/");
-    $fullPath = __DIR__ . "/../" . $cleanPath;
-
-    if (!file_exists($fullPath)) {
-        return $fallback;
+    if (str_starts_with($path, "/assets/") || str_starts_with($path, "assets/")) {
+        return "/" . ltrim($path, "/");
     }
 
-    return "/" . $cleanPath;
+    if (str_starts_with($path, "/")) {
+        return "https://image.tmdb.org/t/p/" . $size . $path;
+    }
+
+    return "/" . ltrim($path, "/");
 }
 
 function episodeLabel($movieType, $episode)
@@ -191,7 +192,7 @@ $prevEpisode = $episodes[$currentEpisodeIndex - 1] ?? null;
 $nextEpisode = $episodes[$currentEpisodeIndex + 1] ?? null;
 
 $stmt = $pdo->prepare("
-    SELECT actors.name, actors.avatar
+    SELECT actors.name, actors.avatar, actors.profile_path
     FROM movie_actors
     INNER JOIN actors ON movie_actors.actor_id = actors.id
     WHERE movie_actors.movie_id = ?
@@ -358,7 +359,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
         <section class="watch-layout">
             <section class="watch-main">
                 <section class="watch-movie-info">
-                    <img src="<?= e(assetPath($movie["poster"], "/assets/images/poster_movie.jpg")) ?>"
+                    <img src="<?= e(assetPath($movie["poster"] ?: ($movie["poster_path"] ?? ""), "/assets/images/poster_movie.jpg", "w500")) ?>"
                         alt="<?= e($movie["title"]) ?>">
 
                     <div>
@@ -505,7 +506,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                         <div class="watch-actor-grid">
                             <?php foreach ($actors as $actor): ?>
                                 <div class="watch-actor-item">
-                                    <img src="<?= e(assetPath($actor["avatar"], "/assets/images/favicon.png")) ?>"
+                                    <img src="<?= e(assetPath($actor["avatar"] ?: ($actor["profile_path"] ?? ""), "/assets/images/avatar-default.png", "w185")) ?>"
                                         alt="<?= e($actor["name"]) ?>">
                                     <span>
                                         <?= e($actor["name"]) ?>
@@ -521,7 +522,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 
                     <?php foreach ($relatedMovies as $related): ?>
                         <a class="watch-related-item" href="movie-detail.php?id=<?= $related["id"] ?>">
-                            <img src="<?= e(assetPath($related["poster"], "/assets/images/poster_movie.jpg")) ?>"
+                            <img src="<?= e(assetPath($related["poster"] ?: ($related["poster_path"] ?? ""), "/assets/images/poster_movie.jpg", "w500")) ?>"
                                 alt="<?= e($related["title"]) ?>">
 
                             <div>

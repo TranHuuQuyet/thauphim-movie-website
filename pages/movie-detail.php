@@ -18,24 +18,27 @@ function e($value)
     return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
 }
 
-function assetPath($path, $fallback)
+function assetPath($path, $fallback, $size = "w500")
 {
     if (empty($path)) {
         return $fallback;
     }
 
-    if (preg_match('/^https?:\/\//i', (string) $path) || str_starts_with((string) $path, "data:")) {
-        return (string) $path;
+    $path = trim((string) $path);
+
+    if (preg_match('/^https?:\/\//i', $path) || str_starts_with($path, "data:")) {
+        return $path;
     }
 
-    $cleanPath = ltrim($path, "/");
-    $fullPath = __DIR__ . "/../" . $cleanPath;
-
-    if (!file_exists($fullPath)) {
-        return $fallback;
+    if (str_starts_with($path, "/assets/") || str_starts_with($path, "assets/")) {
+        return "/" . ltrim($path, "/");
     }
 
-    return "../" . $cleanPath;
+    if (str_starts_with($path, "/")) {
+        return "https://image.tmdb.org/t/p/" . $size . $path;
+    }
+
+    return "/" . ltrim($path, "/");
 }
 
 function statusText($status)
@@ -258,8 +261,11 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
             <?php if ($heroVideoUrl !== ""): ?>
                 <iframe src="<?= e($heroVideoUrl) ?>" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             <?php else: ?>
-                <img src="<?= e(assetPath($movie["backdrop"] ?: $movie["poster"], "/assets/images/poster_movie.jpg")) ?>"
-                    alt="<?= e($movie["title"]) ?>">
+                <img src="<?= e(assetPath(
+                    $movie["backdrop"] ?: ($movie["backdrop_path"] ?? "") ?: $movie["poster"] ?: ($movie["poster_path"] ?? ""),
+                    "/assets/images/poster_movie.jpg",
+                    "w1280"
+                )) ?>" alt="<?= e($movie["title"]) ?>">
             <?php endif; ?>
         </div>
 
@@ -270,7 +276,7 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
         <section id="movie-info" class="detail-sidebar">
             <div class="detail-info-card">
                 <div class="detail-poster">
-                    <img src="<?= e(assetPath($movie["poster"], "/assets/images/poster_movie.jpg")) ?>"
+                    <img src="<?= e(assetPath($movie["poster"] ?: ($movie["poster_path"] ?? ""), "/assets/images/poster_movie.jpg", "w500")) ?>"
                         alt="<?= e($movie["title"]) ?>">
                 </div>
 
@@ -448,7 +454,7 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
                     <?php else: ?>
                         <?php foreach ($relatedMovies as $related): ?>
                             <a class="related-movie-card" href="movie-detail.php?id=<?= $related["id"] ?>">
-                                <img src="<?= e(assetPath($related["poster"], "/assets/images/poster_movie.jpg")) ?>"
+                                <img src="<?= e(assetPath($related["poster"] ?: ($related["poster_path"] ?? ""), "/assets/images/poster_movie.jpg", "w500")) ?>"
                                     alt="<?= e($related["title"]) ?>">
                                 <h3><?= e($related["title"]) ?></h3>
                             </a>
