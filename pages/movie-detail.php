@@ -5,10 +5,10 @@ require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 
 $pdo = getDatabaseConnection();
-$currentUser = auth_current_user($pdo);
 
 $movieId = isset($_GET["id"]) ? (int) $_GET["id"] : 1;
 
+$currentUser = auth_current_user($pdo);
 $isLoggedIn = $currentUser !== null;
 $currentUserId = $currentUser ? (int) $currentUser["id"] : null;
 $currentUserName = $currentUser["username"] ?? "Bạn";
@@ -28,14 +28,14 @@ function assetPath($path, $fallback)
         return (string) $path;
     }
 
-    $cleanPath = ltrim((string) $path, "/");
+    $cleanPath = ltrim($path, "/");
     $fullPath = __DIR__ . "/../" . $cleanPath;
 
     if (!file_exists($fullPath)) {
         return $fallback;
     }
 
-    return "/" . $cleanPath;
+    return "../" . $cleanPath;
 }
 
 function statusText($status)
@@ -121,6 +121,9 @@ $stmt = $pdo->prepare("
     SELECT *
     FROM episodes
     WHERE movie_id = ?
+        AND is_published = 1
+        AND youtube_url IS NOT NULL
+        AND youtube_url <> ''
     ORDER BY episode_number ASC
 ");
 $stmt->execute([$movieId]);
@@ -139,6 +142,9 @@ if ($currentUserId !== null) {
         INNER JOIN episodes ON watch_history.episode_id = episodes.id
         WHERE watch_history.user_id = ?
           AND watch_history.movie_id = ?
+            AND episodes.is_published = 1
+            AND episodes.youtube_url IS NOT NULL
+            AND episodes.youtube_url <> ''
         ORDER BY watch_history.watched_at DESC
         LIMIT 1
     ");
@@ -187,7 +193,8 @@ if ($currentUserId !== null) {
     $stmt = $pdo->prepare("
         SELECT id
         FROM favorites
-        WHERE user_id = ? AND movie_id = ?
+        WHERE user_id = ?
+          AND movie_id = ?
         LIMIT 1
     ");
     $stmt->execute([$currentUserId, $movieId]);
@@ -196,7 +203,8 @@ if ($currentUserId !== null) {
     $stmt = $pdo->prepare("
         SELECT rating
         FROM ratings
-        WHERE user_id = ? AND movie_id = ?
+        WHERE user_id = ?
+          AND movie_id = ?
         LIMIT 1
     ");
     $stmt->execute([$currentUserId, $movieId]);
@@ -223,6 +231,7 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$movieId]);
 $ratingSummary = $stmt->fetch() ?: ["rating_average" => 0, "rating_count" => 0];
+
 $ratingAverage = round((float) ($ratingSummary["rating_average"] ?? 0), 2);
 $ratingCount = (int) ($ratingSummary["rating_count"] ?? 0);
 
@@ -237,10 +246,8 @@ $statusClass = match ($movie["status"]) {
     default => "status-success"
 };
 
-$heroVideoUrl = youtubeEmbedUrl(
-    $firstEpisode["youtube_url"] ?? "https://www.youtube.com/embed/62bIsvRcPv0",
-    "?autoplay=1&mute=1&controls=0&rel=0"
-);
+$heroVideoUrl = !empty($firstEpisode["youtube_url"])
+    ? youtubeEmbedUrl($firstEpisode["youtube_url"], "?autoplay=1&mute=1&controls=0&rel=0") : "";
 ?>
 
 <link rel="stylesheet" href="/assets/css/movie-detail.css">
@@ -248,8 +255,12 @@ $heroVideoUrl = youtubeEmbedUrl(
 <main class="page-shell detail-page">
     <section class="hero detail-hero">
         <div class="video-bg">
-            <iframe src="<?= e($heroVideoUrl) ?>" allow="autoplay; encrypted-media" allowfullscreen>
-            </iframe>
+            <?php if ($heroVideoUrl !== ""): ?>
+                <iframe src="<?= e($heroVideoUrl) ?>" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <?php else: ?>
+                <img src="<?= e(assetPath($movie["backdrop"] ?: $movie["poster"], "/assets/images/poster_movie.jpg")) ?>"
+                    alt="<?= e($movie["title"]) ?>">
+            <?php endif; ?>
         </div>
 
         <div class="hero-overlay"></div>
@@ -293,12 +304,18 @@ $heroVideoUrl = youtubeEmbedUrl(
 
                     <div class="detail-desc-block">
                         <h3>Giới thiệu</h3>
-                        <p><?= e($movie["description"] ?? "Nội dung phim đang được cập nhật.") ?></p>
+                        <p><?= e($movie["description"] ?: ($movie["overview"] ?? "Nội dung phim đang được cập nhật.")) ?>
+                        </p>
                     </div>
 
                     <div class="detail-info-list">
                         <p><strong>Quốc gia:</strong> <?= e($movie["country_name"] ?? "Đang cập nhật") ?></p>
                         <p><strong>Năm:</strong> <?= e($movie["release_year"] ?? "Đang cập nhật") ?></p>
+                        <p><strong>Tên gốc:</strong> <?= e($movie["original_title"] ?? "Đang cập nhật") ?></p>
+                        <p><strong>Thời lượng:</strong>
+                            <?= !empty($movie["runtime"]) ? e($movie["runtime"] . " phút") : "Đang cập nhật" ?></p>
+                        <p><strong>Điểm TMDB:</strong>
+                            <?= isset($movie["vote_average"]) ? e($movie["vote_average"]) : "Đang cập nhật" ?></p>
                         <p><strong>Loại phim:</strong> <?= e($typeLabel) ?></p>
                         <p><strong>Diễn viên:</strong>
                             <?= e(implode(", ", array_column($actors, "name")) ?: "Đang cập nhật") ?></p>
@@ -312,29 +329,34 @@ $heroVideoUrl = youtubeEmbedUrl(
 
                 <?php if ($firstEpisode && $watchAccess["allowed"]): ?>
                     <a class="play-btn" id="watchNowBtn"
-                        href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $firstEpisode["id"] ?>">
-                        ▶ Xem Ngay
+                        href="watch.php?movie_id=<?= (int) $movieId ?>&episode_id=<?= (int) $firstEpisode["id"] ?>">
+                        ▶ Xem ngay
                     </a>
                 <?php elseif ($firstEpisode && $watchAccess["code"] === "login_required"): ?>
                     <a class="play-btn" id="watchNowBtn" href="#authModal" data-open-login>
                         ▶ Đăng nhập để xem
                     </a>
                 <?php elseif ($firstEpisode): ?>
-                    <button class="play-btn" type="button" disabled><?= e($watchAccess["message"]) ?></button>
+                    <button class="play-btn" type="button" disabled>
+                        <?= e($watchAccess["message"] ?? "Bạn chưa có quyền xem phim này") ?>
+                    </button>
                 <?php else: ?>
-                    <button class="play-btn" type="button" disabled>Chưa có tập</button>
+                    <button class="play-btn" type="button" disabled>
+                        Chưa có tập
+                    </button>
                 <?php endif; ?>
 
-                <?php if ($continueWatching && $watchAccess["allowed"]): ?>
+                <?php if ($continueWatching): ?>
                     <a class="continue-watch-btn"
-                        href="watch.php?movie_id=<?= $movieId ?>&episode_id=<?= $continueWatching["episode_id"] ?>">
+                        href="watch.php?movie_id=<?= (int) $movieId ?>&episode_id=<?= (int) $continueWatching["episode_id"] ?>">
                         ↻ Tiếp tục xem
                         <?= $movie["type"] === "series" ? "- Tập " . e($continueWatching["episode_number"]) : e($continueWatching["episode_title"]) ?>
                     </a>
                 <?php endif; ?>
 
                 <button class="detail-action-btn <?= $isFavorite ? "is-favorite" : "" ?>" id="favoriteBtn" type="button"
-                    data-favorite-toggle data-movie-id="<?= $movieId ?>" aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
+                    data-favorite-toggle data-movie-id="<?= $movieId ?>"
+                    aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
                     <?= $isFavorite ? "♥" : "♡" ?> Yêu thích
                 </button>
                 <?php if ($isLoggedIn): ?>
@@ -499,7 +521,8 @@ $heroVideoUrl = youtubeEmbedUrl(
 
                 <div class="rating-box">
                     <div class="rating-summary">
-                        <strong id="ratingAverage"><?= $ratingCount > 0 ? e(number_format($ratingAverage, 1) . " / 5") : "Chưa có đánh giá" ?></strong>
+                        <strong
+                            id="ratingAverage"><?= $ratingCount > 0 ? e(number_format($ratingAverage, 1) . " / 5") : "Chưa có đánh giá" ?></strong>
                         <span id="ratingTotal"><?= (int) $ratingCount ?> lượt đánh giá</span>
                     </div>
 
@@ -510,7 +533,8 @@ $heroVideoUrl = youtubeEmbedUrl(
                     <?php else: ?>
                         <div class="rating-stars" id="ratingStars">
                             <?php for ($star = 1; $star <= 5; $star++): ?>
-                                <button type="button" data-rating="<?= $star ?>" class="<?= $userRating !== null && $star <= $userRating ? "active" : "" ?>">
+                                <button type="button" data-rating="<?= $star ?>"
+                                    class="<?= $userRating !== null && $star <= $userRating ? "active" : "" ?>">
                                     <?= $userRating !== null && $star <= $userRating ? "★" : "☆" ?>
                                 </button>
                             <?php endfor; ?>
@@ -534,6 +558,7 @@ $heroVideoUrl = youtubeEmbedUrl(
         loginUrl: "/index.php#authModal"
     };
 </script>
+
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/movie-detail.js"></script>
 <script src="/assets/js/movie-interactions.js"></script>
