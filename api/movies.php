@@ -94,7 +94,7 @@ try {
     $total = (int) $countStatement->fetchColumn();
 
     $statement = $pdo->prepare(
-        "SELECT
+        "SELECT DISTINCT
             m.*,
             c.code AS country_code,
             c.name AS country_name
