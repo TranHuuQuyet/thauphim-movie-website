@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Lay cac phan tu filter tren giao dien
     const filterForm = document.querySelector(".filter-form");
-    const keywordInput = document.querySelector('input[name="keyword"]');
+    const keywordInput = document.querySelector('input[name="q"]');
     const genreSelect = document.querySelector('select[name="genre"]');
     const countrySelect = document.querySelector('select[name="country"]');
     const yearSelect = document.querySelector('select[name="year"]');
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Doc cac tham so tren url
     const urlParams = new URLSearchParams(window.location.search);
     
-    if (keywordInput && urlParams.has("keyword")) keywordInput.value = urlParams.get("keyword");
+    if (keywordInput && urlParams.has("q")) keywordInput.value = urlParams.get("q");
     if (genreSelect && urlParams.has("genre")) genreSelect.value = urlParams.get("genre");
     if (countrySelect && urlParams.has("country")) countrySelect.value = urlParams.get("country");
     if (yearSelect && urlParams.has("year")) yearSelect.value = urlParams.get("year");
