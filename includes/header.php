@@ -7,13 +7,6 @@ require_once __DIR__ . "/config.php";
 require_once __DIR__ . "/auth.php";
 require_once __DIR__ . "/upcoming_notifications.php";
 
-try {
-    $menuStmt = $pdo->query('SELECT id, name FROM genres ORDER BY name ASC LIMIT 12');
-    $menuGenres = $menuStmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Throwable $e) {
-    $menuGenres = []; 
-}
-
 $tmdbCountries = $TMDB_COUNTRIES ?? [];
 $currentUser = auth_current_user();
 $isMember = $currentUser !== null;
@@ -64,23 +57,7 @@ $notificationCount = count($upcomingNotifications);
 
             <div class="header-actions" id="primary-menu">
                 <nav class="main-nav" aria-label="Điều hướng chính">
-                <details class="nav-dropdown">
-                        <summary>
-                            Thể loại
-                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-                        </summary>
-                        <div class="nav-dropdown-menu">
-                            <?php if (!empty($menuGenres)): ?>
-                                <?php foreach ($menuGenres as $g): ?>
-                                    <a href="/pages/browse.php?genre=<?= urlencode((string)$g['id']) ?>">
-                                        <?= htmlspecialchars($g['name'], ENT_QUOTES, 'UTF-8') ?>
-                                    </a>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <a href="#">Đang cập nhật...</a>
-                            <?php endif; ?>
-                        </div>
-                    </details>
+                    <a href="/pages/genres.php" class="menu-link">Chủ đề</a>
                     <a href="/index.php#featured">Bộ lọc</a>
                     <a href="/index.php#single-movies">Phim lẻ</a>
                     <a href="/index.php#series-movies">Phim bộ</a>
