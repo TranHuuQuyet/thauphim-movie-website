@@ -39,12 +39,12 @@ $countries = getAllCountriesFromDB();
                            style="width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 4px;">
                 </div>
 
-                <div class="filter-group" style="min-width: 150px;">
-                    <label style="display: block; color: #ccc; margin-bottom: 5px; font-size: 14px;">Định dạng</label>
-                    <select name="type" style="width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 4px;">
-                        <option value="">-- Tất cả --</option>
-                        <option value="movie" <?= ($_GET['type'] ?? '') === 'movie' ? 'selected' : '' ?>>Phim lẻ</option>
-                        <option value="series" <?= ($_GET['type'] ?? '') === 'series' ? 'selected' : '' ?>>Phim bộ</option>
+                <div class="filter-group" style="flex: 1; min-width: 180px;">
+                    <label for="filter-type" style="display: block; color: #aaa; margin-bottom: 8px; font-size: 14px;">Loại phim</label>
+                    <select name="type" id="filter-type" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px;">
+                        <option value="">Tất cả loại phim</option>
+                        <option value="movie" <?= (isset($_GET['type']) && $_GET['type'] === 'movie') ? 'selected' : '' ?>>Phim Lẻ</option>
+                        <option value="series" <?= (isset($_GET['type']) && $_GET['type'] === 'series') ? 'selected' : '' ?>>Phim Bộ</option>
                     </select>
                 </div>
 
