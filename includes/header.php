@@ -30,8 +30,10 @@ $notificationCount = count($upcomingNotifications);
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/auth.css">
     <script src="/assets/js/auth_login.js" defer></script>
+    <script src="/assets/js/theme.js" defer></script>
     <script src="/assets/js/notifications.js" defer></script>
     <script src="/assets/js/account-menu.js" defer></script>
+    <script src="/assets/js/theme.js" defer></script>
 </head>
 
 <body>
@@ -77,8 +79,7 @@ $notificationCount = count($upcomingNotifications);
                     <a href="/pages/actor.php">Diễn viên</a>
                 </nav>
 
-                <form class="search-form" action="/index.php#featured" method="get"
-                    role="search" data-home-search>
+                <form class="search-form" action="/index.php#featured" method="get" role="search" data-home-search>
                     <label class="sr-only" for="header-search">Tìm phim, diễn viên</label>
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off"
@@ -140,7 +141,8 @@ $notificationCount = count($upcomingNotifications);
                                 $displayTime = $showTime !== "" ? $showTime : "Cập nhật";
                                 $detailUrl = "/pages/movie-detail.php?id=" . urlencode((string) ($notification["movie_id"] ?? ""));
                                 ?>
-                                <a class="notification-item" href="<?= htmlspecialchars($detailUrl, ENT_QUOTES, "UTF-8") ?>">
+                                <a class="notification-item"
+                                    href="<?= htmlspecialchars($detailUrl, ENT_QUOTES, "UTF-8") ?>">
                                     <span class="notification-item__poster">
                                         <img src="<?= htmlspecialchars($poster, ENT_QUOTES, "UTF-8") ?>"
                                             alt="Poster phim <?= htmlspecialchars($title, ENT_QUOTES, "UTF-8") ?>"
@@ -169,8 +171,7 @@ $notificationCount = count($upcomingNotifications);
                     <?php if ($isMember): ?>
                     <div class="account-wrapper" data-account-root>
                         <button id="accountToggle" class="account-toggle" type="button" aria-label="Tài khoản"
-                            aria-haspopup="menu" aria-expanded="false" aria-controls="accountPanel"
-                            data-account-toggle>
+                            aria-haspopup="menu" aria-expanded="false" aria-controls="accountPanel" data-account-toggle>
                             <i class="fa-solid fa-user" aria-hidden="true"></i>
                         </button>
 
@@ -188,8 +189,7 @@ $notificationCount = count($upcomingNotifications);
                                 <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
                                 <span>Lịch sử xem</span>
                             </a>
-                            <a class="account-menu-item account-menu-item--logout"
-                                href="/logout.php" role="menuitem">
+                            <a class="account-menu-item account-menu-item--logout" href="/logout.php" role="menuitem">
                                 <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
                                 <span>Đăng xuất</span>
                             </a>
