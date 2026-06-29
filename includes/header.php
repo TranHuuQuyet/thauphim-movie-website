@@ -58,6 +58,7 @@ $notificationCount = count($upcomingNotifications);
                 <nav class="main-nav" aria-label="Điều hướng chính">
                     <a href="/index.php#hot-genres">Chủ đề</a>
                     <a href="/index.php#featured">Bộ lọc</a>
+                    <a href="/pages/upcoming.php">Sắp chiếu</a>
                     <a href="/index.php#single-movies">Phim lẻ</a>
                     <a href="/index.php#series-movies">Phim bộ</a>
                     <details class="nav-dropdown">
