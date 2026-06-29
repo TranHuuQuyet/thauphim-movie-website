@@ -44,7 +44,6 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-section" id="featured" aria-labelledby="featured-title">
         <div class="section-head">
             <h2 id="featured-title">Phim nổi bật</h2>
-            <a href="#featured" class="view-more">Xem thêm</a>
         </div>
 
         <div class="swiper movieSwiper">
@@ -58,7 +57,6 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-top" id="top-week" aria-labelledby="top-week-title">
         <div class="section-head">
             <h2 id="top-week-title">Phim top của tuần</h2>
-            <a href="#top-week" class="view-more">Xem thêm</a>
         </div>
 
         <div class="swiper bannerSwiper">
@@ -73,7 +71,6 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-slides" id="new-movies" aria-labelledby="new-movies-title">
         <div class="movie-slides-head">
             <h2 id="new-movies-title">Phim mới gần đây</h2>
-            <a href="#new-movies" class="view-more">Xem thêm</a>
         </div>
 
         <div class="swiper movieHeroSwiper">
@@ -105,7 +102,9 @@ require_once __DIR__ . "/includes/config.php";
 
         <div class="movie-grid" id="seriesMovies" aria-live="polite"></div>
     </section>
-
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Lên đầu trang">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>

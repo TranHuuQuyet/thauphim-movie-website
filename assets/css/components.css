@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 .ui-button,
 .play-btn,
 .member-button,
@@ -284,7 +287,46 @@
 .ui-state--loading i {
   animation: ui-spin 1s linear infinite;
 }
+/* scroll */
+.scroll-top-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
 
+  width: 48px;
+  height: 48px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: var(--primary-color);
+  color: #fff;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(20px);
+
+  transition: all 0.3s ease;
+
+  z-index: 999;
+}
+
+.scroll-top-btn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-4px);
+}
 @keyframes ui-spin {
   to {
     transform: rotate(360deg);
@@ -308,5 +350,4 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 22px 12px;
   }
-
 }
