@@ -112,7 +112,7 @@ $stmt->execute([$movieId]);
 $genres = $stmt->fetchAll();
 
 $stmt = $pdo->prepare("
-    SELECT actors.name, actors.avatar
+    SELECT actors.name, actors.avatar, actors.profile_path
     FROM movie_actors
     INNER JOIN actors ON movie_actors.actor_id = actors.id
     WHERE movie_actors.movie_id = ?
@@ -254,6 +254,7 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
 ?>
 
 <link rel="stylesheet" href="/assets/css/movie-detail.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 <main class="page-shell detail-page">
     <section class="hero detail-hero">
@@ -365,11 +366,12 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
                     aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
                     <?= $isFavorite ? "♥" : "♡" ?> Yêu thích
                 </button>
-                <?php if ($isLoggedIn): ?>
-                    <a class="detail-action-btn" id="addListBtn" href="account.php?tab=favorites">＋ Danh sách</a>
-                <?php else: ?>
-                    <button class="detail-action-btn" id="addListBtn" type="button" data-open-login>＋ Danh sách</button>
-                <?php endif; ?>
+
+                <button class="detail-action-btn <?= $isFavorite ? "is-added" : "" ?>" id="addListBtn" type="button"
+                    data-add-list aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
+                    <?= $isFavorite ? "✓ Đã có trong danh sách" : "＋ Danh sách" ?>
+                </button>
+
                 <button class="detail-action-btn" id="shareBtn" type="button">↗ Chia sẻ</button>
                 <button class="detail-action-btn" id="commentBtn" type="button">💬 Bình luận</button>
             </section>
@@ -437,9 +439,19 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
                     <h2>Diễn viên</h2>
                 </div>
 
-                <div class="detail-placeholder" id="actorsPanel">
-                    <?= e(implode(", ", array_column($actors, "name")) ?: "Đang cập nhật") ?>
-                </div>
+                <?php if (empty($actors)): ?>
+                    <p class="detail-empty">Đang cập nhật</p>
+                <?php else: ?>
+                    <div class="detail-actor-grid" id="actorsPanel">
+                        <?php foreach ($actors as $actor): ?>
+                            <div class="detail-actor-item">
+                                <img src="<?= e(assetPath($actor["avatar"] ?: ($actor["profile_path"] ?? ""), "/assets/images/avatar-default.png", "w185")) ?>"
+                                    alt="<?= e($actor["name"]) ?>">
+                                <span><?= e($actor["name"]) ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </section>
 
             <section class="movie-section related-section detail-tab-panel" id="related-section">
@@ -470,7 +482,7 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
 
                 <?php if (!$isLoggedIn): ?>
                     <p class="comment-login-note">
-                        Vui lòng <a href="/login.php">đăng nhập</a> để bình luận.
+                        Vui lòng <a href="#authModal" data-open-login>đăng nhập</a> để bình luận.
                     </p>
 
                     <div class="comment-box">
@@ -534,7 +546,7 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
 
                     <?php if (!$isLoggedIn): ?>
                         <p class="rating-login-note">
-                            Vui lòng <a href="/login.php">đăng nhập</a> để đánh giá.
+                            Vui lòng <a href="#authModal" data-open-login>đăng nhập</a> để đánh giá.
                         </p>
                     <?php else: ?>
                         <div class="rating-stars" id="ratingStars">
@@ -567,6 +579,7 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
 
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/movie-detail.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="/assets/js/movie-interactions.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

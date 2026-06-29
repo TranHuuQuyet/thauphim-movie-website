@@ -1,61 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const shareBtn = document.querySelector("#shareBtn");
-    const commentBtn = document.querySelector("#commentBtn");
-    const commentSection = document.querySelector(".comment-section");
-
     const detailTabs = document.querySelectorAll(".detail-tab");
     const detailPanels = document.querySelectorAll(".detail-tab-panel");
 
-    const commentInput = document.querySelector("#commentInput");
-    const commentCount = document.querySelector("#commentCount");
-    if (shareBtn) {
-        shareBtn.addEventListener("click", async () => {
-            try {
-                await navigator.clipboard.writeText(window.location.href);
-                shareBtn.textContent = "✓ Đã copy link";
+    detailTabs.forEach((tab) => {
+        tab.addEventListener("click", (event) => {
+            event.preventDefault();
 
-                setTimeout(() => {
-                    shareBtn.textContent = "↗ Chia sẻ";
-                }, 1800);
-            } catch (error) {
-                alert("Lỗi! Không copy được link chia sẻ.");
-            }
-        });
-    }
+            const targetSelector = tab.dataset.target;
+            const targetPanel = document.querySelector(targetSelector);
 
-    if (commentBtn && commentSection) {
-        commentBtn.addEventListener("click", () => {
-            commentSection.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-        });
-    }
-
-    if (detailTabs.length > 0) {
-        detailTabs.forEach((tab) => {
-            tab.addEventListener("click", () => {
-                const targetSelector = tab.dataset.target;
-
-                detailTabs.forEach((item) => item.classList.remove("active"));
-                tab.classList.add("active");
-
-                detailPanels.forEach((panel) => {
-                    const isTargetPanel = `#${panel.id}` === targetSelector;
-                    panel.classList.toggle("active", isTargetPanel);
-                });
-            });
-        });
-    }
-
-    if (commentInput && commentCount) {
-        commentInput.addEventListener("input", () => {
-            if (commentInput.value.length > 1000) {
-                commentInput.value = commentInput.value.slice(0, 1000);
+            if (!targetPanel) {
+                return;
             }
 
-            commentCount.textContent = `${commentInput.value.length} / 1000`;
-        });
-    }
+            detailTabs.forEach((item) => item.classList.remove("active"));
+            tab.classList.add("active");
 
+            detailPanels.forEach((panel) => {
+                panel.classList.toggle("active", panel === targetPanel);
+            });
+        });
+    });
 });

@@ -24,17 +24,27 @@ function e($value)
     return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
 }
 
-function accountAssetPath($path, $fallback)
+function accountAssetPath($path, $fallback, $size = "w500")
 {
     if (empty($path)) {
         return $fallback;
     }
 
-    if (preg_match('/^https?:\/\//i', (string) $path) || str_starts_with((string) $path, "data:")) {
-        return (string) $path;
+    $path = (string) $path;
+
+    if (preg_match('/^https?:\/\//i', $path) || str_starts_with($path, "data:")) {
+        return $path;
     }
 
-    $cleanPath = ltrim((string) $path, "/");
+    if (str_starts_with($path, "/assets/") || str_starts_with($path, "assets/")) {
+        return "/" . ltrim($path, "/");
+    }
+
+    if (str_starts_with($path, "/")) {
+        return "https://image.tmdb.org/t/p/" . $size . $path;
+    }
+
+    $cleanPath = ltrim($path, "/");
     $fullPath = __DIR__ . "/../" . $cleanPath;
 
     if (!file_exists($fullPath)) {
@@ -75,6 +85,7 @@ $stmt = $pdo->prepare("
         watch_history.*,
         movies.title AS movie_title,
         movies.poster,
+        movies.poster_path,
         movies.type,
         movies.release_year,
         movies.quality,
@@ -146,7 +157,8 @@ include __DIR__ . "/../includes/header.php";
                 <div class="account-movie-grid">
                     <?php foreach ($previewFavorites as $movie): ?>
                         <a class="account-movie-card" href="movie-detail.php?id=<?= (int) $movie["id"] ?>">
-                            <img src="<?= e(accountAssetPath($movie["poster"], "/assets/images/poster_movie.jpg")) ?>" alt="<?= e($movie["title"]) ?>">
+                            <img src="<?= e(accountAssetPath(($movie["poster"] ?? "") ?: ($movie["poster_path"] ?? ""), "/assets/images/poster_movie.jpg")) ?>"
+                                alt="<?= e($movie["title"]) ?>">
                             <strong><?= e($movie["title"]) ?></strong>
                             <span><?= e(($movie["release_year"] ?? "N/A") . " · " . ($movie["quality"] ?? "HD")) ?></span>
                         </a>
@@ -166,7 +178,8 @@ include __DIR__ . "/../includes/header.php";
                 <div class="account-movie-grid">
                     <?php foreach ($favorites as $movie): ?>
                         <a class="account-movie-card" href="movie-detail.php?id=<?= (int) $movie["id"] ?>">
-                            <img src="<?= e(accountAssetPath($movie["poster"], "/assets/images/poster_movie.jpg")) ?>" alt="<?= e($movie["title"]) ?>">
+                            <img src="<?= e(accountAssetPath(($movie["poster"] ?? "") ?: ($movie["poster_path"] ?? ""), "/assets/images/poster_movie.jpg")) ?>"
+                                alt="<?= e($movie["title"]) ?>">
                             <strong><?= e($movie["title"]) ?></strong>
                             <span><?= e(($movie["release_year"] ?? "N/A") . " · " . ($movie["quality"] ?? "HD")) ?></span>
                         </a>
@@ -193,7 +206,8 @@ include __DIR__ . "/../includes/header.php";
                         ?>
                         <a class="account-history-item"
                             href="watch.php?movie_id=<?= (int) $item["movie_id"] ?>&episode_id=<?= (int) $item["episode_id"] ?>">
-                            <img src="<?= e(accountAssetPath($item["poster"], "/assets/images/poster_movie.jpg")) ?>" alt="<?= e($item["movie_title"]) ?>">
+                            <img src="<?= e(accountAssetPath(($item["poster"] ?? "") ?: ($item["poster_path"] ?? ""), "/assets/images/poster_movie.jpg")) ?>"
+                                alt="<?= e($item["movie_title"]) ?>">
                             <span>
                                 <strong><?= e($item["movie_title"]) ?></strong>
                                 <small><?= e($episodeLabel) ?> · <?= (int) $item["progress_seconds"] ?>s</small>

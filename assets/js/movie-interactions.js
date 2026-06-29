@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const favoriteBtn = document.querySelector("[data-favorite-toggle]");
+  const addListBtn = document.querySelector("#addListBtn");
+  const shareBtn = document.querySelector("#shareBtn");
+  const commentBtn = document.querySelector("#commentBtn");
   const commentInput = document.querySelector("#commentInput");
   const commentCount = document.querySelector("#commentCount");
   const sendCommentBtn = document.querySelector("#sendCommentBtn");
@@ -23,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     comments: `${endpointsBase}comments.php`,
     ratings: `${endpointsBase}ratings.php`,
   };
+
+  let currentFavoriteState = Boolean(favoriteBtn?.classList.contains("is-favorite"));
 
   const escapeHtml = (value) =>
     String(value ?? "")
@@ -41,6 +46,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.location.href = data.loginUrl || "/index.php#authModal";
   };
+
+const showToast = (message, type = "info") => {
+    if (typeof Toastify === "function") {
+        Toastify({
+            text: message,
+            duration: 2500,
+            gravity: "top",
+            position: "right",
+            close: true,
+            stopOnFocus: true,
+            className: `thau-toast thau-toast-${type}`,
+        }).showToast();
+        return;
+    }
+
+    alert(message);
+};
+
+const requireLogin = (message) => {
+    if (isLoggedIn) {
+        return true;
+    }
+
+    showToast(message || "Vui lòng đăng nhập để sử dụng chức năng này.", "warning");
+    return false;
+};
 
   const requestJson = async (url, options = {}) => {
     const response = await fetch(url, {
@@ -61,14 +92,24 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const updateFavoriteButton = (isFavorite, count = null) => {
-    if (!favoriteBtn) return;
+    currentFavoriteState = Boolean(isFavorite);
 
-    favoriteBtn.classList.toggle("is-favorite", Boolean(isFavorite));
-    favoriteBtn.setAttribute("aria-pressed", isFavorite ? "true" : "false");
-    favoriteBtn.textContent = `${isFavorite ? "♥" : "♡"} Yêu thích`;
+    if (favoriteBtn) {
+      favoriteBtn.classList.toggle("is-favorite", currentFavoriteState);
+      favoriteBtn.setAttribute("aria-pressed", currentFavoriteState ? "true" : "false");
+      favoriteBtn.textContent = `${currentFavoriteState ? "♥" : "♡"} Yêu thích`;
 
-    if (count !== null) {
-      favoriteBtn.dataset.favoriteCount = String(count);
+      if (count !== null) {
+        favoriteBtn.dataset.favoriteCount = String(count);
+      }
+    }
+
+    if (addListBtn) {
+      addListBtn.classList.toggle("is-added", currentFavoriteState);
+      addListBtn.setAttribute("aria-pressed", currentFavoriteState ? "true" : "false");
+      addListBtn.textContent = currentFavoriteState
+        ? "✓ Đã có trong danh sách"
+        : "＋ Danh sách";
     }
   };
 
@@ -85,9 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (favoriteBtn) {
     favoriteBtn.addEventListener("click", async () => {
-      if (!isLoggedIn) {
-        openLogin();
-        return;
+      if (!requireLogin("Vui lòng đăng nhập để thêm phim yêu thích.")) {
+          return;
       }
 
       favoriteBtn.disabled = true;
@@ -97,12 +137,74 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ movie_id: movieId }),
         });
         updateFavoriteButton(favorite.is_favorite, favorite.favorite_count);
+
+        showToast(
+            favorite.is_favorite ? "Đã thêm vào yêu thích." : "Đã bỏ khỏi yêu thích.",
+            "success"
+        );
+
       } catch (error) {
-        alert(error.message);
+        showToast(error.message || "Không thêm được vào yêu thích.", "error");
       } finally {
         favoriteBtn.disabled = false;
       }
     });
+  }
+
+  if (addListBtn) {
+    addListBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+
+      if (!requireLogin("Vui lòng đăng nhập để thêm phim vào danh sách.")) {
+        return;
+      }
+
+      if (currentFavoriteState) {
+        showToast("Phim đã có trong danh sách.", "info");
+        return;
+      }
+
+      addListBtn.disabled = true;
+
+      try {
+        const favorite = await requestJson(endpoints.favorites, {
+          method: "POST",
+          body: JSON.stringify({ movie_id: movieId }),
+        });
+
+        updateFavoriteButton(favorite.is_favorite, favorite.favorite_count);
+        showToast("Đã thêm phim vào danh sách.", "success");
+      } catch (error) {
+        showToast(error.message || "Không thể thêm phim vào danh sách.", "error");
+      } finally {
+        addListBtn.disabled = false;
+      }
+    });
+  }
+
+  if (commentBtn) {
+      commentBtn.addEventListener("click", () => {
+          if (!requireLogin("Vui lòng đăng nhập để bình luận.")) {
+              return;
+          }
+
+          const commentSection = document.querySelector(".comment-section, .watch-comment-box");
+          const input = document.querySelector("#commentInput");
+
+          commentSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+          input?.focus();
+      });
+  }
+
+  if (shareBtn && !window.watchHistoryData) {
+      shareBtn.addEventListener("click", async () => {
+          try {
+              await navigator.clipboard.writeText(window.location.href);
+              showToast("Đã copy link phim.", "success");
+          } catch (error) {
+              showToast("Không copy được link. ", "error");
+          }
+      });
   }
 
   const renderComments = (comments) => {
@@ -160,13 +262,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (sendCommentBtn && commentInput) {
     sendCommentBtn.addEventListener("click", async () => {
-      if (!isLoggedIn) {
-        openLogin();
-        return;
+      if (!requireLogin("Vui lòng đăng nhập để bình luận.")) {
+          return;
       }
 
       const content = commentInput.value.trim();
       if (!content) {
+        showToast("Bạn chưa nhập nội dung bình luận.", "warning");
         return;
       }
 
@@ -181,8 +283,9 @@ document.addEventListener("DOMContentLoaded", () => {
           commentCount.textContent = "0 / 1000";
         }
         await loadComments();
+        showToast("Đã gửi bình luận.", "success");
       } catch (error) {
-        alert(error.message);
+        showToast(error.message || "Không thể gửi bình luận.", "error");
       } finally {
         sendCommentBtn.disabled = false;
       }
@@ -204,8 +307,9 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ comment_id: commentId }),
         });
         await loadComments();
+        showToast("Đã xóa bình luận.", "success");
       } catch (error) {
-        alert(error.message);
+        showToast(error.message || "Không thể xóa bình luận.", "error");
         button.disabled = false;
       }
     });
@@ -250,9 +354,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ratingButtons.forEach((button) => {
     button.addEventListener("click", async () => {
-      if (!isLoggedIn) {
-        openLogin();
-        return;
+      if (!requireLogin("Vui lòng đăng nhập để đánh giá phim.")) {
+          return;
       }
 
       const rating = Number(button.dataset.rating || 0);
@@ -264,7 +367,10 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ movie_id: movieId, rating }),
         });
         updateRating(result);
+        showToast(`Đã đánh giá ${rating} sao.`, "success");
       } catch (error) {
+        showToast(error.message || "Không thể gửi đánh giá.", "error");
+
         if (ratingMessage) {
           ratingMessage.textContent = error.message;
         }
