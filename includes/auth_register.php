@@ -1,4 +1,4 @@
-<form action="/thauphim-movie-website/register.php" method="post" class="auth-form auth-register-form">
+<form action="/register.php" method="post" class="auth-form auth-register-form">
     <span class="brand-title">Thau<strong>Phim</strong></span>
     <h1>Đăng ký tài khoản</h1>
 
@@ -49,5 +49,5 @@
         required>
 
     <button type="submit">Đăng ký</button>
-    <p>Đã có tài khoản, <a href="/thauphim-movie-website/index.php#authModal">đăng nhập ngay.</a></p>
+    <p>Đã có tài khoản, <a href="/index.php#authModal">đăng nhập ngay.</a></p>
 </form>

@@ -1,5 +1,6 @@
-const APP_ROOT = "/thauphim-movie-website/";
-const MOVIES_API_ENDPOINT = `${APP_ROOT}api/movies.php`;
+const APP_ROOT = "/";
+const API_BASE = "/api";
+const MOVIES_API_ENDPOINT = `${API_BASE}/movies.php`;
 const IMAGE_ROOT = "https://image.tmdb.org/t/p/";
 const FALLBACK_POSTER = `${APP_ROOT}assets/images/poster_movie.jpg`;
 const FALLBACK_BACKDROP = `${APP_ROOT}assets/images/pic1.webp`;
@@ -84,12 +85,18 @@ const fetchMovies = async (params = {}) => {
   });
 
   const response = await fetch(url);
+  const payload = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(`Movies API request failed: ${response.status}`);
+    const debugMessage = payload?.debug?.message
+      ? ` (${payload.debug.message})`
+      : "";
+    throw new Error(
+      payload?.message
+        ? `${payload.message}${debugMessage}`
+        : `Movies API request failed: ${response.status}`,
+    );
   }
-
-  const payload = await response.json();
 
   if (!payload.success || !Array.isArray(payload.data)) {
     throw new Error(payload.message || "Movies API response is invalid.");

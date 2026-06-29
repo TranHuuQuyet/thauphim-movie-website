@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/auth_check.php';
 
 if (!defined('APP_BASE_PATH')) {
-    define('APP_BASE_PATH', '/thauphim-movie-website/');
+    define('APP_BASE_PATH', '/');
 }
 
 if (!defined('ADMIN_BASE_PATH')) {

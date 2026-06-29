@@ -24,14 +24,18 @@ function assetPath($path, $fallback)
         return $fallback;
     }
 
-    $cleanPath = ltrim($path, "/");
+    if (preg_match('/^https?:\/\//i', (string) $path) || str_starts_with((string) $path, "data:")) {
+        return (string) $path;
+    }
+
+    $cleanPath = ltrim((string) $path, "/");
     $fullPath = __DIR__ . "/../" . $cleanPath;
 
     if (!file_exists($fullPath)) {
         return $fallback;
     }
 
-    return "../" . $cleanPath;
+    return "/" . $cleanPath;
 }
 
 function statusText($status)
@@ -239,7 +243,7 @@ $heroVideoUrl = youtubeEmbedUrl(
 );
 ?>
 
-<link rel="stylesheet" href="../assets/css/movie-detail.css">
+<link rel="stylesheet" href="/assets/css/movie-detail.css">
 
 <main class="page-shell detail-page">
     <section class="hero detail-hero">
@@ -255,7 +259,7 @@ $heroVideoUrl = youtubeEmbedUrl(
         <section id="movie-info" class="detail-sidebar">
             <div class="detail-info-card">
                 <div class="detail-poster">
-                    <img src="<?= e(assetPath($movie["poster"], "../assets/images/poster_movie.jpg")) ?>"
+                    <img src="<?= e(assetPath($movie["poster"], "/assets/images/poster_movie.jpg")) ?>"
                         alt="<?= e($movie["title"]) ?>">
                 </div>
 
@@ -422,7 +426,7 @@ $heroVideoUrl = youtubeEmbedUrl(
                     <?php else: ?>
                         <?php foreach ($relatedMovies as $related): ?>
                             <a class="related-movie-card" href="movie-detail.php?id=<?= $related["id"] ?>">
-                                <img src="<?= e(assetPath($related["poster"], "../assets/images/poster_movie.jpg")) ?>"
+                                <img src="<?= e(assetPath($related["poster"], "/assets/images/poster_movie.jpg")) ?>"
                                     alt="<?= e($related["title"]) ?>">
                                 <h3><?= e($related["title"]) ?></h3>
                             </a>
@@ -438,7 +442,7 @@ $heroVideoUrl = youtubeEmbedUrl(
 
                 <?php if (!$isLoggedIn): ?>
                     <p class="comment-login-note">
-                        Vui lòng <a href="../login.php">đăng nhập</a> để bình luận.
+                        Vui lòng <a href="/login.php">đăng nhập</a> để bình luận.
                     </p>
 
                     <div class="comment-box">
@@ -501,7 +505,7 @@ $heroVideoUrl = youtubeEmbedUrl(
 
                     <?php if (!$isLoggedIn): ?>
                         <p class="rating-login-note">
-                            Vui lòng <a href="../login.php">đăng nhập</a> để đánh giá.
+                            Vui lòng <a href="/login.php">đăng nhập</a> để đánh giá.
                         </p>
                     <?php else: ?>
                         <div class="rating-stars" id="ratingStars">
@@ -526,12 +530,12 @@ $heroVideoUrl = youtubeEmbedUrl(
     window.movieInteractionData = {
         movieId: <?= json_encode($movieId) ?>,
         isLoggedIn: <?= $isLoggedIn ? "true" : "false" ?>,
-        endpointsBase: "../api/",
-        loginUrl: "/thauphim-movie-website/index.php#authModal"
+        endpointsBase: "/api/",
+        loginUrl: "/index.php#authModal"
     };
 </script>
-<script src="../assets/js/main.js"></script>
-<script src="../assets/js/movie-detail.js"></script>
-<script src="../assets/js/movie-interactions.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/movie-detail.js"></script>
+<script src="/assets/js/movie-interactions.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 
 if (!defined('APP_BASE_PATH')) {
-    define('APP_BASE_PATH', '/thauphim-movie-website/');
+    define('APP_BASE_PATH', '/');
 }
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
@@ -38,6 +38,25 @@ function apiError(string $message, int $statusCode = 500): void
         'success' => false,
         'message' => $message,
     ], $statusCode);
+}
+
+function apiServerError(string $message, Throwable $exception, int $statusCode = 500): void
+{
+    error_log($exception->getMessage());
+
+    $payload = [
+        'success' => false,
+        'message' => $message,
+    ];
+
+    if (defined('APP_DEBUG') && APP_DEBUG) {
+        $payload['debug'] = [
+            'type' => get_class($exception),
+            'message' => $exception->getMessage(),
+        ];
+    }
+
+    apiSend($payload, $statusCode);
 }
 
 function apiReadJson(): array

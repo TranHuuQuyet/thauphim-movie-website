@@ -37,14 +37,18 @@ function assetPath($path, $fallback)
         return $fallback;
     }
 
-    $cleanPath = ltrim($path, "/");
+    if (preg_match('/^https?:\/\//i', (string) $path) || str_starts_with((string) $path, "data:")) {
+        return (string) $path;
+    }
+
+    $cleanPath = ltrim((string) $path, "/");
     $fullPath = __DIR__ . "/../" . $cleanPath;
 
     if (!file_exists($fullPath)) {
         return $fallback;
     }
 
-    return "../" . $cleanPath;
+    return "/" . $cleanPath;
 }
 
 function episodeLabel($movieType, $episode)
@@ -107,7 +111,7 @@ $watchAccess = auth_can_watch_movie($movie, $currentUser);
 
 if (!$watchAccess["allowed"]) {
     ?>
-    <link rel="stylesheet" href="../assets/css/watch.css">
+    <link rel="stylesheet" href="/assets/css/watch.css">
     <main class="page-shell watch-page">
         <section class="watch-container">
             <section class="watch-access-card">
@@ -292,7 +296,7 @@ $currentEpisodeLabel = episodeLabel($movie["type"], $currentEpisode);
 $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 ?>
 
-<link rel="stylesheet" href="../assets/css/watch.css">
+<link rel="stylesheet" href="/assets/css/watch.css">
 
 <main class="page-shell watch-page">
     <section class="watch-container">
@@ -342,7 +346,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
         <section class="watch-layout">
             <section class="watch-main">
                 <section class="watch-movie-info">
-                    <img src="<?= e(assetPath($movie["poster"], "../assets/images/poster_movie.jpg")) ?>"
+                    <img src="<?= e(assetPath($movie["poster"], "/assets/images/poster_movie.jpg")) ?>"
                         alt="<?= e($movie["title"]) ?>">
 
                     <div>
@@ -487,7 +491,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                         <div class="watch-actor-grid">
                             <?php foreach ($actors as $actor): ?>
                                 <div class="watch-actor-item">
-                                    <img src="<?= e(assetPath($actor["avatar"], "../assets/images/avatar-default.jpg")) ?>"
+                                    <img src="<?= e(assetPath($actor["avatar"], "/assets/images/favicon.png")) ?>"
                                         alt="<?= e($actor["name"]) ?>">
                                     <span>
                                         <?= e($actor["name"]) ?>
@@ -503,7 +507,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 
                     <?php foreach ($relatedMovies as $related): ?>
                         <a class="watch-related-item" href="movie-detail.php?id=<?= $related["id"] ?>">
-                            <img src="<?= e(assetPath($related["poster"], "../assets/images/poster_movie.jpg")) ?>"
+                            <img src="<?= e(assetPath($related["poster"], "/assets/images/poster_movie.jpg")) ?>"
                                 alt="<?= e($related["title"]) ?>">
 
                             <div>
@@ -534,13 +538,13 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
     window.movieInteractionData = {
         movieId: <?= json_encode($movieId) ?>,
         isLoggedIn: <?= $currentUserDbId !== null ? "true" : "false" ?>,
-        endpointsBase: "../api/",
-        loginUrl: "/thauphim-movie-website/index.php#authModal"
+        endpointsBase: "/api/",
+        loginUrl: "/index.php#authModal"
     };
 </script>
 
-<script src="../assets/js/main.js"></script>
-<script src="../assets/js/watch.js"></script>
-<script src="../assets/js/movie-interactions.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/watch.js"></script>
+<script src="/assets/js/movie-interactions.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

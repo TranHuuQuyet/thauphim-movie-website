@@ -112,8 +112,7 @@ try {
     $pdo->commit();
 } catch (Throwable $exception) {
     $pdo->rollBack();
-    error_log($exception->getMessage());
-    apiError('Khong the luu danh gia', 500);
+    apiServerError('Khong the luu danh gia', $exception);
 }
 
 apiSuccess(apiRatingSummary($pdo, $movieId, $user));

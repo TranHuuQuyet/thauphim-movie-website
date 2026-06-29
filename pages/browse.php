@@ -34,8 +34,8 @@ $countries = getAllCountriesFromDB();
                 
                 <div class="filter-group" style="flex: 1; min-width: 200px;">
                     <label style="display: block; color: #ccc; margin-bottom: 5px; font-size: 14px;">Từ khóa</label>
-                    <input type="text" name="keyword" placeholder="Nhập tên phim cần tìm..." 
-                           value="<?= htmlspecialchars($_GET['keyword'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                    <input type="text" name="q" placeholder="Nhập tên phim cần tìm..." 
+                           value="<?= htmlspecialchars($_GET['q'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                            style="width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 4px;">
                 </div>
 
@@ -104,8 +104,8 @@ $countries = getAllCountriesFromDB();
         <section class="movies-result-section">
             <h2 style="color: #fff; font-size: 22px; margin-bottom: 20px; border-left: 4px solid #e50914; padding-left: 10px;">
                 <?php 
-                    if (!empty($_GET['keyword'])) {
-                        echo "Kết quả tìm kiếm cho: \"" . htmlspecialchars($_GET['keyword'], ENT_QUOTES, 'UTF-8') . "\"";
+                    if (!empty($_GET['q'])) {
+                        echo "Kết quả tìm kiếm cho: \"" . htmlspecialchars($_GET['q'], ENT_QUOTES, 'UTF-8') . "\"";
                     } else {
                         echo "Danh sách phim tổng hợp";
                     }
@@ -157,14 +157,16 @@ $countries = getAllCountriesFromDB();
                 <ul style="display: flex; list-style: none; padding: 0; margin: 0; gap: 8px;">
                     <?php 
                     $queryParams = $_GET;
+                    for ($i = 1; $i <= $totalPages; $i++): 
+                        $queryParams['page'] = $i;
                     ?>
-                    <?php
-                    $queryParams['page'] = $i;
-                    ?>
-                    <a href="?<?= http_build_query($queryParams) ?>"
-                        class="page-link <?= $page == $i ? 'active-page' : '' ?>">
-                            <?= $i ?>
-                    </a>
+                        <li>
+                            <a href="?<?= http_build_query($queryParams) ?>"
+                               class="page-link <?= $page == $i ? 'active-page' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        </li>
+                    <?php endfor; ?>
                 </ul>
             </nav>
         <?php endif; ?>
@@ -175,5 +177,3 @@ $countries = getAllCountriesFromDB();
 <script src="/thauphim-movie-website/assets/js/browse.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
-    </div>
-</main>

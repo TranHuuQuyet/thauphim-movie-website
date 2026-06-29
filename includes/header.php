@@ -23,23 +23,23 @@ $notificationCount = count($upcomingNotifications);
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
     </style>
-    <link rel="icon" type="image/png" sizes="512x512" href="/thauphim-movie-website/assets/images/favicon-tab.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/images/favicon-tab.png">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
-    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/style.css">
-    <link rel="stylesheet" href="/thauphim-movie-website/assets/css/auth.css">
-    <script src="/thauphim-movie-website/assets/js/auth_login.js" defer></script>
-    <script src="/thauphim-movie-website/assets/js/notifications.js" defer></script>
-    <script src="/thauphim-movie-website/assets/js/account-menu.js" defer></script>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/auth.css">
+    <script src="/assets/js/auth_login.js" defer></script>
+    <script src="/assets/js/notifications.js" defer></script>
+    <script src="/assets/js/account-menu.js" defer></script>
 </head>
 
 <body>
     <header class="site-header">
         <div class="header-inner">
-            <a class="brand" href="/thauphim-movie-website/index.php#hero" aria-label="ThauPhim trang chủ">
+            <a class="brand" href="/index.php#hero" aria-label="ThauPhim trang chủ">
                 <span class="brand-icon" aria-hidden="true">
-                    <img src="/thauphim-movie-website/assets/images/favicon.png" alt="">
+                    <img src="/assets/images/favicon.png" alt="">
                 </span>
                 <span class="brand-copy">
                     <span class="brand-title">Thau<strong>Phim</strong></span>
@@ -56,10 +56,10 @@ $notificationCount = count($upcomingNotifications);
 
             <div class="header-actions" id="primary-menu">
                 <nav class="main-nav" aria-label="Điều hướng chính">
-                    <a href="/thauphim-movie-website/index.php#hot-genres">Chủ đề</a>
-                    <a href="/thauphim-movie-website/index.php#featured">Bộ lọc</a>
-                    <a href="/thauphim-movie-website/index.php#single-movies">Phim lẻ</a>
-                    <a href="/thauphim-movie-website/index.php#series-movies">Phim bộ</a>
+                    <a href="/index.php#hot-genres">Chủ đề</a>
+                    <a href="/index.php#featured">Bộ lọc</a>
+                    <a href="/index.php#single-movies">Phim lẻ</a>
+                    <a href="/index.php#series-movies">Phim bộ</a>
                     <details class="nav-dropdown">
                         <summary>
                             Quốc gia
@@ -67,16 +67,16 @@ $notificationCount = count($upcomingNotifications);
                         </summary>
                         <div class="nav-dropdown-menu">
                             <?php foreach ($tmdbCountries as $country): ?>
-                            <a href="/thauphim-movie-website/pages/browse.php?country=<?= urlencode($country['code']) ?>">
+                            <a href="/pages/country.php?code=<?= urlencode($country['code']) ?>">
                                 <?= htmlspecialchars($country['name'], ENT_QUOTES, 'UTF-8') ?>
                             </a>
                             <?php endforeach; ?>
                         </div>
                     </details>
-                    <a href="/thauphim-movie-website/pages/actor.php">Diễn viên</a>
+                    <a href="/pages/actor.php">Diễn viên</a>
                 </nav>
 
-                <form class="search-form" action="/thauphim-movie-website/index.php#featured" method="get"
+                <form class="search-form" action="/index.php#featured" method="get"
                     role="search" data-home-search>
                     <label class="sr-only" for="header-search">Tìm phim, diễn viên</label>
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
@@ -131,13 +131,13 @@ $notificationCount = count($upcomingNotifications);
                                 <?php foreach ($upcomingNotifications as $notification): ?>
                                 <?php
                                 $title = (string) ($notification["title"] ?? "Phim sắp chiếu");
-                                $poster = (string) ($notification["poster"] ?? "/thauphim-movie-website/assets/images/poster_movie.jpg");
+                                $poster = (string) ($notification["poster"] ?? "/assets/images/poster_movie.jpg");
                                 $showDate = (string) ($notification["show_date"] ?? "");
                                 $showTime = (string) ($notification["show_time"] ?? "");
                                 $dateObject = date_create($showDate);
                                 $displayDate = $dateObject ? date_format($dateObject, "d/m/Y") : "Đang cập nhật";
                                 $displayTime = $showTime !== "" ? $showTime : "Cập nhật";
-                                $detailUrl = "/thauphim-movie-website/pages/movie-detail.php?id=" . urlencode((string) ($notification["movie_id"] ?? ""));
+                                $detailUrl = "/pages/movie-detail.php?id=" . urlencode((string) ($notification["movie_id"] ?? ""));
                                 ?>
                                 <a class="notification-item" href="<?= htmlspecialchars($detailUrl, ENT_QUOTES, "UTF-8") ?>">
                                     <span class="notification-item__poster">
@@ -175,20 +175,20 @@ $notificationCount = count($upcomingNotifications);
 
                         <div class="account-panel" id="accountPanel" role="menu" aria-label="Tài khoản" hidden
                             data-account-panel>
-                            <a class="account-menu-item" href="/thauphim-movie-website/pages/account.php" role="menuitem">
+                            <a class="account-menu-item" href="/pages/account.php" role="menuitem">
                                 <i class="fa-solid fa-user" aria-hidden="true"></i>
                                 <span>Tài khoản</span>
                             </a>
-                            <a class="account-menu-item" href="/thauphim-movie-website/pages/account.php?tab=favorites" role="menuitem">
+                            <a class="account-menu-item" href="/pages/account.php?tab=favorites" role="menuitem">
                                 <i class="fa-solid fa-heart" aria-hidden="true"></i>
                                 <span>Phim yêu thích</span>
                             </a>
-                            <a class="account-menu-item" href="/thauphim-movie-website/pages/account.php?tab=history" role="menuitem">
+                            <a class="account-menu-item" href="/pages/account.php?tab=history" role="menuitem">
                                 <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
                                 <span>Lịch sử xem</span>
                             </a>
                             <a class="account-menu-item account-menu-item--logout"
-                                href="/thauphim-movie-website/logout.php" role="menuitem">
+                                href="/logout.php" role="menuitem">
                                 <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
                                 <span>Đăng xuất</span>
                             </a>

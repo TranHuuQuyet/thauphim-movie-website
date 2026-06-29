@@ -115,12 +115,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 <?php include __DIR__ . "/includes/header.php"; ?>
-<link rel="stylesheet" href="/thauphim-movie-website/assets/css/auth.css">
+<link rel="stylesheet" href="/assets/css/auth.css">
 
 <main class="page-shell auth-page">
     <section class="auth-page-card">
         <div class="auth-page-media">
-            <img src="/thauphim-movie-website/assets/images/img_login.jpg" alt="">
+            <img src="/assets/images/img_login.jpg" alt="">
         </div>
         <div class="auth-page-panel">
             <?php include __DIR__ . "/includes/auth_register.php"; ?>

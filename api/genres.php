@@ -30,6 +30,5 @@ try {
 
     apiSuccess($genres);
 } catch (Throwable $exception) {
-    error_log($exception->getMessage());
-    apiError('Khong the tai danh sach the loai.');
+    apiServerError('Khong the tai danh sach the loai.', $exception);
 }

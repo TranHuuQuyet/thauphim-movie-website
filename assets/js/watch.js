@@ -39,11 +39,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 type: "application/json"
             });
 
-            navigator.sendBeacon("../api/update-watch-history.php", blob);
+            navigator.sendBeacon("/api/update-watch-history.php", blob);
             return;
         }
 
-        fetch("../api/update-watch-history.php", {
+        fetch("/api/update-watch-history.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

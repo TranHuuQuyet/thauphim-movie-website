@@ -3,6 +3,10 @@ if (!defined("APP_BASE_PATH")) {
     define("APP_BASE_PATH", "/");
 }
 
+if (!defined("APP_DEBUG")) {
+    define("APP_DEBUG", false);
+}
+
 define("TMDB_API_KEY", "replace-with-your-tmdb-api-key");
 
 define("DB_HOST", "localhost");

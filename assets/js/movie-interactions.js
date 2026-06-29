@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const data = window.movieInteractionData || {};
   const movieId = Number(data.movieId || 0);
   const isLoggedIn = Boolean(data.isLoggedIn);
-  const endpointsBase = data.endpointsBase || "../api/";
+  const endpointsBase = data.endpointsBase || "/api/";
 
   if (!movieId) {
     return;
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    window.location.href = data.loginUrl || "/thauphim-movie-website/index.php#authModal";
+    window.location.href = data.loginUrl || "/index.php#authModal";
   };
 
   const requestJson = async (url, options = {}) => {

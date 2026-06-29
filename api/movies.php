@@ -56,8 +56,17 @@ try {
 
     $query = apiStringParam('q');
     if ($query !== '') {
-        $where[] = '(m.title LIKE :q OR m.original_title LIKE :q OR m.description LIKE :q OR m.overview LIKE :q)';
-        $params['q'] = '%' . $query . '%';
+        $where[] = '(
+            m.title LIKE :q_title
+            OR m.original_title LIKE :q_original_title
+            OR m.description LIKE :q_description
+            OR m.overview LIKE :q_overview
+        )';
+        $searchPattern = '%' . $query . '%';
+        $params['q_title'] = $searchPattern;
+        $params['q_original_title'] = $searchPattern;
+        $params['q_description'] = $searchPattern;
+        $params['q_overview'] = $searchPattern;
     }
 
     $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
@@ -107,6 +116,5 @@ try {
 
     apiSuccess($movies, apiPaginationMeta($page, $limit, $total));
 } catch (Throwable $exception) {
-    error_log($exception->getMessage());
-    apiError('Khong the tai danh sach phim.');
+    apiServerError('Khong the tai danh sach phim.', $exception);
 }

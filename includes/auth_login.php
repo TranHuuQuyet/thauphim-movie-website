@@ -1,7 +1,7 @@
 <div class="auth-modal <?= !empty($_SESSION["login_errors"]) ? "active" : "" ?>" id="authModal">
     <div class="auth-card">
         <div class="auth-screen">
-            <img src="/thauphim-movie-website/assets/images/poster_movie.jpg" alt="">
+            <img src="/assets/images/poster_movie.jpg" alt="">
         </div>
         <div class="auth-panel">
             <button type="button" id="closeAuth" class="auth-back">
@@ -10,7 +10,7 @@
                     <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
                 </svg>
             </button>
-            <form action="/thauphim-movie-website/login.php" method="post" class="auth-form">
+            <form action="/login.php" method="post" class="auth-form">
                 <span class="brand-title">Thau<strong>Phim</strong></span>
 
                 <?php if (!empty($_SESSION["login_errors"])): ?>
@@ -29,7 +29,7 @@
                 <input id="loginPassword" type="password" placeholder="password" name="password"
                     autocomplete="current-password" />
                 <button type="submit">Đăng nhập</button>
-                <p>Bạn chưa có tài khoản,<a href="/thauphim-movie-website/register.php">đăng ký ngay.</a></p>
+                <p>Bạn chưa có tài khoản,<a href="/register.php">đăng ký ngay.</a></p>
                 <p class="forgot">QUÊN MẬT KHẨU?</p>
             </form>
             <?php unset($_SESSION["login_old"]); ?>

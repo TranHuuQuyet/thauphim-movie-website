@@ -2,8 +2,8 @@
     <div class="footer-container">
         <div class="footer-main-row">
             <div class="footer-brand">
-                <a class="footer-logo" href="/thauphim-movie-website/index.php#hero" aria-label="ThauPhim trang chủ">
-                    <img class="footer-img" src="/thauphim-movie-website/assets/images/favicon.png" alt="">
+                <a class="footer-logo" href="/index.php#hero" aria-label="ThauPhim trang chủ">
+                    <img class="footer-img" src="/assets/images/favicon.png" alt="">
                     <span class="logo-text">
                         <span class="footer-brand-title">Thau<strong>Phim</strong></span>
                         <span>Phim hay cả thau</span>
@@ -40,15 +40,15 @@
 
         <div class="footer-grid">
             <div class="footer-col">
-                <a href="/thauphim-movie-website/index.php#hero">Trang chủ</a>
-                <a href="/thauphim-movie-website/index.php#single-movies">Phim lẻ</a>
-                <a href="/thauphim-movie-website/index.php#series-movies">Phim bộ</a>
+                <a href="/index.php#hero">Trang chủ</a>
+                <a href="/index.php#single-movies">Phim lẻ</a>
+                <a href="/index.php#series-movies">Phim bộ</a>
             </div>
 
             <div class="footer-col">
-                <a href="/thauphim-movie-website/index.php#hot-genres">Thể loại</a>
-                <a href="/thauphim-movie-website/index.php#featured">Phim yêu thích</a>
-                <a href="/thauphim-movie-website/index.php#new-movies">Lịch sử xem</a>
+                <a href="/index.php#hot-genres">Thể loại</a>
+                <a href="/index.php#featured">Phim yêu thích</a>
+                <a href="/index.php#new-movies">Lịch sử xem</a>
             </div>
 
             <div class="footer-col">

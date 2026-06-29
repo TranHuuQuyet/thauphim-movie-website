@@ -96,6 +96,5 @@ try {
         'episodes' => $episodes,
     ]);
 } catch (Throwable $exception) {
-    error_log($exception->getMessage());
-    apiError('Khong the tai chi tiet phim.');
+    apiServerError('Khong the tai chi tiet phim.', $exception);
 }

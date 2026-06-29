@@ -266,7 +266,7 @@ page=1
 ### Chay rebuild DB local
 
 ```powershell
-D:\Xampp\mysql\bin\mysql.exe -uroot -P3306 --default-character-set=utf8mb4 -e "SOURCE D:/Xampp/htdocs/thauphim-movie-website/database/schema.sql; SOURCE D:/Xampp/htdocs/thauphim-movie-website/database/seed.sql;"
+D:\Xampp\mysql\bin\mysql.exe -uroot -P3306 --default-character-set=utf8mb4 -e "SOURCE D:/Xampp/htdocs/your-site/database/schema.sql; SOURCE D:/Xampp/htdocs/your-site/database/seed.sql;"
 ```
 
 ### Chay import TMDB
@@ -497,7 +497,7 @@ Ghi chu: `schedules` dung cho lich chieu/thong bao phim sap chieu.
 ## 11. Cau truc thu muc
 
 ```text
-thauphim-movie-website/
+your-site/
 |-- admin/
 |   |-- dashboard.php
 |   |-- movies/
@@ -735,7 +735,7 @@ Ghi chu: `seed.sql` hien chi tao admin. User Free/User Premium se tao sau qua re
 - Script `tools/import_tmdb.php`.
 - API PHP trong `/api`.
 - README.md.
-- Demo website tren domain hoac localhost.
+- Demo website tren production domain hoac local development host.
 - Tai khoan demo admin.
 - Bao cao do an.
 - Anh chup man hinh cac chuc nang chinh.
