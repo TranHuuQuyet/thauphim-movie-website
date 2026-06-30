@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.title = "Thể loại phim - ThauPhim";
   
-    const API_BASE = "/api";
+    const API_BASE = "/thauphim-movie-website/api";
     const genresStatus = document.querySelector("#genresStatus");
     const genresList = document.querySelector("#genresList");
   
