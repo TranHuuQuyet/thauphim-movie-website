@@ -31,7 +31,7 @@
                     <a href="/index.php#hero">Trang chủ</a>
                     <a href="/index.php#single-movies">Phim lẻ</a>
                     <a href="/index.php#series-movies">Phim bộ</a>
-                    <a href="/index.php#hot-genres">Thể loại</a>
+                    <a href="/thauphim-movie-website/pages/genres.php">Chủ đề</a>
                 </div>
 
                 <div class="footer-col">
