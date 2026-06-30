@@ -69,13 +69,12 @@ const movieWatchUrl = (movie, fallbackAnchor = "featured") => {
 
 const stateMarkup = (type, text) => `
   <div class="ui-state ui-state--${type}">
-    <i class="fa-solid ${
-      type === "loading"
-        ? "fa-spinner"
-        : type === "error"
-          ? "fa-triangle-exclamation"
-          : "fa-film"
-    }" aria-hidden="true"></i>
+    <i class="fa-solid ${type === "loading"
+    ? "fa-spinner"
+    : type === "error"
+      ? "fa-triangle-exclamation"
+      : "fa-film"
+  }" aria-hidden="true"></i>
     <p>${escapeHtml(text)}</p>
   </div>
 `;
@@ -605,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sort: "popular",
       page: 1,
     },
-    limit: 12,
+    limit: 14,
     anchorId: "single-movies",
   });
   loadMovieGrid({
@@ -615,7 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sort: "popular",
       page: 1,
     },
-    limit: 12,
+    limit: 14,
     anchorId: "series-movies",
   });
 });
