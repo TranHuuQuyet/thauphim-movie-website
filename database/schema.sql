@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS ratings;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS watch_history;
 DROP TABLE IF EXISTS favorites;
+DROP TABLE IF EXISTS notification_reads;
 DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS movie_actors;
 DROP TABLE IF EXISTS movie_genres;
@@ -177,6 +178,7 @@ CREATE TABLE schedules (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   movie_id INT UNSIGNED NOT NULL,
   release_date DATE NOT NULL,
+  show_time TIME DEFAULT NULL,
   note VARCHAR(255) DEFAULT NULL,
   is_published TINYINT(1) NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -186,6 +188,23 @@ CREATE TABLE schedules (
   KEY idx_schedules_published (is_published),
   CONSTRAINT fk_schedules_movie
     FOREIGN KEY (movie_id) REFERENCES movies(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE notification_reads (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  schedule_id INT UNSIGNED NOT NULL,
+  read_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_notification_reads_user_schedule (user_id, schedule_id),
+  KEY idx_notification_reads_schedule_id (schedule_id),
+  CONSTRAINT fk_notification_reads_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT fk_notification_reads_schedule
+    FOREIGN KEY (schedule_id) REFERENCES schedules(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

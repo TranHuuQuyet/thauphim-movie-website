@@ -5,6 +5,7 @@ $navItems = [
     ['href' => 'dashboard.php', 'icon' => 'fa-house', 'label' => 'Dashboard'],
     ['href' => 'movies/index.php', 'icon' => 'fa-film', 'label' => 'Movies'],
     ['href' => 'episodes/index.php', 'icon' => 'fa-tv', 'label' => 'Episodes'],
+    ['href' => 'schedules/index.php', 'icon' => 'fa-calendar-days', 'label' => 'Lịch chiếu'],
     ['href' => 'genres/index.php', 'icon' => 'fa-tags', 'label' => 'Genres'],
     ['href' => 'countries/index.php', 'icon' => 'fa-earth-asia', 'label' => 'Countries'],
     ['href' => 'actors/index.php', 'icon' => 'fa-masks-theater', 'label' => 'Actors'],

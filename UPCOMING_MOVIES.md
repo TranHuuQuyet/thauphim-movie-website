@@ -1,51 +1,31 @@
-# Phim Sắp Chiếu - Upcoming Movies Feature
+# Thông Báo Phim Sắp Chiếu
 
 ## Tính Năng (Features)
 
-Tính năng "Phim Sắp Chiếu" cho phép:
+Tính năng thông báo phim sắp chiếu cho phép:
 
-1. **Hiển thị phim sắp chiếu** - Trang công khai để xem danh sách phim sắp được phát hành
-2. **Lọc và tìm kiếm** - Người dùng có thể tìm kiếm phim theo:
-   - Tên phim
-   - Loại (Phim/Phim bộ)
-   - Thể loại
-   - Quốc gia
-   - Sắp xếp (Ngày phát hành, Phổ biến nhất, Tên, Đánh giá)
+1. **Hiển thị thông báo phim sắp chiếu** - Người dùng đăng nhập có thể xem thông báo từ biểu tượng chuông trên header
+2. **Đã đọc/chưa đọc** - Mỗi người dùng có trạng thái đã đọc riêng; mở chuông sẽ đánh dấu các thông báo đang hiển thị là đã đọc
 3. **Quản lý phim sắp chiếu** - Admin có thể:
-   - Thay đổi trạng thái phim (Sắp chiếu/Đang chiếu/Đã hoàn thành)
-   - Thêm lịch phát hành chi tiết
-   - Quản lý ghi chú về lịch chiếu
+   - Thêm/sửa/xóa lịch chiếu
+   - Chọn ngày chiếu, giờ chiếu tùy chọn, ghi chú
+   - Chọn trạng thái Công bố/Nháp
 
 ## Cấu Trúc Files
 
-### Frontend (Giao diện người dùng)
+### Header Notification
 
-- **`/pages/upcoming.php`** - Trang hiển thị danh sách phim sắp chiếu
-- **`/assets/css/upcoming.css`** - Stylesheet cho trang phim sắp chiếu
-- **`/includes/header.php`** - Đã thêm menu "Sắp chiếu" vào navigation
-
-### Backend (API)
-
-- **`/api/upcoming-movies.php`** - API endpoint để lấy danh sách phim sắp chiếu
-  - URL: `/api/upcoming-movies.php`
-  - Hỗ trợ tham số:
-    - `page` (int) - Số trang (mặc định: 1)
-    - `limit` (int) - Số phim trên mỗi trang (mặc định: 20)
-    - `search` (string) - Tìm kiếm theo tên
-    - `type` (string) - Lọc theo loại (movie/series)
-    - `genre_id` (int) - Lọc theo thể loại
-    - `country` (string) - Lọc theo quốc gia (code hoặc ID)
-    - `sort_by` (string) - Sắp xếp theo (release_date/popularity/title/rating)
-    - `order` (string) - Thứ tự (ASC/DESC)
+- **`/includes/header.php`** - Hiển thị biểu tượng chuông và danh sách thông báo
+- **`/includes/upcoming_notifications.php`** - Lấy danh sách thông báo phim sắp chiếu đã công bố
+- **`/assets/js/notifications.js`** - Điều khiển mở/đóng panel thông báo
+- **`/api/notifications.php`** - Đánh dấu thông báo đang hiển thị là đã đọc
 
 ### Admin Panel
 
-- **`/admin/schedules/index.php`** - Quản lý lịch phát hành của từng phim
-  - Xem lịch phát hành hiện tại
-  - Thêm lịch phát hành mới
-  - Cập nhật trạng thái phim
-- **`/admin/schedules/delete.php`** - Xóa lịch phát hành
-- **`/admin/movies/index.php`** - Đã cập nhật thêm nút "Schedule" để quản lý lịch chiếu
+- **`/admin/schedules/index.php`** - Trang Lịch chiếu tổng hợp, có lọc theo phim/trạng thái/thời gian
+- **`/admin/schedules/delete.php`** - Xóa lịch phát hành bằng POST + CSRF
+- **`/admin/layout_sidebar.php`** - Có mục "Lịch chiếu"
+- **`/admin/movies/index.php`** - Có nút "Lịch chiếu" để quản lý lịch của từng phim
 
 ## Database
 
@@ -62,6 +42,7 @@ CREATE TABLE schedules (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   movie_id INT UNSIGNED NOT NULL,
   release_date DATE NOT NULL,
+  show_time TIME DEFAULT NULL,
   note VARCHAR(255) DEFAULT NULL,
   is_published TINYINT(1) NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -76,97 +57,50 @@ CREATE TABLE schedules (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
+### Bảng `notification_reads`
+
+Lưu trạng thái đã đọc theo từng user và từng lịch chiếu.
+
+```sql
+CREATE TABLE notification_reads (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  schedule_id INT UNSIGNED NOT NULL,
+  read_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_notification_reads_user_schedule (user_id, schedule_id)
+);
+```
+
+Database hiện có cần chạy `database/notification_upgrade.sql`.
+
 ## Cách Sử Dụng
 
 ### Cho Người Dùng
 
-1. Truy cập vào menu "Sắp chiếu" từ navigation header
-2. Xem danh sách phim sắp chiếu
-3. Sử dụng các bộ lọc để tìm kiếm phim cụ thể
-4. Nhấp vào phim để xem chi tiết
+1. Đăng nhập tài khoản
+2. Nhấp biểu tượng chuông trên header
+3. Xem danh sách phim sắp chiếu đã được admin công bố
+4. Khi mở chuông, các thông báo đang hiển thị được đánh dấu đã đọc
+5. Nhấp vào thông báo để xem chi tiết phim
 
 ### Cho Admin
 
 1. Truy cập Admin Panel
-2. Vào mục "Movies"
-3. Tìm phim cần quản lý
-4. Nhấp nút "Schedule" để quản lý lịch phát hành
-5. Cập nhật trạng thái, thêm/xóa lịch phát hành
-
-## API Endpoint Examples
-
-### Lấy danh sách phim sắp chiếu
-
-```
-GET /api/upcoming-movies.php?page=1&limit=20
-```
-
-Response:
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": 1,
-      "title": "Avengers: Endgame",
-      "original_title": "Avengers: Endgame",
-      "poster": "https://image.tmdb.org/t/p/w500/...",
-      "backdrop": "https://image.tmdb.org/t/p/w1280/...",
-      "release_date": "2026-07-31",
-      "upcoming_date": "2026-07-31",
-      "type": "movie",
-      "quality": "4K",
-      "rating": 8.5,
-      "status": "coming_soon",
-      "is_premium": true,
-      "popularity": 95.5,
-      "runtime": 180,
-      "genres": ["Action", "Adventure"],
-      "country": {
-        "code": "US",
-        "name": "Hoa Kỳ"
-      }
-    }
-  ],
-  "meta": {
-    "page": 1,
-    "limit": 20,
-    "total": 50,
-    "total_pages": 3
-  }
-}
-```
-
-### Lọc theo thể loại
-
-```
-GET /api/upcoming-movies.php?genre_id=28&page=1
-```
-
-### Tìm kiếm phim
-
-```
-GET /api/upcoming-movies.php?search=Avengers&page=1
-```
-
-### Sắp xếp theo phổ biến
-
-```
-GET /api/upcoming-movies.php?sort_by=popularity&order=DESC&page=1
-```
+2. Vào mục "Lịch chiếu" ở sidebar hoặc vào "Movies" rồi nhấp nút "Lịch chiếu" của từng phim
+3. Thêm/sửa/xóa lịch chiếu
+4. Chọn trạng thái Công bố để lịch được hiển thị trên chuông thông báo
 
 ## Ghi Chú
 
-- Phim được hiển thị trong trang sắp chiếu nếu:
-  - Trạng thái là `coming_soon` HOẶC
-  - Có lịch phát hành trong bảng `schedules` với ngày > hôm nay
-- Admin có thể quản lý lịch phát hành chi tiết và ghi chú từ từng phim
-- Trang sắp chiếu hỗ trợ pagination để hiển thị danh sách lớn
+- Phim được hiển thị trong chuông thông báo nếu:
+  - Có lịch phát hành trong bảng `schedules` với ngày từ hôm nay trở đi
+  - Lịch phát hành đã được công bố (`is_published = 1`)
+- Badge trên chuông chỉ đếm thông báo chưa đọc của user hiện tại
+- Giờ chiếu là tùy chọn; nếu bỏ trống, chuông chỉ hiển thị ngày
 
 ## Tích Hợp Thêm
 
 Nếu cần, có thể mở rộng tính năng bằng:
 - Thêm email notification cho các phim sắp chiếu yêu thích
 - Thêm countdown timer cho phim sắp phát hành
-- Thêm widget "Sắp chiếu" trên trang chủ
 - Đồng bộ với TMDB API để cập nhật ngày phát hành tự động
