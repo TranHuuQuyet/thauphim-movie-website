@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentPage = 1;
     const limit = 12; 
   
-    // Đọc các tham số trên URL khi tải trang lần đầu
+    // Doc cac tham so
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("page")) currentPage = parseInt(urlParams.get("page"));
     if (keywordInput && urlParams.has("q")) keywordInput.value = urlParams.get("q");
@@ -113,13 +113,18 @@ document.addEventListener("DOMContentLoaded", () => {
         updateBrowserURL(); 
         
         movieList.innerHTML = "";
-        movieStatus.textContent = "Đang tải danh sách phim...";
+        movieStatus.textContent = "Đang tìm kiếm phim...";
         movieStatus.style.display = "block";
         paginationContainer.innerHTML = "";
   
         try {
             const apiParams = new URLSearchParams();
-            if (keywordInput.value) apiParams.set("q", keywordInput.value);
+            if (keywordInput.value) {
+                const queryValue = keywordInput.value.trim();
+                apiParams.set("q", queryValue);
+                apiParams.set("keyword", queryValue);
+                apiParams.set("search", queryValue);
+            }
             if (typeSelect.value) apiParams.set("type", typeSelect.value);
             if (genreSelect.value) apiParams.set("genre_id", genreSelect.value); 
             if (countrySelect.value) apiParams.set("country", countrySelect.value);
@@ -135,6 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
             const response = await fetch(`${API_BASE}/movies.php?${apiParams.toString()}`);
             const payload = await response.json();
+
+            console.log("Dữ liệu kết quả tìm kiếm API trả về:", payload);
   
             if (!response.ok || !payload.success) {
                 throw new Error(payload.message || "Lỗi khi lấy dữ liệu phim");
