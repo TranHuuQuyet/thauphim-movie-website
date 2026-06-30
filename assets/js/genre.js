@@ -8,14 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const createMovieCard = (movie) => {
       const card = document.createElement("a");
-      card.href = `/pages/movie-detail.php?id=${movie.id}`; 
+      card.href = `/thauphim-movie-website/pages/movie-detail.php?id=${movie.id}`; 
       card.className = "movie-item-card"; 
   
       const posterWrap = document.createElement("div");
       posterWrap.className = "poster-wrapper";
   
       const img = document.createElement("img");
-      img.src = movie.poster || "/assets/images/no-poster.png";
+      img.src = movie.poster_url || movie.poster || "/thauphim-movie-website/assets/images/default.jpg";
       img.alt = movie.title || "Movie Poster";
       img.loading = "lazy";
       posterWrap.append(img);
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const genreId = urlParams.get("id");
   
       if (!genreId) {
-        window.location.href = "/pages/genres.php";
+        window.location.href = "/thauphim-movie-website/pages/genres.php";
         return;
       }
   
