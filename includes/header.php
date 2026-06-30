@@ -85,7 +85,7 @@ $notificationUnreadCount = count(array_filter(
                     <a href="/pages/actor.php">Diễn viên</a>
                 </nav>
 
-                <form class="search-form" action="/index.php#featured" method="get" role="search" data-home-search>
+                <form class="search-form" action="/index.php" method="get" role="search">
                     <label class="sr-only" for="header-search">Tìm phim, diễn viên</label>
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off"
