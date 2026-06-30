@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.title = "Thể loại phim - ThauPhim";
   
-    const API_BASE = "/thauphim-movie-website/api";
+    const APP_BASE_PATH = window.APP_BASE_PATH || "/";
+    const API_BASE = `${APP_BASE_PATH}api`;
     const genresStatus = document.querySelector("#genresStatus");
     const genresList = document.querySelector("#genresList");
   
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const createGenreCard = (genre) => {
       const card = document.createElement("a");
-      card.href = `/thauphim-movie-website/pages/genre.php?id=${genre.id}`; 
+      card.href = `${APP_BASE_PATH}pages/genre.php?id=${genre.id}`;
       card.className = "genre-card";
   
       const name = document.createElement("h3");

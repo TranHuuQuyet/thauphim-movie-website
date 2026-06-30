@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!actorList) return;
 
   let currentPage = 1;
-  const limit = 18; 
+  const limit = 18;
   let searchQuery = "";
   let searchTimeout = null;
 
@@ -50,42 +50,111 @@ document.addEventListener("DOMContentLoaded", () => {
     card.append(name);
 
     if (actor.movie_count > 0) {
-        const count = document.createElement("span");
-        count.className = "actor-movie-count";
-        count.textContent = `${actor.movie_count} phim`;
-        count.style.cssText = "display:block; font-size:12px; color:#aaa; margin-top:5px;";
-        card.append(count);
+      const count = document.createElement("span");
+      count.className = "actor-movie-count";
+      count.textContent = `${actor.movie_count} phim`;
+      count.style.cssText = "display:block; font-size:12px; color:#aaa; margin-top:5px;";
+      card.append(count);
     }
 
     return card;
   };
 
+  const getPaginationItems = (totalPages) => {
+    const pages = new Set([1, totalPages]);
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let page = start; page <= end; page += 1) {
+      pages.add(page);
+    }
+
+    if (currentPage <= 2) {
+      pages.add(2);
+      pages.add(3);
+    }
+
+    if (currentPage >= totalPages - 1) {
+      pages.add(totalPages - 2);
+      pages.add(totalPages - 1);
+    }
+
+    return [...pages]
+      .filter((page) => page >= 1 && page <= totalPages)
+      .sort((a, b) => a - b)
+      .reduce((items, page, index, sortedPages) => {
+        if (index > 0 && page - sortedPages[index - 1] > 1) {
+          items.push("ellipsis");
+        }
+
+        items.push(page);
+        return items;
+      }, []);
+  };
+
+  const createPaginationButton = (label, page, options = {}) => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    const isCurrent = page === currentPage;
+
+    btn.type = "button";
+    btn.textContent = label;
+    btn.className = `page-link${isCurrent ? " active-page" : ""}`;
+    btn.disabled = Boolean(options.disabled) || isCurrent;
+
+    if (isCurrent) {
+      btn.setAttribute("aria-current", "page");
+    }
+
+    btn.addEventListener("click", () => {
+      if (btn.disabled) return;
+
+      currentPage = page;
+      loadActors();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    li.append(btn);
+    return li;
+  };
+
+  const createPaginationEllipsis = () => {
+    const li = document.createElement("li");
+    const ellipsis = document.createElement("span");
+
+    ellipsis.className = "page-ellipsis";
+    ellipsis.textContent = "...";
+    ellipsis.setAttribute("aria-hidden", "true");
+    li.append(ellipsis);
+    return li;
+  };
+
   const renderPagination = (totalItems) => {
     if (!actorPagination) return;
     actorPagination.innerHTML = "";
-    
+
     const totalPages = Math.ceil(totalItems / limit);
     if (totalPages <= 1) return;
 
     const ul = document.createElement("ul");
-    ul.style.cssText = "display: flex; list-style: none; padding: 0; margin: 0; gap: 8px;";
+    ul.className = "pagination-list";
 
-    for (let i = 1; i <= totalPages; i++) {
-      const li = document.createElement("li");
-      const btn = document.createElement("button");
-      btn.textContent = i;
-      btn.className = `page-link ${i === currentPage ? "active-page" : ""}`;
-      
-      btn.style.cssText = `padding: 8px 16px; border: 1px solid #333; background: ${i === currentPage ? '#e50914' : '#111'}; color: #fff; cursor: pointer; border-radius: 4px;`;
-      
-      btn.addEventListener("click", () => {
-        currentPage = i;
-        loadActors();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-      li.append(btn);
-      ul.append(li);
-    }
+    ul.append(createPaginationButton("Trước", Math.max(1, currentPage - 1), {
+      disabled: currentPage === 1,
+    }));
+
+    getPaginationItems(totalPages).forEach((item) => {
+      ul.append(
+        item === "ellipsis"
+          ? createPaginationEllipsis()
+          : createPaginationButton(String(item), item),
+      );
+    });
+
+    ul.append(createPaginationButton("Sau", Math.min(totalPages, currentPage + 1), {
+      disabled: currentPage === totalPages,
+    }));
+
     actorPagination.append(ul);
   };
 
@@ -112,9 +181,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const fragment = document.createDocumentFragment();
       actors.forEach((actor) => fragment.append(createActorCard(actor)));
       actorList.append(fragment);
-      
+
       setStatus(searchQuery ? `Tìm thấy ${payload.meta?.total || actors.length} kết quả.` : "", "ready");
-      
+
       if (payload.meta && payload.meta.total) {
         renderPagination(payload.meta.total);
       } else {
@@ -132,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
         searchQuery = e.target.value.trim();
-        currentPage = 1; 
+        currentPage = 1;
         loadActors();
       }, 500);
     });
