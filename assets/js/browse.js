@@ -55,12 +55,12 @@ document.addEventListener("DOMContentLoaded", () => {
         card.className = "movie-card";
         card.style.cssText = "background: #111; border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative;";
         
-        const posterSrc = movie.poster_url || movie.poster || '/thauphim-movie-website/assets/images/default.jpg';
+        const posterSrc = movie.poster_url || movie.poster || '/assets/images/default.jpg';
         const movieType = movie.type === 'series' ? 'Phim Bộ' : 'Phim Lẻ';
         const views = (movie.views || 0).toLocaleString('vi-VN');
   
         card.innerHTML = `
-            <a href="/../pages/movie-detail.php?id=${movie.id}" style="text-decoration: none; color: inherit; display: block;">
+            <a href="/pages/movie-detail.php?id=${movie.id}" style="text-decoration: none; color: inherit; display: block;">
                 <div class="poster-wrapper" style="position: relative; padding-top: 145%; background: #222; overflow: hidden;">
                     <img src="${posterSrc}" alt="${movie.title}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                     <span style="position: absolute; top: 8px; left: 8px; background: rgba(229, 9, 20, 0.9); color: #fff; padding: 3px 6px; font-size: 11px; font-weight: bold; border-radius: 3px; text-transform: uppercase;">
