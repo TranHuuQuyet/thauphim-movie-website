@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentPage = 1;
     const limit = 12; 
   
-    // Doc cac tham so
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("page")) currentPage = parseInt(urlParams.get("page"));
     if (keywordInput && urlParams.has("q")) keywordInput.value = urlParams.get("q");
