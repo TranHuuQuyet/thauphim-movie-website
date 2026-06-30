@@ -310,6 +310,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 ?>
 
 <link rel="stylesheet" href="/assets/css/watch.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 <main class="page-shell watch-page">
     <section class="watch-container">
@@ -336,9 +337,12 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                     data-movie-id="<?= $movieId ?>" aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
                     <?= $isFavorite ? "♥" : "♡" ?> Yêu thích
                 </button>
-                <a href="account.php?tab=favorites">＋ Danh sách</a>
+                <button class="<?= $isFavorite ? "is-added" : "" ?>" id="addListBtn" type="button" data-add-list
+                    aria-pressed="<?= $isFavorite ? "true" : "false" ?>">
+                    <?= $isFavorite ? "✓ Đã có trong danh sách" : "＋ Danh sách" ?>
+                </button>
                 <button type="button" id="shareBtn">↗ Chia sẻ</button>
-                <button type="button" disabled>⚑ Báo lỗi</button>
+                <button type="button" id="reportErrorBtn">⚑ Báo lỗi</button>
             </div>
 
             <div class="watch-episode-nav">
@@ -418,6 +422,10 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
                     <h2> Bình luận</h2>
 
                     <?php if ($currentUserDbId === null): ?>
+                        <p class="rating-login-note">
+                            Vui lòng <a href="#authModal" data-open-login>đăng nhập</a> để bình luận.
+                        </p>
+
                         <div class="watch-comment-input">
                             <textarea placeholder="Viết bình luận" disabled></textarea>
                             <div>
@@ -478,7 +486,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 
                         <?php if ($currentUserDbId === null): ?>
                             <p class="rating-login-note">
-                                Vui lòng <a href="../login.php">đăng nhập</a> để đánh giá.
+                                Vui lòng <a href="#authModal" data-open-login>đăng nhập</a> để đánh giá.
                             </p>
                         <?php else: ?>
                             <div class="rating-stars" id="ratingStars">
@@ -559,6 +567,7 @@ $iframeSrc = youtubeEmbedUrl($currentEpisode["youtube_url"], $startSeconds);
 </script>
 
 <script src="/assets/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="/assets/js/watch.js"></script>
 <script src="/assets/js/movie-interactions.js"></script>
 

@@ -1,27 +1,75 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const watchHistoryData = window.watchHistoryData || {};
     const shareBtn = document.querySelector("#shareBtn");
+    const reportErrorBtn = document.querySelector("#reportErrorBtn");
+
+    let guestHistoryToastShown = false;
+    let watchPlayer = null;
+    let saveProgressTimer = null;
+
+    const showWatchToast = (message, type = "info") => {
+        if (typeof Toastify === "function") {
+            Toastify({
+                text: message,
+                duration: 2500,
+                gravity: "top",
+                position: "right",
+                close: true,
+                stopOnFocus: true,
+                className: `thau-toast thau-toast-${type}`,
+            }).showToast();
+            return;
+        }
+        alert(message);
+    };
+
+    const notifyGuestHistory = () => {
+        if (guestHistoryToastShown) {
+            return;
+        }
+
+        guestHistoryToastShown = true;
+        showWatchToast("Đăng nhập để lưu lịch sử xem.", "warning");
+    };
 
     if (shareBtn) {
         shareBtn.addEventListener("click", async () => {
             try {
                 await navigator.clipboard.writeText(window.location.href);
-                shareBtn.textContent = "✓ Đã copy link";
-
-                setTimeout(() => {
-                    shareBtn.textContent = "↗ Chia sẻ";
-                }, 1800);
+                showWatchToast("Đã copy link phim.", "success");
             } catch (error) {
-                alert("Không copy được link. Bạn hãy copy trên thanh địa chỉ.");
+                showWatchToast("Không copy được link chia sẻ.", "error");
             }
         });
     }
 
-    const watchHistoryData = window.watchHistoryData || {};
-    let watchPlayer = null;
-    let saveProgressTimer = null;
+    if (reportErrorBtn) {
+        reportErrorBtn.addEventListener("click", () => {
+            const commentInput = document.querySelector("#commentInput");
+            const commentSection = document.querySelector(".watch-comment-box");
+
+            if (!watchHistoryData.isLoggedIn || !commentInput) {
+                showWatchToast("Vui lòng đăng nhập để báo lỗi phim.", "warning");
+                return;
+            }
+
+            if (!commentInput.value.trim()) {
+                commentInput.value = "[Báo lỗi] Tập phim này bị lỗi: ";
+                commentInput.dispatchEvent(new Event("input"));
+            }
+
+            commentSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+            commentInput.focus();
+
+            showWatchToast("Bạn mô tả lỗi rồi bấm Gửi để báo lỗi.", "info");
+        });
+    }
 
     const saveWatchProgress = (isLeavingPage = false) => {
-        if (!watchHistoryData.isLoggedIn) return;
+        if (!watchHistoryData.isLoggedIn) {
+            notifyGuestHistory();
+            return;
+        }
         if (!watchPlayer || typeof watchPlayer.getCurrentTime !== "function") return;
 
         const progressSeconds = Math.floor(watchPlayer.getCurrentTime());
