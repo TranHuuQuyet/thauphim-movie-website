@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
       genresStatus.className = `genres-status${state ? ` is-${state}` : ""}`;
       if (state === "ready") {
           genresStatus.style.display = "none";
+      } else {
+          genresStatus.style.display = "block";
       }
     };
   
@@ -32,13 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
     const loadGenres = async () => {
-      genresList.replaceChildren();
+      genresList.innerHTML = "";
       setStatus("Đang tải danh sách thể loại...", "loading");
   
       try {
-        const response = await fetch(`${API_BASE}/genres.php`, {
-          headers: { Accept: "application/json" },
-        });
+        const response = await fetch(`${API_BASE}/genres.php`);
         const payload = await response.json().catch(() => null);
   
         if (!response.ok || !payload?.success) {
