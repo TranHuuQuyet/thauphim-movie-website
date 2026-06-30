@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_BASE = "/api";
+    const API_BASE = "/thauphim-movie-website/api";
     const movieTitle = document.querySelector("#genre-movies-title");
     const movieStatus = document.querySelector("#genreMovieStatus");
     const movieList = document.querySelector("#genreMovieList");
