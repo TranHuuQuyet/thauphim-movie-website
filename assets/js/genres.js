@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const createGenreCard = (genre) => {
       const card = document.createElement("a");
-      card.href = `/../pages/genre.php?id=${genre.id}`; 
+      card.href = `/pages/genre.php?id=${genre.id}`; 
       card.className = "genre-card";
   
       const name = document.createElement("h3");
