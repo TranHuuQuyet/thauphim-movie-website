@@ -116,6 +116,9 @@ $stmt = $pdo->prepare("
     FROM movie_actors
     INNER JOIN actors ON movie_actors.actor_id = actors.id
     WHERE movie_actors.movie_id = ?
+    AND COALESCE(NULLIF(actors.avatar, ''), NULLIF(actors.profile_path, '')) IS NOT NULL
+    ORDER BY movie_actors.actor_id ASC
+    LIMIT 12
 ");
 $stmt->execute([$movieId]);
 $actors = $stmt->fetchAll();

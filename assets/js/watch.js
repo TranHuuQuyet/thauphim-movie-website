@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
             Toastify({
                 text: message,
                 duration: 2500,
-                gravity: "top",
+                gravity: "bottom",
                 position: "right",
                 close: true,
                 stopOnFocus: true,
@@ -54,14 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (!commentInput.value.trim()) {
-                commentInput.value = "[Báo lỗi] Tập phim này bị lỗi: ";
+                commentInput.value = "[Báo lỗi] Tập phim này hiện đang bị lỗi: ";
                 commentInput.dispatchEvent(new Event("input"));
             }
 
             commentSection?.scrollIntoView({ behavior: "smooth", block: "start" });
             commentInput.focus();
 
-            showWatchToast("Bạn mô tả lỗi rồi bấm Gửi để báo lỗi.", "info");
+            showWatchToast("Bạn mô tả lỗi và bấm Gửi để báo lỗi.", "info");
         });
     }
 

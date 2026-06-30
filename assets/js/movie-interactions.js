@@ -48,20 +48,27 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
 const showToast = (message, type = "info") => {
-    if (typeof Toastify === "function") {
-        Toastify({
-            text: message,
-            duration: 2500,
-            gravity: "top",
-            position: "right",
-            close: true,
-            stopOnFocus: true,
-            className: `thau-toast thau-toast-${type}`,
-        }).showToast();
-        return;
-    }
+  if (typeof Toastify === "function") {
+    document.querySelectorAll(".thau-toast").forEach((toast) => toast.remove());
 
-    alert(message);
+    Toastify({
+      text: message,
+      duration: 2200,
+      gravity: "bottom",
+      position: "right",
+      close: false,
+      stopOnFocus: true,
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      className: `thau-toast thau-toast-${type}`,
+    }).showToast();
+
+    return;
+  }
+
+  alert(message);
 };
 
 const requireLogin = (message) => {
