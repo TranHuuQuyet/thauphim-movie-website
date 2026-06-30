@@ -21,7 +21,7 @@ include __DIR__ . '/../includes/header.php';
 </main>
 
 <script>
-    window.APP_BASE_PATH = <?= json_encode(APP_BASE_PATH, JSON_UNESCAPED_SLASHES) ?>;
+window.APP_BASE_PATH = <?= json_encode(APP_BASE_PATH, JSON_UNESCAPED_SLASHES) ?>;
 </script>
 <script src="<?= htmlspecialchars(APP_BASE_PATH . 'assets/js/genres.js', ENT_QUOTES, 'UTF-8') ?>"></script>
 
