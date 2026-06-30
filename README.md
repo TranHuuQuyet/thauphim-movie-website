@@ -405,6 +405,7 @@ Checklist tom tat:
 - Cap nhat `APP_BASE_PATH`, database credentials va `TMDB_API_KEY`.
 - Import `database/schema.sql`.
 - Import `database/seed.sql`.
+- Neu database da ton tai va chi can nang cap chuong thong bao lich chieu, import `database/notification_upgrade.sql` trong dung database dang duoc cau hinh.
 - Import data TMDB bang CLI neu hosting cho phep, hoac import local roi export SQL data.
 - Cau hinh web root/vhost/.htaccess theo moi truong.
 - Kiem tra API, trang user va trang admin.

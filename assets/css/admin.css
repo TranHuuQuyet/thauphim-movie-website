@@ -263,6 +263,11 @@ button:hover {
     border-color: #b42318;
 }
 
+.btn-info {
+    background: #0f62fe;
+    border-color: #0f62fe;
+}
+
 .btn-warning {
     background: #a15c07;
     border-color: #a15c07;

@@ -58,8 +58,8 @@ include __DIR__ . '/../layout_sidebar.php';
                                 <a class="btn btn-secondary" href="<?= admin_e(admin_url('movies/edit.php?id=' . (int) $movie['id'])) ?>">
                                     <i class="fa-solid fa-pen"></i> Edit
                                 </a>
-                                <a class="btn btn-info" href="<?= admin_e(admin_url('schedules/index.php?movie_id=' . (int) $movie['id'])) ?>" title="Manage schedules/upcoming releases">
-                                    <i class="fa-solid fa-calendar"></i> Schedule
+                                <a class="btn btn-info" href="<?= admin_e(admin_url('schedules/index.php?movie_id=' . (int) $movie['id'])) ?>" title="Quản lý lịch chiếu">
+                                    <i class="fa-solid fa-calendar"></i> Lịch chiếu
                                 </a>
                                 <form class="inline-form" method="post" action="<?= admin_e(admin_url('movies/delete.php')) ?>" onsubmit="return confirm('Delete this movie?');">
                                     <?= admin_csrf_input() ?>
