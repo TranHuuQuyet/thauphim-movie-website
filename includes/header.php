@@ -65,7 +65,7 @@ $notificationUnreadCount = count(array_filter(
             <div class="header-actions" id="primary-menu">
                 <nav class="main-nav" aria-label="Điều hướng chính">
                     <a href="/pages/genres.php" class="menu-link">Chủ đề</a>
-                    <a href="/index.php#featured">Bộ lọc</a>
+                    <a href="/pages/browse.php?q=">Bộ lọc</a>
                     <a href="/index.php#single-movies">Phim lẻ</a>
                     <a href="/index.php#series-movies">Phim bộ</a>
                     
