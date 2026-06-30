@@ -1,0 +1,91 @@
+.genre-page {
+    width: min(100% - 48px, 1380px);
+    margin: 0 auto;
+    padding: 120px 0 72px;
+  }
+  
+  .genre-section-heading {
+    margin-bottom: 12px;
+  }
+  
+  .genre-section-heading h1 {
+    margin: 0;
+    color: var(--color-text, #fff);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.08;
+  }
+  
+  .genre-movie-status.is-loading,
+  .genre-movie-status.is-ready {
+    margin-bottom: 22px;
+    color: var(--color-text-soft, #a8adbd);
+    font-size: 0.9rem;
+  }
+  
+  .genre-movie-status.is-empty,
+  .genre-movie-status.is-error {
+    display: grid;
+    min-height: 220px;
+    padding: 40px 24px;
+    place-content: center;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: #171923;
+    color: #a8adbd;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .genre-movie-status i {
+    font-size: 2rem;
+    color: #ff5c7a;
+  }
+  
+  /* Khung lưới hiển thị danh sách phim giống bên Quốc Gia */
+  .genre-movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+  }
+  
+  /* Định dạng thẻ phim mẫu (Bạn có thể bỏ qua nếu đã dùng class CSS chung của website) */
+  .movie-item-card {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+  }
+  
+  .poster-wrapper {
+    aspect-ratio: 2 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background: #222;
+  }
+  
+  .poster-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .movie-item-card:hover .poster-wrapper img {
+    transform: scale(1.05);
+  }
+  
+  .movie-item-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  @media (max-width: 600px) {
+    .genre-movie-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }

@@ -13,6 +13,7 @@ $isMember = $currentUser !== null;
 $upcomingNotifications = get_published_upcoming_notifications();
 $notificationCount = count($upcomingNotifications);
 ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -58,11 +59,12 @@ $notificationCount = count($upcomingNotifications);
 
             <div class="header-actions" id="primary-menu">
                 <nav class="main-nav" aria-label="Điều hướng chính">
-                    <a href="/index.php#hot-genres">Chủ đề</a>
+                    <a href="/pages/genres.php" class="menu-link">Chủ đề</a>
                     <a href="/index.php#featured">Bộ lọc</a>
                     <a href="/pages/upcoming.php">Sắp chiếu</a>
                     <a href="/index.php#single-movies">Phim lẻ</a>
                     <a href="/index.php#series-movies">Phim bộ</a>
+                    
                     <details class="nav-dropdown">
                         <summary>
                             Quốc gia

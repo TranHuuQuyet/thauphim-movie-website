@@ -24,28 +24,61 @@ try {
     if (!$country) {
         apiError('Khong tim thay quoc gia.', 404);
     }
+    $countryId = (int) $country['id'];
+
+    $page = apiIntParam('page', 1, 1, 1000);
+    $limit = apiIntParam('limit', 20, 1, 50); 
+    $offset = ($page - 1) * $limit;
+    $type = strtolower(apiStringParam('type'));
+    if ($type === 'tv') {
+        $type = 'series';
+    }
+
+    $whereClauses = ['m.country_id = :country_id'];
+    $bindParams = ['country_id' => $countryId];
+    if ($type !== '') {
+        if (!in_array($type, ['movie', 'series'], true)) {
+            apiError('Loai phim khong hop le.', 400);
+        }
+        $whereClauses[] = 'm.type = :type';
+        $bindParams['type'] = $type;
+    }
+    $whereSql = 'WHERE ' . implode(' AND ', $whereClauses);
+    $countStatement = $pdo->prepare(
+        "SELECT COUNT(*) FROM movies m {$whereSql}"
+    );
+    $countStatement->execute($bindParams);
+    $total = (int) $countStatement->fetchColumn();
 
     $movieStatement = $pdo->prepare(
-        'SELECT
+        "SELECT
             m.*,
             c.code AS country_code,
             c.name AS country_name
          FROM movies m
          LEFT JOIN countries c ON c.id = m.country_id
-         WHERE m.country_id = :country_id
+         {$whereSql}
          ORDER BY m.release_date DESC, m.created_at DESC, m.id DESC
-         LIMIT 24'
+         LIMIT :limit OFFSET :offset"
     );
-    $movieStatement->execute(['country_id' => (int) $country['id']]);
+
+    foreach ($bindParams as $key => $value) {
+        $movieStatement->bindValue(':' . $key, $value, PDO::PARAM_STR); 
+    }
+    $movieStatement->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $movieStatement->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $movieStatement->execute();
+    $movies = array_map('apiMovieRow', $movieStatement->fetchAll());
 
     apiSuccess([
         'country' => [
-            'id' => (int) $country['id'],
+            'id'   => $countryId,
             'code' => $country['code'],
             'name' => $country['name'],
         ],
-        'movies' => array_map('apiMovieRow', $movieStatement->fetchAll()),
-    ]);
+        'movies' => $movies
+    ], apiPaginationMeta($page, $limit, $total));
+
 } catch (Throwable $exception) {
-    apiServerError('Khong the tai phim theo quoc gia.', $exception);
+    apiServerError('Khong the tai danh sach phim theo quoc gia.', $exception);
 }

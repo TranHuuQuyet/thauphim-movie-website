@@ -17,47 +17,39 @@ function apiActorProfileUrl(?string $avatar, ?string $profilePath): ?string
 
 try {
     $pdo = getDatabaseConnection();
-
     $page = apiIntParam('page', 1, 1, 1000);
-    $limit = apiIntParam('limit', 20, 1, 50);
+    $limit = apiIntParam('limit', 20, 1, 50); 
     $offset = ($page - 1) * $limit;
+    
     $query = apiStringParam('q');
 
     $whereSql = '';
-    $params = [];
+    $bindParams = [];
     if ($query !== '') {
         $whereSql = 'WHERE a.name LIKE :q';
-        $params['q'] = '%' . $query . '%';
+        $bindParams['q'] = '%' . $query . '%';
     }
 
     $countStatement = $pdo->prepare(
-        "SELECT COUNT(*)
-         FROM actors a
-         {$whereSql}"
+        "SELECT COUNT(*) FROM actors a {$whereSql}"
     );
-    $countStatement->execute($params);
+    $countStatement->execute($bindParams);
     $total = (int) $countStatement->fetchColumn();
 
     $statement = $pdo->prepare(
         "SELECT
-            a.id,
-            a.tmdb_actor_id,
-            a.name,
-            a.avatar,
-            a.profile_path,
-            a.biography,
-            a.known_for_department,
+            a.*,
             COUNT(ma.movie_id) AS movie_count
          FROM actors a
          LEFT JOIN movie_actors ma ON ma.actor_id = a.id
          {$whereSql}
-         GROUP BY a.id, a.tmdb_actor_id, a.name, a.avatar, a.profile_path, a.biography, a.known_for_department
+         GROUP BY a.id
          ORDER BY movie_count DESC, a.name ASC
          LIMIT :limit OFFSET :offset"
     );
 
-    foreach ($params as $key => $value) {
-        $statement->bindValue(':' . $key, $value, PDO::PARAM_STR);
+    if ($query !== '') {
+        $statement->bindValue(':q', $bindParams['q'], PDO::PARAM_STR);
     }
     $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
     $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -65,15 +57,15 @@ try {
 
     $actors = array_map(static function (array $actor): array {
         return [
-            'id' => (int) $actor['id'],
-            'tmdb_actor_id' => isset($actor['tmdb_actor_id']) ? (int) $actor['tmdb_actor_id'] : null,
-            'name' => $actor['name'],
-            'avatar' => $actor['avatar'],
-            'profile_path' => $actor['profile_path'],
-            'profile_url' => apiActorProfileUrl($actor['avatar'], $actor['profile_path']),
-            'biography' => $actor['biography'],
+            'id'                   => (int) $actor['id'],
+            'tmdb_actor_id'        => $actor['tmdb_actor_id'] !== null ? (int) $actor['tmdb_actor_id'] : null,
+            'name'                 => $actor['name'],
+            'avatar'               => $actor['avatar'],
+            'profile_path'         => $actor['profile_path'],
+            'profile_url'          => apiActorProfileUrl($actor['avatar'], $actor['profile_path']),
+            'biography'            => $actor['biography'],
             'known_for_department' => $actor['known_for_department'],
-            'movie_count' => (int) $actor['movie_count'],
+            'movie_count'          => (int) $actor['movie_count'],
         ];
     }, $statement->fetchAll());
 

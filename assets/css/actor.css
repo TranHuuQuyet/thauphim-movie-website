@@ -57,3 +57,48 @@
   text-align: center;
   color: #fff;
 }
+
+/* Bổ sung trạng thái tải dữ liệu diễn viên */
+.actor-status.is-loading {
+  color: var(--color-primary, #e50914);
+  font-style: italic;
+}
+
+.actor-status.is-empty {
+  color: var(--color-text-soft, #8f96ad);
+  padding: 20px;
+  border: 1px dashed #333;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* Bổ sung định dạng phân trang cho trang Diễn Viên */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.pagination-container .page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid #2d3748;
+  background: #171923;
+  color: #a8adbd;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-container .page-link:hover {
+  background: #2d3748;
+  color: #fff;
+}
