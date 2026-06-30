@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/config.php';
 include __DIR__ . '/../includes/header.php';
 ?>
 
-<link rel="stylesheet" href="/assets/css/genres.css">
+<link rel="stylesheet" href="/thauphim-movie-website/assets/css/genres.css">
 
 <main class="genres-page">
     <section class="genres-section" aria-labelledby="genres-title">
@@ -20,6 +20,6 @@ include __DIR__ . '/../includes/header.php';
     </section>
 </main>
 
-<script src="/assets/js/genres.js"></script>
+<script src="/thauphim-movie-website/assets/js/genres.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
