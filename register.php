@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/includes/auth.php";
+require_once __DIR__ . "/includes/auth_ui.php";
 
 auth_start_session();
 
@@ -115,17 +116,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 <?php include __DIR__ . "/includes/header.php"; ?>
-<link rel="stylesheet" href="/assets/css/auth.css">
 
 <main class="page-shell auth-page">
-    <section class="auth-page-card">
-        <div class="auth-page-media">
-            <img src="/assets/images/img_login.jpg" alt="">
-        </div>
-        <div class="auth-page-panel">
-            <?php include __DIR__ . "/includes/auth_register.php"; ?>
-        </div>
-    </section>
+    <?php
+    auth_ui_render_surface([
+        "context" => "page",
+        "mode" => "register",
+        "id_suffix" => "page",
+        "register_errors" => $registerErrors,
+        "register_old" => $registerOld,
+        "pdo" => $pdo,
+    ]);
+    ?>
 </main>
 
 <?php include __DIR__ . "/includes/footer.php"; ?>
