@@ -150,7 +150,17 @@ $stmt->execute([$movieId]);
 $episodes = $stmt->fetchAll();
 
 if (empty($episodes)) {
-    echo "<main class='page-shell watch-page'><p>Phim này chưa có tập để xem.</p></main>";
+    $detailUrl = "movie-detail.php?id=" . rawurlencode((string) $movieId);
+
+    if (!headers_sent()) {
+        header("Location: " . $detailUrl);
+        exit;
+    }
+    ?>
+    <script>
+        window.location.replace(<?= json_encode($detailUrl, JSON_UNESCAPED_SLASHES) ?>);
+    </script>
+    <?php
     include __DIR__ . '/../includes/footer.php';
     exit;
 }

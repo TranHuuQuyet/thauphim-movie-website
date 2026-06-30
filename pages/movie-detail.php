@@ -460,7 +460,7 @@ $heroVideoUrl = !empty($firstEpisode["youtube_url"])
             <section class="movie-section related-section detail-tab-panel" id="related-section">
                 <div class="section-head">
                     <h2>Có thể bạn sẽ thích</h2>
-                    <a href="#" class="view-more">Xem thêm</a>
+                    <a href="/index.php#top-week" class="view-more">Xem thêm</a>
                 </div>
 
                 <div class="related-movie-grid" id="relatedMovies">
