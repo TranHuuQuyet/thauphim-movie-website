@@ -7,7 +7,7 @@ $countries = getAllCountriesFromDB();
 
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
-<link rel="stylesheet" href="/thauphim-review-website/assets/css/browse.css">
+<link rel="stylesheet" href="/../assets/css/browse.css">
 
 <main class="page-shell" aria-label="Bộ lọc và tìm kiếm phim">
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px 15px;">
@@ -95,6 +95,6 @@ $countries = getAllCountriesFromDB();
     </div>
 </main>
 
-<script src="/thauphim-movie-website/assets/js/browse.js"></script>
+<script src="/../assets/js/browse.js"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
