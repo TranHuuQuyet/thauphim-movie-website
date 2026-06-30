@@ -494,10 +494,6 @@ const setupHomeSearch = () => {
   document.querySelectorAll("[data-home-search]").forEach((form) => {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      document.querySelector("#featured")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
 
       form.querySelector("input")?.blur();
     });
