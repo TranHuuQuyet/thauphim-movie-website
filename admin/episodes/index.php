@@ -4,25 +4,50 @@ declare(strict_types=1);
 require_once __DIR__ . '/../_helpers.php';
 
 $movieId = admin_nullable_int($_GET['movie_id'] ?? null);
+$search = trim((string) ($_GET['q'] ?? ''));
+$page = admin_page_number($_GET['page'] ?? null);
+$perPage = 20;
 $movies = $pdo->query('
     SELECT id, title
     FROM movies
     ORDER BY title ASC
 ')->fetchAll();
 
+$where = [];
+$params = [];
+
+if ($movieId !== null && $movieId > 0) {
+    $where[] = 'episodes.movie_id = ?';
+    $params[] = $movieId;
+}
+
+if ($search !== '') {
+    $where[] = '(movies.title LIKE ? OR episodes.title LIKE ?)';
+    $searchValue = '%' . $search . '%';
+    $params[] = $searchValue;
+    $params[] = $searchValue;
+}
+
+$whereSql = $where ? ' WHERE ' . implode(' AND ', $where) : '';
+
+$countStmt = $pdo->prepare('
+    SELECT COUNT(*)
+    FROM episodes
+    INNER JOIN movies ON movies.id = episodes.movie_id
+    ' . $whereSql);
+$countStmt->execute($params);
+$totalItems = (int) $countStmt->fetchColumn();
+$totalPages = max(1, (int) ceil($totalItems / $perPage));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $perPage;
+
 $sql = '
     SELECT episodes.*, movies.title AS movie_title, movies.type AS movie_type
     FROM episodes
     INNER JOIN movies ON movies.id = episodes.movie_id
-';
-$params = [];
-
-if ($movieId !== null && $movieId > 0) {
-    $sql .= ' WHERE episodes.movie_id = ?';
-    $params[] = $movieId;
-}
-
-$sql .= ' ORDER BY movies.title ASC, episodes.episode_number ASC';
+    ' . $whereSql . '
+    ORDER BY episodes.id ASC
+    LIMIT ' . $perPage . ' OFFSET ' . $offset;
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $episodes = $stmt->fetchAll();
@@ -31,7 +56,7 @@ $pageTitle = 'Admin Episodes';
 include __DIR__ . '/../layout_header.php';
 include __DIR__ . '/../layout_sidebar.php';
 ?>
-<main class="admin-content">
+<main class="admin-content admin-list-content">
     <div class="page-header">
         <h1>Episodes</h1>
         <a href="<?= admin_e(admin_url('episodes/create.php' . ($movieId ? '?movie_id=' . $movieId : ''))) ?>" class="btn-add">
@@ -39,8 +64,8 @@ include __DIR__ . '/../layout_sidebar.php';
         </a>
     </div>
 
-    <form class="admin-form" method="get" action="<?= admin_e(admin_url('episodes/index.php')) ?>">
-        <div class="form-grid">
+    <form class="admin-form admin-filter" method="get" action="<?= admin_e(admin_url('episodes/index.php')) ?>">
+        <div class="filter-fields">
             <div class="form-row">
                 <label for="movie_id">Filter by movie</label>
                 <select id="movie_id" name="movie_id">
@@ -52,10 +77,14 @@ include __DIR__ . '/../layout_sidebar.php';
                     <?php endforeach; ?>
                 </select>
             </div>
-        </div>
-        <div class="form-actions">
-            <button type="submit"><i class="fa-solid fa-filter"></i> Filter</button>
-            <a class="btn btn-secondary" href="<?= admin_e(admin_url('episodes/index.php')) ?>">Reset</a>
+            <div class="form-row filter-search">
+                <label for="q">Search episodes</label>
+                <input id="q" type="search" name="q" value="<?= admin_e($search) ?>" placeholder="Movie or episode title">
+            </div>
+            <div class="form-actions">
+                <button type="submit"><i class="fa-solid fa-filter"></i> Filter</button>
+                <a class="btn btn-secondary" href="<?= admin_e(admin_url('episodes/index.php')) ?>">Reset</a>
+            </div>
         </div>
     </form>
 
@@ -109,6 +138,15 @@ include __DIR__ . '/../layout_sidebar.php';
             </tbody>
         </table>
     </section>
+    <?php admin_render_pagination(
+        'episodes/index.php',
+        ['movie_id' => $movieId, 'q' => $search],
+        $page,
+        $totalPages,
+        $totalItems,
+        $offset,
+        $perPage
+    ); ?>
 </main>
 
 <?php include __DIR__ . '/../layout_footer.php'; ?>

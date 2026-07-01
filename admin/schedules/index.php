@@ -290,8 +290,7 @@ $stmt = $pdo->prepare("
     FROM schedules
     INNER JOIN movies ON movies.id = schedules.movie_id
     {$whereSql}
-    ORDER BY schedules.release_date < CURDATE() ASC, schedules.release_date ASC,
-             schedules.show_time IS NULL ASC, schedules.show_time ASC, schedules.id ASC
+    ORDER BY schedules.id ASC
 ");
 $stmt->execute($params);
 $schedules = $stmt->fetchAll();

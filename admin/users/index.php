@@ -3,7 +3,27 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../_helpers.php';
 
-$users = $pdo->query('
+$search = trim((string) ($_GET['q'] ?? ''));
+$page = admin_page_number($_GET['page'] ?? null);
+$perPage = 20;
+$where = '';
+$params = [];
+
+if ($search !== '') {
+    $where = ' WHERE users.username LIKE ? OR users.email LIKE ? OR users.role LIKE ?
+               OR users.membership LIKE ? OR users.status LIKE ?';
+    $searchValue = '%' . $search . '%';
+    $params = [$searchValue, $searchValue, $searchValue, $searchValue, $searchValue];
+}
+
+$countStmt = $pdo->prepare('SELECT COUNT(*) FROM users ' . $where);
+$countStmt->execute($params);
+$totalItems = (int) $countStmt->fetchColumn();
+$totalPages = max(1, (int) ceil($totalItems / $perPage));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $perPage;
+
+$stmt = $pdo->prepare('
     SELECT users.id, users.username, users.email, users.role, users.membership,
            users.status, users.last_login_at, users.created_at,
            (SELECT COUNT(*) FROM comments WHERE comments.user_id = users.id) AS comment_count,
@@ -11,17 +31,34 @@ $users = $pdo->query('
            (SELECT COUNT(*) FROM favorites WHERE favorites.user_id = users.id) AS favorite_count,
            (SELECT COUNT(*) FROM watch_history WHERE watch_history.user_id = users.id) AS history_count
     FROM users
-    ORDER BY users.id DESC
-')->fetchAll();
+    ' . $where . '
+    ORDER BY users.id ASC
+    LIMIT ' . $perPage . ' OFFSET ' . $offset . '
+');
+$stmt->execute($params);
+$users = $stmt->fetchAll();
 
 $pageTitle = 'Admin Users';
 include __DIR__ . '/../layout_header.php';
 include __DIR__ . '/../layout_sidebar.php';
 ?>
-<main class="admin-content">
+<main class="admin-content admin-list-content">
     <div class="page-header">
         <h1>Users</h1>
     </div>
+
+    <form class="admin-form admin-filter" method="get" action="<?= admin_e(admin_url('users/index.php')) ?>">
+        <div class="filter-fields">
+            <div class="form-row filter-search">
+                <label for="q">Search users</label>
+                <input id="q" type="search" name="q" value="<?= admin_e($search) ?>" placeholder="Username, email, role or status">
+            </div>
+            <div class="form-actions">
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                <a class="btn btn-secondary" href="<?= admin_e(admin_url('users/index.php')) ?>">Reset</a>
+            </div>
+        </div>
+    </form>
 
     <section class="admin-table">
         <table>
@@ -92,9 +129,23 @@ include __DIR__ . '/../layout_sidebar.php';
                         </td>
                     </tr>
                 <?php endforeach; ?>
+                <?php if (empty($users)): ?>
+                    <tr>
+                        <td colspan="8" class="muted">No users found.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </section>
+    <?php admin_render_pagination(
+        'users/index.php',
+        ['q' => $search],
+        $page,
+        $totalPages,
+        $totalItems,
+        $offset,
+        $perPage
+    ); ?>
 </main>
 
 <?php include __DIR__ . '/../layout_footer.php'; ?>

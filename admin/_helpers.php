@@ -79,6 +79,75 @@ function admin_nullable_int(mixed $value): ?int
     return $intValue === false ? null : (int) $intValue;
 }
 
+function admin_page_number(mixed $value): int
+{
+    $page = filter_var($value, FILTER_VALIDATE_INT, [
+        'options' => ['min_range' => 1],
+    ]);
+
+    return $page === false || $page === null ? 1 : (int) $page;
+}
+
+function admin_render_pagination(
+    string $path,
+    array $query,
+    int $currentPage,
+    int $totalPages,
+    int $totalItems,
+    int $offset,
+    int $perPage
+): void {
+    $firstItem = $totalItems > 0 ? $offset + 1 : 0;
+    $lastItem = min($offset + $perPage, $totalItems);
+
+    echo '<div class="list-pagination-bar">';
+    echo '<span class="table-summary">' . $firstItem . '–' . $lastItem . ' / ' . $totalItems . '</span>';
+
+    if ($totalPages > 1) {
+        $pageUrl = static function (int $page) use ($path, $query): string {
+            $parameters = array_filter(
+                array_merge($query, ['page' => $page]),
+                static fn (mixed $value): bool => $value !== null && $value !== ''
+            );
+
+            return admin_url($path) . '?' . http_build_query($parameters);
+        };
+
+        $pages = [1, $totalPages];
+        for ($page = max(1, $currentPage - 1); $page <= min($totalPages, $currentPage + 1); $page++) {
+            $pages[] = $page;
+        }
+        $pages = array_values(array_unique($pages));
+        sort($pages);
+
+        echo '<nav class="pagination" aria-label="Pagination">';
+        if ($currentPage > 1) {
+            echo '<a href="' . admin_e($pageUrl($currentPage - 1)) . '" aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></a>';
+        }
+
+        $previousPage = 0;
+        foreach ($pages as $page) {
+            if ($previousPage > 0 && $page > $previousPage + 1) {
+                echo '<span class="pagination__ellipsis">…</span>';
+            }
+
+            if ($page === $currentPage) {
+                echo '<span class="is-active" aria-current="page">' . $page . '</span>';
+            } else {
+                echo '<a href="' . admin_e($pageUrl($page)) . '">' . $page . '</a>';
+            }
+            $previousPage = $page;
+        }
+
+        if ($currentPage < $totalPages) {
+            echo '<a href="' . admin_e($pageUrl($currentPage + 1)) . '" aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></a>';
+        }
+        echo '</nav>';
+    }
+
+    echo '</div>';
+}
+
 function admin_slugify(string $value): string
 {
     $value = trim($value);

@@ -8,7 +8,7 @@ $ratings = $pdo->query('
     FROM ratings
     INNER JOIN users ON users.id = ratings.user_id
     INNER JOIN movies ON movies.id = ratings.movie_id
-    ORDER BY ratings.updated_at DESC
+    ORDER BY ratings.id ASC
     LIMIT 200
 ')->fetchAll();
 

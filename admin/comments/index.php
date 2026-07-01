@@ -19,7 +19,7 @@ if (in_array($status, $allowedStatuses, true)) {
     $params[] = $status;
 }
 
-$sql .= ' ORDER BY comments.created_at DESC LIMIT 200';
+$sql .= ' ORDER BY comments.id ASC LIMIT 200';
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $comments = $stmt->fetchAll();
