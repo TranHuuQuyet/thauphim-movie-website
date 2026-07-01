@@ -88,7 +88,7 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-section movie-grid-section" id="single-movies" aria-labelledby="single-movies-title">
         <div class="section-head">
             <h2 id="single-movies-title">Danh sách phim lẻ</h2>
-            <a href="#single-movies" class="view-more">Xem thêm</a>
+            <!-- <a href="#single-movies" class="view-more">Xem thêm</a> -->
         </div>
 
         <div class="movie-grid" id="singleMovies" aria-live="polite"></div>
@@ -97,7 +97,7 @@ require_once __DIR__ . "/includes/config.php";
     <section class="movie-section movie-grid-section" id="series-movies" aria-labelledby="series-movies-title">
         <div class="section-head">
             <h2 id="series-movies-title">Danh sách phim bộ</h2>
-            <a href="#series-movies" class="view-more">Xem thêm</a>
+            <!-- <a href="#series-movies" class="view-more">Xem thêm</a> -->
         </div>
 
         <div class="movie-grid" id="seriesMovies" aria-live="polite"></div>

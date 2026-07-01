@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/config.php';
 include __DIR__ . '/../includes/header.php';
 ?>
 
-<link rel="stylesheet" href="/assets/css/genres.css">
+<link rel="stylesheet" href="<?= htmlspecialchars(APP_BASE_PATH . 'assets/css/genres.css', ENT_QUOTES, 'UTF-8') ?>">
 
 <main class="genres-page">
     <section class="genres-section" aria-labelledby="genres-title">
@@ -20,6 +20,9 @@ include __DIR__ . '/../includes/header.php';
     </section>
 </main>
 
-<script src="/assets/js/genres.js"></script>
+<script>
+window.APP_BASE_PATH = <?= json_encode(APP_BASE_PATH, JSON_UNESCAPED_SLASHES) ?>;
+</script>
+<script src="<?= htmlspecialchars(APP_BASE_PATH . 'assets/js/genres.js', ENT_QUOTES, 'UTF-8') ?>"></script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

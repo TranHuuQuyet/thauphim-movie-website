@@ -69,13 +69,12 @@ const movieWatchUrl = (movie, fallbackAnchor = "featured") => {
 
 const stateMarkup = (type, text) => `
   <div class="ui-state ui-state--${type}">
-    <i class="fa-solid ${
-      type === "loading"
-        ? "fa-spinner"
-        : type === "error"
-          ? "fa-triangle-exclamation"
-          : "fa-film"
-    }" aria-hidden="true"></i>
+    <i class="fa-solid ${type === "loading"
+    ? "fa-spinner"
+    : type === "error"
+      ? "fa-triangle-exclamation"
+      : "fa-film"
+  }" aria-hidden="true"></i>
     <p>${escapeHtml(text)}</p>
   </div>
 `;
@@ -231,13 +230,14 @@ const loadTopMovies = async () => {
       .map((movie, index) => {
         const title = escapeHtml(movieTitle(movie));
         const backdrop = movieBackdropUrl(movie, "w780");
+        const detailUrl = movieDetailUrl(movie, "top-week");
         const watchUrl = movieWatchUrl(movie, "top-week");
         const overview = escapeHtml(
           movie.overview || "Nội dung phim đang được cập nhật.",
         );
 
         return `
-          <div class="swiper-slide">
+          <div class="swiper-slide" data-detail-url="${detailUrl}">
             <img src="${backdrop}" alt="${title}" loading="lazy">
             <div class="slide-content">
               <span class="movie-rank">${index + 1}</span>
@@ -253,6 +253,24 @@ const loadTopMovies = async () => {
         `;
       })
       .join("");
+
+    if (container.dataset.detailClickReady !== "true") {
+      container.dataset.detailClickReady = "true";
+
+      container.addEventListener("click", (event) => {
+        if (event.target.closest("a, button")) {
+          return;
+        }
+        const slide = event.target.closest(".swiper-slide[data-detail-url]");
+        if (!slide || !container.contains(slide)) {
+          return;
+        }
+        const targetUrl = slide.dataset.detailUrl;
+        if (targetUrl) {
+          window.location.href = targetUrl;
+        }
+      });
+    }
 
     initSwiper(".bannerSwiper", {
       loop: movies.length > 3,
@@ -605,7 +623,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sort: "popular",
       page: 1,
     },
-    limit: 12,
+    limit: 14,
     anchorId: "single-movies",
   });
   loadMovieGrid({
@@ -615,7 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sort: "popular",
       page: 1,
     },
-    limit: 12,
+    limit: 14,
     anchorId: "series-movies",
   });
 });
