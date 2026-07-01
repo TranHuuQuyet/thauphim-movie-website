@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reset Password Fixture</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/auth-reset.css">
+  <script src="../assets/js/auth-reset.js" defer></script>
+</head>
+<body class="reset-auth-body">
+  <main class="reset-auth-page" data-reset-flow>
+    <div class="reset-auth-topbar">
+      <a class="reset-auth-logo" href="#" aria-label="ThauPhim home">
+        <span class="reset-auth-logo__mark" aria-hidden="true">▶</span>
+        <span class="reset-auth-logo__text">Thau<strong>Phim</strong></span>
+      </a>
+      <p class="reset-auth-register"><span>Don't have an account?</span> <a href="#">Register now</a></p>
+    </div>
+    <div class="reset-auth-toast-region" aria-live="polite" aria-atomic="true" data-reset-toast-region></div>
+    <section class="reset-auth-card" aria-labelledby="resetFlowTitle">
+      <div class="reset-auth-illustration reset-auth-illustration--mailbox" aria-hidden="true">
+        <svg viewBox="0 0 140 110" role="img" focusable="false">
+          <path d="M39 50c0-19 15-34 34-34h8c16 0 29 13 29 29v39H39z" />
+          <path d="M39 50h71M73 16v68M22 84h100" />
+          <path d="M50 50c0-12 10-22 23-22h2" />
+          <path d="M23 58h29l-10 17H13z" />
+          <path d="m23 58 15 10 14-10" />
+        </svg>
+      </div>
+      <form action="#" method="post" class="reset-auth-form" data-reset-form="password" data-success-state="#passwordChangedState" novalidate>
+        <div class="reset-auth-copy">
+          <h1 id="resetFlowTitle">Reset Password</h1>
+          <p>Please create a new password for your account.</p>
+        </div>
+        <input type="hidden" name="token" value="fixture">
+        <div class="reset-auth-field" data-field="password">
+          <label for="newPassword">New Password</label>
+          <div class="reset-auth-input-wrap">
+            <input id="newPassword" type="password" name="password" placeholder="Enter a new password" autocomplete="new-password" aria-describedby="passwordHelp passwordError" data-password-input data-autofocus required>
+            <button type="button" class="reset-auth-toggle" data-toggle-password aria-label="Show password">👁</button>
+          </div>
+          <p class="reset-auth-error" id="passwordError" data-field-error aria-live="polite"></p>
+          <div class="reset-strength" id="passwordHelp" data-strength-meter>
+            <div class="reset-strength__track" aria-hidden="true"><span data-strength-bar></span></div>
+            <p>Password strength: <strong data-strength-label>Weak</strong></p>
+          </div>
+          <ul class="reset-password-rules" aria-label="Password requirements">
+            <li data-password-rule="length">✓ At least 8 characters</li>
+            <li data-password-rule="uppercase">✓ One uppercase letter</li>
+            <li data-password-rule="number">✓ One number</li>
+            <li data-password-rule="special">✓ One special character</li>
+          </ul>
+        </div>
+        <div class="reset-auth-field" data-field="confirm">
+          <label for="newPasswordConfirm">Confirm Password</label>
+          <div class="reset-auth-input-wrap">
+            <input id="newPasswordConfirm" type="password" name="password_confirm" placeholder="Re-enter your new password" autocomplete="new-password" aria-describedby="confirmPasswordError" data-confirm-input required>
+            <button type="button" class="reset-auth-toggle" data-toggle-password aria-label="Show password">👁</button>
+          </div>
+          <p class="reset-auth-error" id="confirmPasswordError" data-field-error aria-live="polite"></p>
+        </div>
+        <button type="submit" class="reset-auth-submit" data-submit-button>
+          <span data-button-text>Reset Password</span>
+          <span class="reset-auth-spinner" aria-hidden="true"></span>
+        </button>
+        <span class="reset-auth-loading-line" aria-hidden="true"></span>
+      </form>
+      <div class="reset-auth-success-state" id="passwordChangedState" data-password-success-state hidden>
+        <div class="reset-auth-illustration reset-auth-illustration--success" aria-hidden="true">
+          <svg viewBox="0 0 140 110" role="img" focusable="false">
+            <circle cx="70" cy="50" r="32" class="reset-auth-illustration__fill" />
+            <path d="m54 49 12 13 22-28" class="reset-auth-illustration__light" />
+          </svg>
+        </div>
+        <div class="reset-auth-copy">
+          <h1>Password Changed!</h1>
+          <p>Your password has been updated successfully.</p>
+        </div>
+        <a class="reset-auth-submit" href="#"><span>Back to Login</span></a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
