@@ -15,5 +15,8 @@ cache/
 # Logs
 *.log
 
+# Local secrets
+includes/config.local.php
+
 # Hook markers
 .dirty

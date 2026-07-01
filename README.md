@@ -113,6 +113,25 @@ define("SMTP_USERNAME", "thauphim@fnbstore.store");
 define("SMTP_PASSWORD", "replace-with-smtp-password");
 ```
 
+Không commit mật khẩu SMTP thật. Đặt biến môi trường `SMTP_PASSWORD` hoặc tạo file local `includes/config.local.php`:
+
+```php
+<?php
+define("SMTP_PASSWORD", "your-real-smtp-password");
+```
+
+SMTP cần PHPMailer qua `vendor/autoload.php`:
+
+```powershell
+composer install
+```
+
+Kiem tra cau hinh email reset ma khong gui email:
+
+```powershell
+D:\Xampp\php\php.exe tools\diagnose_password_reset_mail.php user@example.com
+```
+
 Neu chay trong subfolder cua Apache, cap nhat `APP_BASE_PATH` theo duong dan public cua project.
 
 ### 5.2 Tao database va seed admin

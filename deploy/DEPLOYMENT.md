@@ -30,7 +30,19 @@ define("SMTP_USERNAME", "thauphim@fnbstore.store");
 define("SMTP_PASSWORD", "replace-with-smtp-password");
 ```
 
-`MAIL_DRIVER=smtp` requires PHPMailer to be available through `vendor/autoload.php`.
+Do not commit the real SMTP password. Put it in the hosting environment as `SMTP_PASSWORD`, or create `includes/config.local.php` on the server:
+
+```php
+<?php
+define("SMTP_PASSWORD", "your-real-smtp-password");
+```
+
+`MAIL_DRIVER=smtp` requires PHPMailer to be available through `vendor/autoload.php`. Install it with:
+
+```powershell
+composer install --no-dev
+```
+
 If PHPMailer is not installed and the hosting supports native PHP mail, set `MAIL_DRIVER` to `mail`.
 
 ## Deploy checklist
@@ -41,12 +53,19 @@ If PHPMailer is not installed and the hosting supports native PHP mail, set `MAI
 4. Import `database/schema.sql`.
 5. Import `database/seed.sql`.
 6. For an existing database, import `database/password_reset_upgrade.sql` to add forgot-password support.
-7. If hosting allows PHP CLI and outbound network, run `php tools/import_tmdb.php`.
-8. If hosting blocks CLI/network, import data locally and upload an exported SQL dump.
-9. Login with the seeded admin account, then change the admin password.
-10. Open `/admin/dashboard.php` and verify unauthenticated users are redirected.
-11. Add/publish at least one episode with a valid YouTube URL.
-12. Test `/api/movies.php`, `/api/movie-detail.php?id=1`, `/api/episodes.php?movie_id=1`, and `/forgot-password.php`.
+7. Run `composer install --no-dev` so SMTP email can load PHPMailer.
+8. If hosting allows PHP CLI and outbound network, run `php tools/import_tmdb.php`.
+9. If hosting blocks CLI/network, import data locally and upload an exported SQL dump.
+10. Login with the seeded admin account, then change the admin password.
+11. Open `/admin/dashboard.php` and verify unauthenticated users are redirected.
+12. Add/publish at least one episode with a valid YouTube URL.
+13. Test `/api/movies.php`, `/api/movie-detail.php?id=1`, `/api/episodes.php?movie_id=1`, and `/forgot-password.php`.
+
+To diagnose password-reset email setup without sending an email:
+
+```powershell
+php tools/diagnose_password_reset_mail.php user@example.com
+```
 
 ## Default admin
 
