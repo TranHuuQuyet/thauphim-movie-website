@@ -11,12 +11,17 @@ function mailer_is_placeholder(string $value): bool
     $value = trim($value);
     $placeholders = [
         "REAL_SMTP_PASSWORD_HERE",
+        "YOUR_REAL_SMTP_PASSWORD",
         "your-real-smtp-password",
         "your-smtp-password",
+        "M\u{1EAC}T_KH\u{1EA8}U_EMAIL",
+        "M\u{00E1}\u{00BA}\u{00AC}T_KH\u{00C3}\u{00A1}\u{00BA}\u{00A8}U_EMAIL",
+        "MAT_KHAU_EMAIL",
     ];
+    $normalizedValue = strtolower($value);
 
     return $value === ""
-        || str_starts_with($value, "replace-with-")
+        || str_starts_with($normalizedValue, "replace-with-")
         || in_array($value, $placeholders, true);
 }
 

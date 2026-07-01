@@ -7,8 +7,16 @@ if (PHP_SAPI !== "cli") {
 }
 
 $email = trim((string) ($argv[1] ?? ""));
+$smtpPort = (int) SMTP_PORT;
+$smtpEncryption = strtolower(trim((string) SMTP_ENCRYPTION));
 $checks = [
     "mail_driver" => (string) MAIL_DRIVER,
+    "mail_from" => (string) MAIL_FROM,
+    "mail_from_name" => (string) MAIL_FROM_NAME,
+    "smtp_host" => (string) SMTP_HOST,
+    "smtp_port" => $smtpPort,
+    "smtp_encryption" => $smtpEncryption !== "" ? $smtpEncryption : "(none)",
+    "smtp_username" => (string) SMTP_USERNAME,
     "smtp_host_configured" => !mailer_is_placeholder((string) SMTP_HOST),
     "smtp_username_configured" => !mailer_is_placeholder((string) SMTP_USERNAME),
     "smtp_password_configured" => !mailer_is_placeholder((string) SMTP_PASSWORD),
@@ -36,6 +44,10 @@ foreach ($checks as $name => $value) {
 
 if (!$checks["smtp_password_configured"]) {
     echo "action: set SMTP_PASSWORD in the environment or includes/config.local.php" . PHP_EOL;
+}
+
+if ($checks["mail_driver"] === "smtp" && $smtpPort === 587 && $smtpEncryption === "ssl") {
+    echo "action: SMTP_PORT 587 should use SMTP_ENCRYPTION tls or empty, not ssl" . PHP_EOL;
 }
 
 if (!$checks["phpmailer_available"] && $checks["mail_driver"] === "smtp") {

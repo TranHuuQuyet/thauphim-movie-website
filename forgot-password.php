@@ -30,9 +30,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (empty($errors)) {
         try {
             $sentEmail = $oldEmail;
-            password_reset_request($pdo, $oldEmail);
-            $notice = "If the email exists, a password reset link has been sent.";
-            $oldEmail = "";
+            $resetRequest = password_reset_request($pdo, $oldEmail);
+
+            if (
+                defined("APP_DEBUG")
+                && APP_DEBUG
+                && !empty($resetRequest["user_found"])
+                && empty($resetRequest["email_sent"])
+            ) {
+                $errors[] = "Password reset email could not be sent. Check SMTP configuration.";
+            } else {
+                $notice = "If the email exists, a password reset link has been sent.";
+                $oldEmail = "";
+            }
         } catch (Throwable $exception) {
             error_log($exception->getMessage());
             $sentEmail = $oldEmail;
