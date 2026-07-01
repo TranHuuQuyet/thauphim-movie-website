@@ -39,7 +39,6 @@ $notificationUnreadCount = count(array_filter(
     <script src="<?= htmlspecialchars(app_url('assets/js/theme.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/notifications.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/account-menu.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
-    <script src="<?= htmlspecialchars(app_url('assets/js/theme.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
 </head>
 
 <body>
