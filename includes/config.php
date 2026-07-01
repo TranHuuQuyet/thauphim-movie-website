@@ -60,7 +60,10 @@ define("TMDB_API_KEY", "9b4592d22d37d5f7ac7a5f6514fbdc0b");
 
 $requestHost = strtolower((string) ($_SERVER["HTTP_HOST"] ?? ""));
 $requestHost = explode(":", $requestHost, 2)[0];
-$isLocalEnvironment = PHP_SAPI === "cli"
+$configDirectory = str_replace("\\", "/", __DIR__);
+$isLocalCli = PHP_SAPI === "cli"
+    && (PHP_OS_FAMILY === "Windows" || str_contains(strtolower($configDirectory), "/xampp/"));
+$isLocalEnvironment = $isLocalCli
     || in_array($requestHost, ["localhost", "127.0.0.1"], true);
 
 define("DB_HOST", $isLocalEnvironment ? "127.0.0.1" : "localhost");
