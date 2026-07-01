@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const limit = 12; 
   
     const urlParams = new URLSearchParams(window.location.search);
+    let globalSearchKeyword = urlParams.get("q") || "";
     if (urlParams.has("page")) currentPage = parseInt(urlParams.get("page"));
     if (typeSelect && urlParams.has("type")) typeSelect.value = urlParams.get("type");
     
@@ -115,6 +116,15 @@ document.addEventListener("DOMContentLoaded", () => {
   
         try {
             const apiParams = new URLSearchParams();
+            if (globalSearchKeyword.trim() !== "") {
+                const qClean = globalSearchKeyword.trim();
+                apiParams.set("q", qClean);
+                apiParams.set("keyword", qClean);
+                apiParams.set("search", qClean);
+                resultTitle.textContent = `Kết quả tìm kiếm cho: "${qClean}"`;
+            } else {
+                resultTitle.textContent = `Danh sách phim tổng hợp`;
+            }
             if (typeSelect.value) apiParams.set("type", typeSelect.value);
             if (genreSelect.value) apiParams.set("genre_id", genreSelect.value); 
             if (countrySelect.value) apiParams.set("country", countrySelect.value);
@@ -186,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnClear) {
         btnClear.addEventListener("click", (e) => {
             e.preventDefault();
-            if (keywordInput) keywordInput.value = "";
+            globalSearchKeyword = "";
             if (typeSelect) typeSelect.value = "";
             if (genreSelect) genreSelect.value = "";
             if (countrySelect) countrySelect.value = "";
@@ -199,3 +209,5 @@ document.addEventListener("DOMContentLoaded", () => {
   
     loadMoviesAPI();
   });
+
+  
