@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const API_BASE = "/api";
     
     const filterForm = document.querySelector("#filterForm");
-    const keywordInput = document.querySelector('input[name="q"]');
     const typeSelect = document.querySelector('select[name="type"]');
     const genreSelect = document.querySelector('select[name="genre"]');
     const countrySelect = document.querySelector('select[name="country"]');
@@ -20,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("page")) currentPage = parseInt(urlParams.get("page"));
-    if (keywordInput && urlParams.has("q")) keywordInput.value = urlParams.get("q");
     if (typeSelect && urlParams.has("type")) typeSelect.value = urlParams.get("type");
     
     if (genreSelect) {
@@ -39,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const updateBrowserURL = () => {
         const params = new URLSearchParams();
-        if (keywordInput.value) params.set("q", keywordInput.value);
         if (typeSelect.value) params.set("type", typeSelect.value);
         if (genreSelect.value) params.set("genre", genreSelect.value);
         if (countrySelect.value) params.set("country", countrySelect.value);
@@ -118,12 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
         try {
             const apiParams = new URLSearchParams();
-            if (keywordInput.value) {
-                const queryValue = keywordInput.value.trim();
-                apiParams.set("q", queryValue);
-                apiParams.set("keyword", queryValue);
-                apiParams.set("search", queryValue);
-            }
             if (typeSelect.value) apiParams.set("type", typeSelect.value);
             if (genreSelect.value) apiParams.set("genre_id", genreSelect.value); 
             if (countrySelect.value) apiParams.set("country", countrySelect.value);
@@ -150,11 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const meta = payload.meta || {};
             const totalMovies = meta.total || movies.length;
             
-            if (keywordInput.value) {
-                resultTitle.textContent = `Kết quả tìm kiếm cho: "${keywordInput.value}" (${totalMovies} phim)`;
-            } else {
-                resultTitle.textContent = `Danh sách phim tổng hợp (${totalMovies} phim)`;
-            }
+            resultTitle.textContent = `Danh sách phim tổng hợp (${totalMovies} phim)`;
   
             if (movies.length === 0) {
                 movieStatus.innerHTML = `
@@ -189,16 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
   
-    let searchTimeout;
-    if (keywordInput) {
-        keywordInput.addEventListener("input", () => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                currentPage = 1;
-                loadMoviesAPI();
-            }, 500); 
-        });
-  
+    if (filterForm) {
         filterForm.addEventListener("submit", (e) => {
             e.preventDefault(); 
         });
