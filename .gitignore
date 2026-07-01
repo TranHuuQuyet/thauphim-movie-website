@@ -18,5 +18,9 @@ cache/
 # Local secrets
 includes/config.local.php
 
+# Composer artifacts
+/vendor/
+/composer.phar
+
 # Hook markers
 .dirty
