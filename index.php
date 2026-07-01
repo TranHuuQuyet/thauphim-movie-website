@@ -37,7 +37,7 @@ require_once __DIR__ . "/includes/config.php";
                 Watch the new trailer for #SpiderManBrandNewDay, in theatres July 31. Tickets on sale now.
             </p>
 
-            <a class="play-btn" href="/pages/watch.php?movie_id=101">XEM NGAY</a>
+            <a class="play-btn" href="/pages/watch.php?movie_id=43">XEM NGAY</a>
         </div>
     </section>
 
