@@ -75,11 +75,14 @@ if ($method === 'POST') {
         apiError('Binh luan toi da 1000 ky tu', 400);
     }
 
+    $isWatchError = str_starts_with($content, '[Error]');
+    $commentStatus = $isWatchError ? 'hidden' : 'visible';
+
     $stmt = $pdo->prepare("
         INSERT INTO comments (user_id, movie_id, content, status)
-        VALUES (?, ?, ?, 'visible')
+        VALUES (?, ?, ?, ?)
     ");
-    $stmt->execute([(int) $user['id'], $movieId, $content]);
+    $stmt->execute([(int) $user['id'], $movieId, $content, $commentStatus]);
 
     $commentId = (int) $pdo->lastInsertId();
     $stmt = $pdo->prepare("

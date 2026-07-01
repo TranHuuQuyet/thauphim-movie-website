@@ -11,6 +11,38 @@ $totalEpisodes = (int) $pdo->query('SELECT COUNT(*) FROM episodes')->fetchColumn
 $totalPublishedEpisodes = (int) $pdo->query('SELECT COUNT(*) FROM episodes WHERE is_published = 1')->fetchColumn();
 $totalViews = (int) $pdo->query('SELECT COALESCE(SUM(views), 0) FROM movies')->fetchColumn();
 
+$totalWatchErrors = (int) $pdo->query("
+    SELECT COUNT(*)
+    FROM comments
+    WHERE content LIKE '[Error]%'
+")->fetchColumn();
+
+$totalFixedWatchErrors = (int) $pdo->query("
+    SELECT COUNT(*)
+    FROM comments
+    WHERE content LIKE '[Error]%'
+        AND content LIKE '%[Fixed]%'
+")->fetchColumn();
+
+$totalOpenWatchErrors = max(0, $totalWatchErrors - $totalFixedWatchErrors);
+
+$latestOpenWatchErrors = $pdo->query("
+    SELECT
+        comments.id,
+        comments.content,
+        comments.status AS comment_status,
+        comments.created_at,
+        users.username,
+        movies.title AS movie_title
+    FROM comments
+    INNER JOIN users ON comments.user_id = users.id
+    INNER JOIN movies ON comments.movie_id = movies.id
+    WHERE comments.content LIKE '[Error]%'
+        AND comments.content NOT LIKE '%[Fixed]%'
+    ORDER BY comments.created_at DESC
+    LIMIT 2
+")->fetchAll();
+
 $latestMovies = $pdo->query('
     SELECT id, title, release_year, type, views
     FROM movies
@@ -90,7 +122,73 @@ include __DIR__ . '/layout_sidebar.php';
             <span>Published episodes</span>
             <h2><?= $totalPublishedEpisodes ?></h2>
         </div>
+
+        <div class="dashboard-card">
+            <span>Watch errors</span>
+            <h2><?= number_format($totalOpenWatchErrors) ?></h2>
+        </div>
+
+        <div class="dashboard-card">
+            <span>Fixed errors</span>
+            <h2><?= number_format($totalFixedWatchErrors) ?></h2>
+        </div>
     </div>
+
+    <section class="admin-table dashboard-watch-errors" id="watch-errors">
+        <div class="admin-section-heading">
+            <div>
+                <h2>Latest watch errors</h2>
+            </div>
+
+            <a class="btn btn-secondary" href="<?= admin_url('watch-errors/watch-errors.php') ?>">
+                View all
+            </a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Movie</th>
+                    <th>Status</th>
+                    <th>Content</th>
+                    <th>Created at</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php if (empty($latestOpenWatchErrors)): ?>
+                    <tr>
+                        <td colspan="7" class="muted">No open watch errors found.</td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php foreach ($latestOpenWatchErrors as $error): ?>
+                    <tr>
+                        <td><?= (int) $error['id'] ?></td>
+                        <td><?= admin_e($error['username']) ?></td>
+                        <td><?= admin_e($error['movie_title']) ?></td>
+                        <td><span class="badge badge-warning">Open</span></td>
+                        <td class="watch-error-preview"><?= admin_e($error['content']) ?></td>
+                        <td><?= admin_e($error['created_at']) ?></td>
+
+                        <td>
+                            <form class="inline-form" method="post"
+                                action="<?= admin_url('watch-errors/update-errors.php') ?>">
+                                <?= admin_csrf_input() ?>
+                                <input type="hidden" name="id" value="<?= (int) $error['id'] ?>">
+                                <input type="hidden" name="action" value="fix">
+                                <input type="hidden" name="return" value="dashboard.php#watch-errors">
+                                <button class="btn btn-info" type="submit">Mark as fixed</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </section>
 
     <section class="dashboard-charts" aria-label="Dashboard charts">
         <article class="chart-card">
@@ -163,9 +261,9 @@ include __DIR__ . '/layout_sidebar.php';
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 <script>
     const dashboardChartData = <?= json_encode(
-                                    $chartData,
-                                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
-                                ) ?>;
+        $chartData,
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+    ) ?>;
 
     Chart.defaults.color = '#667085';
     Chart.defaults.font.family = 'Arial, Helvetica, sans-serif';
@@ -185,10 +283,7 @@ include __DIR__ . '/layout_sidebar.php';
                 return;
             }
 
-            const {
-                ctx,
-                chartArea
-            } = chart;
+            const { ctx, chartArea } = chart;
             const total = chart.data.datasets[0].data.reduce((sum, value) => sum + Number(value), 0);
             const centerX = (chartArea.left + chartArea.right) / 2;
             const centerY = (chartArea.top + chartArea.bottom) / 2;
@@ -221,9 +316,7 @@ include __DIR__ . '/layout_sidebar.php';
                     boxHeight: 9,
                     padding: 16,
                     usePointStyle: true,
-                    font: {
-                        weight: '600'
-                    }
+                    font: { weight: '600' }
                 }
             }
         }
@@ -245,9 +338,7 @@ include __DIR__ . '/layout_sidebar.php';
             ...doughnutOptions,
             plugins: {
                 ...doughnutOptions.plugins,
-                centerTotal: {
-                    label: 'Titles'
-                }
+                centerTotal: { label: 'Titles' }
             }
         },
         plugins: [centerTotalPlugin]
@@ -269,9 +360,7 @@ include __DIR__ . '/layout_sidebar.php';
             ...doughnutOptions,
             plugins: {
                 ...doughnutOptions.plugins,
-                centerTotal: {
-                    label: 'Users'
-                }
+                centerTotal: { label: 'Users' }
             }
         },
         plugins: [centerTotalPlugin]
@@ -299,9 +388,7 @@ include __DIR__ . '/layout_sidebar.php';
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
                         label: context => ` ${Number(context.raw).toLocaleString()} movies`
@@ -311,28 +398,16 @@ include __DIR__ . '/layout_sidebar.php';
             scales: {
                 x: {
                     beginAtZero: true,
-                    ticks: {
-                        precision: 0
-                    },
-                    grid: {
-                        color: '#eef2f6'
-                    },
-                    border: {
-                        display: false
-                    }
+                    ticks: { precision: 0 },
+                    grid: { color: '#eef2f6' },
+                    border: { display: false }
                 },
                 y: {
-                    grid: {
-                        display: false
-                    },
-                    border: {
-                        display: false
-                    },
+                    grid: { display: false },
+                    border: { display: false },
                     ticks: {
                         color: '#344054',
-                        font: {
-                            weight: '600'
-                        },
+                        font: { weight: '600' },
                         callback(value) {
                             const label = this.getLabelForValue(value);
                             return label.length > 28 ? label.slice(0, 28) + '…' : label;
