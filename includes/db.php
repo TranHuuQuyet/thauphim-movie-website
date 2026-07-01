@@ -12,7 +12,7 @@ function getDatabaseConnection(): PDO
     $dsn = sprintf(
         'mysql:host=%s;port=%d;dbname=%s;charset=%s',
         DB_HOST,
-        defined('DB_PORT') ? (int) DB_PORT : 3306,
+        defined('DB_PORT') ? (int) DB_PORT : 3307,
         DB_NAME,
         DB_CHARSET
     );

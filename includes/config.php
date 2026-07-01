@@ -23,10 +23,16 @@ if (!function_exists("app_url")) {
 
 define("TMDB_API_KEY", "9b4592d22d37d5f7ac7a5f6514fbdc0b");
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'zrzyh261k3va_thauphim');
-define('DB_USER', 'zrzyh261k3va_client01');
-define('DB_PASS', 'ri4^Pttghf#KG,n$');
+$requestHost = strtolower((string) ($_SERVER["HTTP_HOST"] ?? ""));
+$requestHost = explode(":", $requestHost, 2)[0];
+$isLocalEnvironment = PHP_SAPI === "cli"
+    || in_array($requestHost, ["localhost", "127.0.0.1"], true);
+
+define("DB_HOST", $isLocalEnvironment ? "127.0.0.1" : "localhost");
+define("DB_PORT", $isLocalEnvironment ? 3307 : 3306);
+define("DB_NAME", $isLocalEnvironment ? "thauphim" : "zrzyh261k3va_thauphim");
+define("DB_USER", $isLocalEnvironment ? "root" : "zrzyh261k3va_client01");
+define("DB_PASS", $isLocalEnvironment ? "" : "ri4^Pttghf#KG,n$");
 define("DB_CHARSET", "utf8mb4");
 
 $TMDB_COUNTRIES = [
