@@ -6,7 +6,7 @@
 }
 
 .watch-container {
-    width: min(100% - 80px, 1420px);
+    width: min(100% - 80px, 1380px);
     margin: 0 auto;
 }
 
@@ -62,17 +62,17 @@
 
 .watch-actions {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    justify-content: flex-start;
+    gap: 1.5rem;
     padding: 1rem 0;
     margin-top: 0.6rem;
-    flex-wrap: nowrap;
+    margin-left: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .watch-actions a,
 .watch-actions button {
-    flex: 1 1 0;
+    flex: 0 1 auto;
     min-width: 0;
     border: 1px solid transparent;
     border-radius: var(--radius-pill);
@@ -82,7 +82,7 @@
     font-weight: 800;
     line-height: 1;
     cursor: pointer;
-    padding: 0.55rem 0.25rem;
+    padding: 0.5rem 0.25rem;
     margin-left: 0;
     text-align: center;
     white-space: nowrap;
@@ -103,6 +103,10 @@
 
 .watch-actions .is-favorite {
     color: #f75799;
+}
+
+.watch-actions .is-added {
+    color: var(--color-link);
 }
 
 .watch-actions button:disabled {
@@ -570,11 +574,16 @@
         width: 90px;
     }
 
+    .watch-actions {
+        gap: 0.8rem;
+        margin-left: 0.25rem;
+    }
+
     .watch-actions a,
     .watch-actions button {
     min-height: 36px;
     padding: 0 0.8rem;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     }
 
     .watch-related-item {
