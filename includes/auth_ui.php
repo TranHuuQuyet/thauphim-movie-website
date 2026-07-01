@@ -86,13 +86,14 @@ if (!function_exists("auth_ui_render_login_form")) {
     {
         $idSuffix = (string) ($options["id_suffix"] ?? "modal");
         $errors = $options["errors"] ?? [];
+        $notices = $options["notices"] ?? [];
         $old = $options["old"] ?? [];
         $active = (bool) ($options["active"] ?? true);
         $usernameId = "loginUsername-" . $idSuffix;
         $passwordId = "loginPassword-" . $idSuffix;
         ?>
         <form
-            action="/login.php"
+            action="<?= auth_ui_e(app_url("login.php")) ?>"
             method="post"
             class="auth-form"
             data-auth-panel="login"
@@ -100,6 +101,14 @@ if (!function_exists("auth_ui_render_login_form")) {
             aria-labelledby="auth-login-tab-<?= auth_ui_e($idSuffix) ?>"
             <?= $active ? "" : "hidden" ?>>
             <h1>Đăng nhập</h1>
+
+            <?php if (!empty($notices)): ?>
+                <div class="auth-success" role="status">
+                    <?php foreach ($notices as $notice): ?>
+                        <p><?= auth_ui_e($notice) ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
             <?php if (!empty($errors)): ?>
                 <div class="auth-errors" role="alert">
@@ -133,7 +142,7 @@ if (!function_exists("auth_ui_render_login_form")) {
             </div>
 
             <button type="submit" class="auth-submit">Đăng nhập</button>
-            <a class="auth-forgot" href="/forgot-password.php">Quên mật khẩu?</a>
+            <a class="auth-forgot" href="<?= auth_ui_e(app_url("forgot-password.php")) ?>">Quên mật khẩu?</a>
         </form>
         <?php
     }
@@ -152,7 +161,7 @@ if (!function_exists("auth_ui_render_register_form")) {
         $confirmId = "registerPasswordConfirm-" . $idSuffix;
         ?>
         <form
-            action="/register.php"
+            action="<?= auth_ui_e(app_url("register.php")) ?>"
             method="post"
             class="auth-form auth-register-form"
             data-auth-panel="register"
@@ -216,7 +225,7 @@ if (!function_exists("auth_ui_render_register_form")) {
             </div>
 
             <button type="submit" class="auth-submit">Đăng ký</button>
-            <p class="auth-switch-copy">Đã có tài khoản? <a href="/index.php#authModal" data-auth-switch="login">Đăng nhập</a></p>
+            <p class="auth-switch-copy">Đã có tài khoản? <a href="<?= auth_ui_e(app_url("index.php#authModal")) ?>" data-auth-switch="login">Đăng nhập</a></p>
         </form>
         <?php
     }
@@ -232,6 +241,7 @@ if (!function_exists("auth_ui_render_surface")) {
         $idSuffix = $idSuffix !== "" ? $idSuffix : "auth";
         $slides = $options["slides"] ?? auth_ui_featured_movies($options["pdo"] ?? null);
         $loginErrors = $options["login_errors"] ?? [];
+        $loginNotices = $options["login_notices"] ?? [];
         $registerErrors = $options["register_errors"] ?? [];
         $loginOld = $options["login_old"] ?? [];
         $registerOld = $options["register_old"] ?? [];
@@ -256,7 +266,7 @@ if (!function_exists("auth_ui_render_surface")) {
                 </div>
 
                 <?php if ($isPage): ?>
-                    <a class="auth-back" href="/index.php" aria-label="Quay lại trang chủ">
+                    <a class="auth-back" href="<?= auth_ui_e(app_url("index.php")) ?>" aria-label="Quay lại trang chủ">
                         <span>Quay lại</span>
                         <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                     </a>
@@ -309,6 +319,7 @@ if (!function_exists("auth_ui_render_surface")) {
                     auth_ui_render_login_form([
                         "id_suffix" => $idSuffix,
                         "errors" => $loginErrors,
+                        "notices" => $loginNotices,
                         "old" => $loginOld,
                         "active" => $mode === "login",
                     ]);
