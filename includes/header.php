@@ -17,6 +17,9 @@ $notificationUnreadCount = count(array_filter(
     $upcomingNotifications,
     static fn(array $notification): bool => empty($notification["is_read"])
 ));
+$pageStyles = $pageStyles ?? [];
+$pageScripts = $pageScripts ?? [];
+$bodyClass = trim((string) ($bodyClass ?? ""));
 ?>
 
 <!DOCTYPE html>
@@ -36,13 +39,19 @@ $notificationUnreadCount = count(array_filter(
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
     <link rel="stylesheet" href="<?= htmlspecialchars(app_url('assets/css/style.css'), ENT_QUOTES, 'UTF-8') ?>">
     <link rel="stylesheet" href="<?= htmlspecialchars(app_url('assets/css/auth.css'), ENT_QUOTES, 'UTF-8') ?>">
+    <?php foreach ($pageStyles as $stylePath): ?>
+    <link rel="stylesheet" href="<?= htmlspecialchars(app_url((string) $stylePath), ENT_QUOTES, 'UTF-8') ?>">
+    <?php endforeach; ?>
     <script src="<?= htmlspecialchars(app_url('assets/js/auth_login.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/theme.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/notifications.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/account-menu.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
+    <?php foreach ($pageScripts as $scriptPath): ?>
+    <script src="<?= htmlspecialchars(app_url((string) $scriptPath), ENT_QUOTES, 'UTF-8') ?>" defer></script>
+    <?php endforeach; ?>
 </head>
 
-<body>
+<body<?= $bodyClass !== "" ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : "" ?>>
     <header class="site-header">
         <div class="header-inner">
             <a class="brand" href="<?= htmlspecialchars(app_url('index.php#hero'), ENT_QUOTES, 'UTF-8') ?>"

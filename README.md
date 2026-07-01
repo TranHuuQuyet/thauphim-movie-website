@@ -40,6 +40,7 @@ Video xem phim/tap phim duoc luu trong `episodes.youtube_url`. Admin nhap URL Yo
 | Trang chi tiet phim | Done | Hien genres, actors, episodes, favorite/comment/rating |
 | Trang xem phim | Done | YouTube iframe, chuyen tap, luu tien do xem |
 | Dang ky/dang nhap/dang xuat | Done | Dung bang `users`, `password_hash`, session |
+| Quen mat khau | Done | Dung reset token gui qua email, het han sau 60 phut |
 | Trang tai khoan | Done | Tong quan, phim yeu thich, lich su xem |
 | Admin dashboard | Done | Guard bang role admin |
 | Admin CRUD movies/episodes | Done | Co nhap/publish YouTube URL |
@@ -100,6 +101,35 @@ define("DB_NAME", "thauphim");
 define("DB_USER", "root");
 define("DB_PASS", "");
 define("DB_CHARSET", "utf8mb4");
+
+define("APP_URL", "https://fnbstore.store/");
+define("MAIL_DRIVER", "smtp");
+define("MAIL_FROM", "thauphim@fnbstore.store");
+define("MAIL_FROM_NAME", "ThauPhim");
+define("SMTP_HOST", "smtp.fnbstore.store");
+define("SMTP_PORT", 465);
+define("SMTP_ENCRYPTION", "ssl");
+define("SMTP_USERNAME", "thauphim@fnbstore.store");
+define("SMTP_PASSWORD", "replace-with-smtp-password");
+```
+
+Không commit mật khẩu SMTP thật. Đặt biến môi trường `SMTP_PASSWORD` hoặc tạo file local `includes/config.local.php`:
+
+```php
+<?php
+define("SMTP_PASSWORD", "your-real-smtp-password");
+```
+
+SMTP cần PHPMailer qua `vendor/autoload.php`:
+
+```powershell
+composer install
+```
+
+Kiem tra cau hinh email reset ma khong gui email:
+
+```powershell
+D:\Xampp\php\php.exe tools\diagnose_password_reset_mail.php user@example.com
 ```
 
 Neu chay trong subfolder cua Apache, cap nhat `APP_BASE_PATH` theo duong dan public cua project.
@@ -232,6 +262,7 @@ Payload mau:
 Bang chinh:
 
 - `users`: tai khoan, role, membership, status.
+- `password_resets`: token dat lai mat khau, het han va dung mot lan.
 - `movies`: metadata phim, TMDB id/type, poster/backdrop, type movie/series, rating, premium.
 - `episodes`: tap phim, YouTube URL, publish state.
 - `genres`: the loai.
@@ -380,6 +411,7 @@ episodes: co the rong neu admin chua tao
 
 - Mat khau hash bang `password_hash()`.
 - Dang nhap kiem tra bang `password_verify()`.
+- Quen mat khau dung reset token hash, het han sau 60 phut va chi dung mot lan.
 - Truy van DB dung PDO prepared statements.
 - Validate input tu form va query API.
 - Escape output bang `htmlspecialchars()`.
@@ -402,10 +434,11 @@ Checklist tom tat:
 
 - Tao database va user MySQL tren hosting.
 - Copy `includes/config.example.php` thanh `includes/config.php`.
-- Cap nhat `APP_BASE_PATH`, database credentials va `TMDB_API_KEY`.
+- Cap nhat `APP_BASE_PATH`, `APP_URL`, database credentials, `TMDB_API_KEY` va SMTP credentials.
 - Import `database/schema.sql`.
 - Import `database/seed.sql`.
 - Neu database da ton tai va chi can nang cap chuong thong bao lich chieu, import `database/notification_upgrade.sql` trong dung database dang duoc cau hinh.
+- Neu database da ton tai va can bo sung quen mat khau, import `database/password_reset_upgrade.sql` trong dung database dang duoc cau hinh.
 - Import data TMDB bang CLI neu hosting cho phep, hoac import local roi export SQL data.
 - Cau hinh web root/vhost/.htaccess theo moi truong.
 - Kiem tra API, trang user va trang admin.

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forgot Password Fixture</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/auth-reset.css">
+  <script src="../assets/js/auth-reset.js" defer></script>
+</head>
+<body class="reset-auth-body">
+  <main class="reset-auth-page" data-reset-flow>
+    <div class="reset-auth-topbar">
+      <a class="reset-auth-logo" href="#" aria-label="ThauPhim home">
+        <span class="reset-auth-logo__mark" aria-hidden="true">▶</span>
+        <span class="reset-auth-logo__text">Thau<strong>Phim</strong></span>
+      </a>
+      <p class="reset-auth-register"><span>Don't have an account?</span> <a href="#">Register now</a></p>
+    </div>
+    <div class="reset-auth-toast-region" aria-live="polite" aria-atomic="true" data-reset-toast-region></div>
+    <section class="reset-auth-card" aria-labelledby="resetFlowTitle">
+      <div class="reset-auth-illustration reset-auth-illustration--forgot" aria-hidden="true">
+        <svg viewBox="0 0 140 110" role="img" focusable="false">
+          <path d="M50 42h50l12 10-12 10H50z" />
+          <path d="M58 50h32M62 57h20" />
+          <path d="M50 42v44M38 86h66" />
+          <path d="M28 92c13-10 25 6 36-3 9-7 18-4 28 2" />
+          <path d="M96 74c10 1 18 4 24 10" />
+        </svg>
+      </div>
+      <form action="../forgot-password.php" method="post" class="reset-auth-form" data-reset-form="forgot" novalidate>
+        <div class="reset-auth-copy">
+          <h1 id="resetFlowTitle">Forgot your password?</h1>
+          <p>Enter your email and we'll send you a password reset link.</p>
+        </div>
+        <div class="reset-auth-field" data-field="email">
+          <label for="resetEmail">Email</label>
+          <div class="reset-auth-input-wrap">
+            <input id="resetEmail" type="email" name="email" placeholder="e.g. username@example.com" autocomplete="email" aria-describedby="resetEmailError" data-email-input data-autofocus required>
+            <i aria-hidden="true">✉</i>
+          </div>
+          <p class="reset-auth-error" id="resetEmailError" data-field-error aria-live="polite"></p>
+        </div>
+        <button type="submit" class="reset-auth-submit" data-submit-button>
+          <span data-button-text>Send Reset Link</span>
+          <span class="reset-auth-spinner" aria-hidden="true"></span>
+        </button>
+        <span class="reset-auth-loading-line" aria-hidden="true"></span>
+        <p class="reset-auth-back"><a href="../index.php#authModal"><span>Back to Login</span></a></p>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
