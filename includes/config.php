@@ -14,10 +14,25 @@ if (!defined("APP_DEBUG")) {
     define("APP_DEBUG", false);
 }
 
+if (!defined("APP_URL")) {
+    define("APP_URL", "https://fnbstore.store/");
+}
+
 if (!function_exists("app_url")) {
     function app_url(string $path = ""): string
     {
         return APP_BASE_PATH . ltrim($path, "/");
+    }
+}
+
+if (!function_exists("app_absolute_url")) {
+    function app_absolute_url(string $path = ""): string
+    {
+        if (preg_match('/^https?:\/\//i', $path)) {
+            return $path;
+        }
+
+        return rtrim(APP_URL, "/") . "/" . ltrim($path, "/");
     }
 }
 
@@ -34,6 +49,16 @@ define("DB_NAME", $isLocalEnvironment ? "thauphim" : "zrzyh261k3va_thauphim");
 define("DB_USER", $isLocalEnvironment ? "root" : "zrzyh261k3va_client01");
 define("DB_PASS", $isLocalEnvironment ? "" : "ri4^Pttghf#KG,n$");
 define("DB_CHARSET", "utf8mb4");
+
+define("MAIL_DRIVER", "smtp");
+define("MAIL_FROM", "thauphim@fnbstore.store");
+define("MAIL_FROM_NAME", "ThauPhim");
+define("SMTP_HOST", "smtp.fnbstore.store");
+define("SMTP_PORT", 465);
+define("SMTP_ENCRYPTION", "ssl");
+define("SMTP_USERNAME", "thauphim@fnbstore.store");
+define("SMTP_PASSWORD", "replace-with-smtp-password");
+define("PASSWORD_RESET_TTL_MINUTES", 60);
 
 $TMDB_COUNTRIES = [
     ["code" => "VN", "name" => "Việt Nam"],
