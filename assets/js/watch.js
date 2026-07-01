@@ -49,19 +49,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const commentSection = document.querySelector(".watch-comment-box");
 
             if (!watchHistoryData.isLoggedIn || !commentInput) {
-                showWatchToast("Vui lòng đăng nhập để báo lỗi phim.", "warning");
+                showWatchToast("Vui lòng đăng nhập để báo lỗi.", "warning");
                 return;
             }
 
             if (!commentInput.value.trim()) {
-                commentInput.value = "[Báo lỗi] Tập phim này hiện đang bị lỗi: ";
+                commentInput.value = `[Error] This episode has a playback issue.
+                Movie ID: ${watchHistoryData.movieId || "N/A"}
+                Episode ID: ${watchHistoryData.episodeId || "N/A"}
+                Link: ${window.location.href}
+                Description: Video cannot be played`;
                 commentInput.dispatchEvent(new Event("input"));
             }
 
             commentSection?.scrollIntoView({ behavior: "smooth", block: "start" });
             commentInput.focus();
 
-            showWatchToast("Bạn mô tả lỗi và bấm Gửi để báo lỗi.", "info");
+            showWatchToast("Mô tả và bấm Gửi để báo lỗi.", "info");
         });
     }
 

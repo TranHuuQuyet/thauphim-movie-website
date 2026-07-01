@@ -269,8 +269,8 @@ const requireLogin = (message) => {
 
   if (sendCommentBtn && commentInput) {
     sendCommentBtn.addEventListener("click", async () => {
-      if (!requireLogin("Vui lòng đăng nhập để bình luận.")) {
-          return;
+      if (!requireLogin("Vui lòng đăng nhập để bình luận")) {
+        return;
       }
 
       const content = commentInput.value.trim();
@@ -278,6 +278,7 @@ const requireLogin = (message) => {
         showToast("Bạn chưa nhập nội dung bình luận.", "warning");
         return;
       }
+      const isWatchError = content.startsWith("[Error]");
 
       sendCommentBtn.disabled = true;
       try {
@@ -290,7 +291,13 @@ const requireLogin = (message) => {
           commentCount.textContent = "0 / 1000";
         }
         await loadComments();
-        showToast("Đã gửi bình luận.", "success");
+
+        showToast(
+          isWatchError
+            ? "Cảm ơn bạn đã báo lỗi. Chúng tôi sẽ kiểm tra và xử lý sớm nhất"
+            : "Bình luận đã được gửi",
+          "success"
+        );
       } catch (error) {
         showToast(error.message || "Không thể gửi bình luận.", "error");
       } finally {
