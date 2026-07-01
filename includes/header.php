@@ -225,4 +225,21 @@ $notificationUnreadCount = count(array_filter(
             </div>
         </div>
     </header>
-    <?php include __DIR__ . "/auth_login.php"; ?>
+<?php include __DIR__ . "/auth_login.php"; ?>
+
+<style>
+    header, .header, #header, .navbar {
+        position: relative; 
+        z-index: 99999 !important;
+    }
+
+    .menu-toggle {
+        position: relative;
+        z-index: 100000 !important;
+        cursor: pointer;
+    }
+
+    .mobile-menu, .nav-menu, .sidebar-menu, .main-navigation {
+        z-index: 999999 !important;
+    }
+</style>
