@@ -12,6 +12,7 @@ $navItems = [
     ['href' => 'users/index.php', 'icon' => 'fa-users', 'label' => 'Users'],
     ['href' => 'comments/index.php', 'icon' => 'fa-comments', 'label' => 'Comments'],
     ['href' => 'ratings/index.php', 'icon' => 'fa-star', 'label' => 'Ratings'],
+    ['href' => 'watch-errors/watch-errors.php', 'icon' => 'fa-triangle-exclamation', 'label' => 'Watch Errors'],
 ];
 ?>
 <aside class="sidebar">
