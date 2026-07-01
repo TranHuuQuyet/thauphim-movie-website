@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/auth_check.php';
+
+$pdo = getDatabaseConnection();
 
 if (!defined('APP_BASE_PATH')) {
     define('APP_BASE_PATH', '/');
@@ -107,7 +110,7 @@ function admin_render_pagination(
         $pageUrl = static function (int $page) use ($path, $query): string {
             $parameters = array_filter(
                 array_merge($query, ['page' => $page]),
-                static fn (mixed $value): bool => $value !== null && $value !== ''
+                static fn(mixed $value): bool => $value !== null && $value !== ''
             );
 
             return admin_url($path) . '?' . http_build_query($parameters);
