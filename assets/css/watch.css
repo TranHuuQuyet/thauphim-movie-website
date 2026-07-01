@@ -63,24 +63,35 @@
 .watch-actions {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    justify-content: space-between;
+    gap: 0.5rem;
     padding: 1rem 0;
-    margin-top: 0.4rem;
-    border-bottom: 1px solid var(--color-border-muted);
-    flex-wrap: wrap;
+    margin-top: 0.6rem;
+    flex-wrap: nowrap;
 }
 
 .watch-actions a,
 .watch-actions button {
-    border: none;
+    flex: 1 1 0;
+    min-width: 0;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
     background: transparent;
     color: var(--color-text);
     text-decoration: none;
     font-weight: 800;
     line-height: 1;
     cursor: pointer;
-    padding: 0;
-    margin-left: 2rem;
+    padding: 0.55rem 0.25rem;
+    margin-left: 0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.watch-actions button:hover {
+    color: var(--color-link-hover);
+    opacity: 1;
+    transform: translateY(-2px);
 }
 
 .watch-actions a:hover,
@@ -559,8 +570,15 @@
         width: 90px;
     }
 
-    .watch-actions {
-        justify-content: flex-start;
+    .watch-actions a,
+    .watch-actions button {
+    min-height: 36px;
+    padding: 0 0.8rem;
+    font-size: 0.82rem;
+    }
+
+    .watch-related-item {
+    grid-template-columns: 56px minmax(0, 1fr);
     }
 
     .watch-actor-grid {
