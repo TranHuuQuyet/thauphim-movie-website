@@ -9,8 +9,15 @@ function mailer_config(string $name, $default = "")
 function mailer_is_placeholder(string $value): bool
 {
     $value = trim($value);
+    $placeholders = [
+        "REAL_SMTP_PASSWORD_HERE",
+        "your-real-smtp-password",
+        "your-smtp-password",
+    ];
 
-    return $value === "" || str_starts_with($value, "replace-with-");
+    return $value === ""
+        || str_starts_with($value, "replace-with-")
+        || in_array($value, $placeholders, true);
 }
 
 function mailer_load_phpmailer(): bool
