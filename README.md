@@ -259,6 +259,12 @@ Payload mau:
 
 ## 8. Database
 
+So do quan he database:
+
+![So do database ThauPhim](assets/images/database-diagram.png)
+
+Mo hinh database dat `movies` lam bang trung tam. Metadata phim duoc lien ket voi `genres`, `countries`, `actors`, `episodes` va cac bang tuong tac nguoi dung. Cac bang trung gian `movie_genres` va `movie_actors` giup mot phim co nhieu the loai va nhieu dien vien. Cac bang `favorites`, `comments`, `ratings` va `watch_history` luu hanh vi cua user theo tung phim/tap phim. Bang `schedules` quan ly lich/phim sap chieu, con `notification_reads` luu trang thai user da doc thong bao lich chieu.
+
 Bang chinh:
 
 - `users`: tai khoan, role, membership, status.
@@ -271,6 +277,7 @@ Bang chinh:
 - `movie_genres`: lien ket phim-the loai.
 - `movie_actors`: lien ket phim-dien vien.
 - `schedules`: lich/thong bao phim sap chieu.
+- `notification_reads`: trang thai da doc thong bao lich chieu theo user.
 - `favorites`: phim yeu thich.
 - `watch_history`: lich su va tien do xem.
 - `comments`: binh luan.
@@ -319,6 +326,7 @@ thauphim-movie-website/
 |   |-- css/
 |   |-- js/
 |   |-- images/
+|   |   |-- database-diagram.png
 |
 |-- database/
 |   |-- schema.sql
@@ -453,5 +461,6 @@ Checklist tom tat:
 - Trang admin.
 - Huong dan deploy.
 - README.
+- So do database ERD.
 - Tai khoan demo admin.
 - Anh chup man hinh va bao cao do an neu can nop kem.
