@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const count = document.createElement("span");
       count.className = "actor-movie-count";
       count.textContent = `${actor.movie_count} phim`;
-      count.style.cssText = "display:block; font-size:12px; color:#aaa; margin-top:5px;";
+      count.style.cssText = "display:flex; justify-content: center; align-items: center; font-size:12px; color:#aaa; margin-top:5px;";
       card.append(count);
     }
 
