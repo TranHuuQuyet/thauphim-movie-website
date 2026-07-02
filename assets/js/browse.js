@@ -93,6 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
             a.textContent = i;
             a.className = `page-link ${i === currentPage ? 'active-page' : ''}`;
             
+            if (i === currentPage) {
+                a.style.backgroundColor = "#e50914"; 
+                a.style.color = "#fff";
+                a.style.borderColor = "#e50914";
+                a.style.fontWeight = "bold";
+            }
+
             a.addEventListener("click", (e) => {
                 e.preventDefault();
                 currentPage = i;

@@ -13,10 +13,11 @@ if (!function_exists("auth_reset_render_topbar")) {
         ?>
         <div class="reset-auth-topbar">
             <a class="reset-auth-logo" href="<?= auth_reset_e(app_url("index.php")) ?>" aria-label="ThauPhim home">
-                <span class="reset-auth-logo__mark" aria-hidden="true">
-                    <i class="fa-solid fa-play"></i>
+                <span class="reset-auth-logo__mark" aria-hidden="true"></span>
+                <span class="reset-auth-logo__copy">
+                    <span class="reset-auth-logo__text">Thau<strong>Phim</strong></span>
+                    <span class="reset-auth-logo__tagline">Phim hay cả thau</span>
                 </span>
-                <span class="reset-auth-logo__text">Thau<strong>Phim</strong></span>
             </a>
 
             <p class="reset-auth-register">

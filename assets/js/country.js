@@ -114,6 +114,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const article = document.createElement("article");
     article.className = "country-movie-card";
 
+    const movieLink = document.createElement("a");
+    movieLink.href = `/pages/movie-detail.php?id=${movie.id}`;
+    movieLink.className = "country-movie-card__link";
+    movieLink.style.textDecoration = "none"; 
+    movieLink.style.color = "inherit";
+    
     const poster = document.createElement("div");
     poster.className = "country-movie-card__poster";
 
@@ -140,7 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
     year.textContent = movie.releaseYear || movie.releaseDate?.slice(0, 4) || "Đang cập nhật";
 
     content.append(title, year);
-    article.append(poster, content);
+    movieLink.append(poster, content);
+    article.append(movieLink);
     return article;
   };
 
