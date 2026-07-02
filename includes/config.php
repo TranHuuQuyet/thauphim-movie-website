@@ -67,52 +67,25 @@ $isLocalEnvironment = $isLocalCli
     || in_array($requestHost, ["localhost", "127.0.0.1"], true);
 
 define("DB_HOST", $isLocalEnvironment ? "127.0.0.1" : "localhost");
-define("DB_PORT", $isLocalEnvironment ? 3307 : 3306);
-define("DB_NAME", $isLocalEnvironment ? "thauphim" : "zrzyh261k3va_thauphim");
+define("DB_PORT", $isLocalEnvironment ? 3306 : 3306);
+define("DB_NAME", $isLocalEnvironment ? "thauphim_movie_website" : "zrzyh261k3va_thauphim");
 define("DB_USER", $isLocalEnvironment ? "root" : "zrzyh261k3va_client01");
 define("DB_PASS", $isLocalEnvironment ? "" : "ri4^Pttghf#KG,n$");
 define("DB_CHARSET", "utf8mb4");
 
-$localConfig = __DIR__ . "/config.local.php";
-if (is_file($localConfig)) {
-    require_once $localConfig;
-}
+define("MAIL_DRIVER", "smtp");
 
-if (!defined("MAIL_DRIVER")) {
-    define("MAIL_DRIVER", app_config_value("MAIL_DRIVER", "smtp"));
-}
+define("MAIL_FROM", "thauphim@fnbstore.store");
+define("MAIL_FROM_NAME", "ThauPhim");
 
-if (!defined("MAIL_FROM")) {
-    define("MAIL_FROM", app_config_value("MAIL_FROM", "thauphim@fnbstore.store"));
-}
+define("SMTP_HOST", "mail.fnbstore.store"); 
+define("SMTP_PORT", 587);
+define("SMTP_ENCRYPTION", "ssl");
 
-if (!defined("MAIL_FROM_NAME")) {
-    define("MAIL_FROM_NAME", app_config_value("MAIL_FROM_NAME", "ThauPhim"));
-}
+define("SMTP_USERNAME", "thauphim@fnbstore.store");
+define("SMTP_PASSWORD", "MẬT_KHẨU_EMAIL");
 
-if (!defined("SMTP_HOST")) {
-    define("SMTP_HOST", app_config_value("SMTP_HOST", "fnbstore.store"));
-}
-
-if (!defined("SMTP_PORT")) {
-    define("SMTP_PORT", (int) app_config_value("SMTP_PORT", 465));
-}
-
-if (!defined("SMTP_ENCRYPTION")) {
-    define("SMTP_ENCRYPTION", app_config_value("SMTP_ENCRYPTION", "ssl"));
-}
-
-if (!defined("SMTP_USERNAME")) {
-    define("SMTP_USERNAME", app_config_value("SMTP_USERNAME", "thauphim@fnbstore.store"));
-}
-
-if (!defined("SMTP_PASSWORD")) {
-    define("SMTP_PASSWORD", app_config_value("SMTP_PASSWORD", "M\u{1EAC}T_KH\u{1EA8}U_EMAIL"));
-}
-
-if (!defined("PASSWORD_RESET_TTL_MINUTES")) {
-    define("PASSWORD_RESET_TTL_MINUTES", (int) app_config_value("PASSWORD_RESET_TTL_MINUTES", 60));
-}
+define("PASSWORD_RESET_TTL_MINUTES", 60);
 $TMDB_COUNTRIES = [
     ["code" => "VN", "name" => "Việt Nam"],
     ["code" => "KR", "name" => "Hàn Quốc"],
