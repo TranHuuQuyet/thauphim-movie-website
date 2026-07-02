@@ -33,11 +33,14 @@ function password_reset_create_token(PDO $pdo, int $userId): array
 {
     $token = bin2hex(random_bytes(32));
     $tokenHash = password_reset_hash_token($token);
-    $expiresAt = date("Y-m-d H:i:s", time() + password_reset_ttl_minutes() * 60);
+    $ttlMinutes = password_reset_ttl_minutes();
 
     $pdo->beginTransaction();
 
     try {
+        $stmt = $pdo->query("SELECT DATE_ADD(NOW(), INTERVAL " . $ttlMinutes . " MINUTE) AS expires_at");
+        $expiresAt = (string) $stmt->fetchColumn();
+
         $stmt = $pdo->prepare("
             UPDATE password_resets
             SET used_at = NOW()
