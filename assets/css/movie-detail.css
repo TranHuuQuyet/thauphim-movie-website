@@ -688,36 +688,28 @@ a.episode-btn--locked {
     overflow-wrap: anywhere;
 }
 
+.detail-main-content h2,
+.detail-main-content h3,
+.detail-main-content .section-title,
+.detail-main-content .section-head,
+.detail-main-content .section-head h2,
+.detail-main-content .movie-section h2,
+.detail-main-content .movie-section h3,
+.detail-main-content .rating-box h2,
+.detail-main-content .rating-box h3 {
+    text-align: left;
+}
+
+.detail-main-content .section-head {
+    justify-content: flex-start;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .detail-body {
         width: min(100% - 32px, 900px);
         margin-top: -80px;
         grid-template-columns: 1fr;
-    }
-
-    .detail-actions {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.9rem;
-    }
-
-    .detail-actions .play-btn,
-    .continue-watch-btn {
-        grid-column: span 2;
-        width: 100%;
-        min-width: 0;
-        white-space: nowrap;
-    }
-
-    .detail-action-btn {
-        width: 100%;
-        min-width: 0;
-        white-space: nowrap;
-    }
-
-    .episode-list {
-        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -745,23 +737,18 @@ a.episode-btn--locked {
     }
 
     .detail-actions {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: flex-start;
         gap: 0.9rem;
     }
 
-    .detail-actions .play-btn,
-    .continue-watch-btn {
-        grid-column: span 2;
+    .detail-actions .play-btn {
         width: 100%;
-        min-width: 0;
-        white-space: nowrap;
+        justify-content: flex-start;
     }
+
     .detail-action-btn {
-        width: 100%;
-        min-width: 0;
-        white-space: nowrap;
-        font-size: 0.9rem;
+        width: calc(50% - 0.5rem);
+        text-align: left;
     }
 
     .detail-tabs {
@@ -786,6 +773,10 @@ a.episode-btn--locked {
 @media (max-width: 480px) {
     .episode-list {
         grid-template-columns: 1fr;
+    }
+
+    .detail-action-btn {
+        width: 100%;
     }
 
     .comment-box textarea {

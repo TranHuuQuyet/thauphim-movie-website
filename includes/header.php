@@ -40,14 +40,14 @@ $bodyClass = trim((string) ($bodyClass ?? ""));
     <link rel="stylesheet" href="<?= htmlspecialchars(app_url('assets/css/style.css'), ENT_QUOTES, 'UTF-8') ?>">
     <link rel="stylesheet" href="<?= htmlspecialchars(app_url('assets/css/auth.css'), ENT_QUOTES, 'UTF-8') ?>">
     <?php foreach ($pageStyles as $stylePath): ?>
-    <link rel="stylesheet" href="<?= htmlspecialchars(app_url((string) $stylePath), ENT_QUOTES, 'UTF-8') ?>">
+        <link rel="stylesheet" href="<?= htmlspecialchars(app_url((string) $stylePath), ENT_QUOTES, 'UTF-8') ?>">
     <?php endforeach; ?>
     <script src="<?= htmlspecialchars(app_url('assets/js/auth_login.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/theme.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/notifications.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/account-menu.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <?php foreach ($pageScripts as $scriptPath): ?>
-    <script src="<?= htmlspecialchars(app_url((string) $scriptPath), ENT_QUOTES, 'UTF-8') ?>" defer></script>
+        <script src="<?= htmlspecialchars(app_url((string) $scriptPath), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <?php endforeach; ?>
 </head>
 
@@ -78,9 +78,9 @@ $bodyClass = trim((string) ($bodyClass ?? ""));
                     <a href="<?= htmlspecialchars(app_url('pages/genres.php'), ENT_QUOTES, 'UTF-8') ?>"
                         class="menu-link">Chủ đề</a>
                     <a href="<?= htmlspecialchars(app_url('pages/browse.php?q='), ENT_QUOTES, 'UTF-8') ?>">Bộ lọc</a>
-                    <a href="<?= htmlspecialchars(app_url('index.php#single-movies'), ENT_QUOTES, 'UTF-8') ?>">Phim
+                    <a href="<?= htmlspecialchars(app_url('pages/single-movies.php'), ENT_QUOTES, 'UTF-8') ?>">Phim
                         lẻ</a>
-                    <a href="<?= htmlspecialchars(app_url('index.php#series-movies'), ENT_QUOTES, 'UTF-8') ?>">Phim
+                    <a href="<?= htmlspecialchars(app_url('pages/series-movies.php'), ENT_QUOTES, 'UTF-8') ?>">Phim
                         bộ</a>
 
                     <details class="nav-dropdown">
