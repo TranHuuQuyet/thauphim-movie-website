@@ -1,23 +1,29 @@
-/* Page */
 .detail-page {
-    background: var(--color-bg);
-    color: var(--color-text);
     min-height: 100vh;
     padding-bottom: 4rem;
     overflow-x: hidden;
+    background: var(--color-bg);
+    color: var(--color-text);
 }
 
-/* Hero */
 .detail-hero {
-    width: 100vw;
-    max-width: none;
-    min-height: clamp(480px, 46vw, 680px);
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
     position: relative;
+    width: 100vw;
+    min-height: clamp(480px, 46vw, 680px);
+    margin-inline: calc(50% - 50vw);
     overflow: hidden;
     background: var(--color-bg);
-    border-radius: 0;
+}
+
+.detail-hero .video-bg,
+.detail-hero .hero-overlay {
+    position: absolute;
+    inset: 0;
+}
+
+.detail-hero .video-bg {
+    z-index: 0;
+    overflow: hidden;
 }
 
 .detail-hero .video-bg img {
@@ -25,14 +31,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center center;
-}
-
-.detail-hero .video-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
+    object-position: center;
 }
 
 .detail-hero .video-bg iframe {
@@ -43,14 +42,12 @@
     height: 56.25vw;
     min-width: 177.77vh;
     min-height: 100vh;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
     border: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
 }
 
 .detail-hero .hero-overlay {
-    position: absolute;
-    inset: 0;
     z-index: 1;
     background:
         linear-gradient(90deg, rgba(12, 14, 22, 0.72) 0%, rgba(12, 14, 22, 0.22) 45%, rgba(12, 14, 22, 0.72) 100%),
@@ -63,13 +60,33 @@
     left: 0;
     right: 0;
     bottom: -1px;
-    height: 180px;
     z-index: 2;
+    height: 180px;
     pointer-events: none;
     background: linear-gradient(180deg, rgba(12, 14, 22, 0) 0%, var(--color-bg) 88%);
 }
 
-/* Sidebar info */
+.detail-body {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+    width: min(100% - 80px, 1680px);
+    margin: clamp(-150px, -9vw, -105px) auto 0;
+}
+
+.detail-sidebar {
+    position: relative;
+    z-index: 4;
+    margin-top: clamp(-140px, -10vw, -90px);
+}
+
+.detail-main-content {
+    min-width: 0;
+}
+
 .detail-poster {
     display: flex;
     justify-content: center;
@@ -85,43 +102,43 @@
 }
 
 .detail-info-text {
-    text-align: center;
     margin-bottom: 1.2rem;
+    text-align: center;
 }
 
 .detail-info-text h1 {
+    margin: 0.8rem 0 0.3rem;
     color: var(--color-text);
     font-size: 2rem;
     font-weight: 700;
-    margin: 0.8rem 0 0.3rem;
 }
 
 .detail-info-text .movie-name {
+    margin-bottom: 0.8rem;
     color: var(--color-text-soft);
     font-size: 1rem;
-    margin-bottom: 0.8rem;
 }
 
 .detail-info-link {
     display: inline-block;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--color-focus-ring);
+    border-radius: 8px;
     color: var(--color-link);
     font-weight: 600;
     text-decoration: none;
-    border: 1px solid var(--color-focus-ring);
-    padding: 0.55rem 1rem;
-    border-radius: 8px;
 }
 
 .detail-info-link:hover {
-    color: var(--color-link-hover);
     background: var(--color-primary-soft);
+    color: var(--color-link-hover);
 }
 
 .detail-info-card {
-    background: var(--color-card-bg);
+    padding: 1.8rem;
     border: 1px solid var(--color-border-muted);
     border-radius: 12px;
-    padding: 1.8rem;
+    background: var(--color-card-bg);
     box-shadow: var(--shadow-md);
 }
 
@@ -138,39 +155,38 @@
     display: inline-flex;
     align-items: center;
     padding: 0.45rem 0.75rem;
+    border: 1px solid var(--color-border-muted);
     border-radius: 6px;
     background: var(--color-surface-muted);
     color: var(--color-text);
-    border: 1px solid var(--color-border-muted);
     font-size: 0.8rem;
     line-height: 1;
 }
 
 .detail-badge.age {
+    border-color: var(--color-surface-inverse);
     background: var(--color-surface-inverse);
     color: var(--color-text-inverse);
-    border-color: var(--color-surface-inverse);
     font-weight: 700;
 }
 
 .detail-status {
     display: inline-flex;
     align-items: center;
+    margin-bottom: 1rem;
     padding: 0.4rem 0.8rem;
     border-radius: 6px;
-    margin-bottom: 1rem;
 }
 
 .detail-status span {
-    background: transparent;
     font-size: 0.85rem;
     font-weight: 700;
     line-height: 1;
 }
 
 .detail-status.status-warning {
-    background: var(--color-warning-soft);
     border: 1px solid var(--color-warning-soft);
+    background: var(--color-warning-soft);
 }
 
 .detail-status.status-warning span {
@@ -178,8 +194,8 @@
 }
 
 .detail-status.status-success {
-    background: var(--color-success-soft);
     border: 1px solid var(--color-success-soft);
+    background: var(--color-success-soft);
 }
 
 .detail-status.status-success span {
@@ -191,49 +207,48 @@
 }
 
 .detail-desc-block h3 {
+    margin-bottom: 0.5rem;
     color: var(--color-text);
     font-size: 1rem;
-    margin-bottom: 0.5rem;
 }
-
-.detail-desc-block p {
-    color: var(--color-text-soft);
-    font-size: 1rem;
-    line-height: 1.8rem;
-    margin: 0.25rem 0;
-}
-
+.detail-desc-block p,
 .detail-info-list p {
+    margin: 0.25rem 0;
     color: var(--color-text-soft);
     font-size: 1rem;
     line-height: 1.8;
-    margin: 0.25rem 0;
 }
-
 .detail-info-list strong {
-    color: var(--color-text);
     margin-right: 0.4rem;
+    color: var(--color-text);
+}
+.detail-actions {
+    --action-size: 64px;
+    --action-icon-size: 1.05rem;
+    --action-label-size: 0.68rem;
+    display: grid;
+    grid-template-columns: max-content max-content repeat(4, var(--action-size));
+    justify-content: center;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 0 0 1.5rem;
 }
 
-/* Actions */
-.detail-actions {
-    margin: 0 0 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+.detail-actions:not(:has(.continue-watch-btn)) {
+    grid-template-columns: max-content repeat(4, var(--action-size));
 }
 
 .detail-actions .play-btn,
-.continue-watch-btn {
+.detail-actions .continue-watch-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 150px;
-    margin-top: 1rem;
+    margin-top: 0;
     border-radius: 999px;
-    text-decoration: none;
     font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
 .detail-actions .play-btn {
@@ -242,106 +257,137 @@
     color: var(--color-bg);
     box-shadow: var(--shadow-md);
 }
-
 .detail-actions .play-btn:hover {
     background: var(--color-link-hover);
     color: var(--color-bg);
-    transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
 }
-
-.continue-watch-btn {
-    padding: 0.8rem 1.5rem;
+.detail-actions .continue-watch-btn {
+    padding: 0.8rem 1.35rem;
+    border: 1px solid var(--color-border-muted);
     background: var(--color-surface-muted);
     color: var(--color-text);
-    border: 1px solid var(--color-border-muted);
 }
-
-.continue-watch-btn:hover {
-    color: var(--color-link-hover);
+.detail-actions .continue-watch-btn:hover {
     background: var(--color-primary-soft);
+    color: var(--color-link-hover);
 }
-
-.detail-action-btn {
-    background: transparent;
-    margin-top: 1rem;
-    border: none;
+.detail-actions .detail-action-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: var(--action-size);
+    min-width: var(--action-size);
+    max-width: var(--action-size);
+    margin-top: 0;
+    padding: 0;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
     color: var(--color-text);
-    text-decoration: none;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0;
     font-weight: 700;
-    opacity: 0.9;
+    line-height: 1;
+    opacity: 0.95;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
+.detail-action-btn::before,
+.detail-action-btn::after {
+    display: block;
+    color: currentColor;
+    line-height: 1;
+    white-space: nowrap;
+}
+.detail-action-btn::before {
+    font-size: var(--action-icon-size);
+}
+.detail-action-btn::after {
+    margin-top: 0.42rem;
+    font-size: var(--action-label-size);
+    font-weight: 700;
+    line-height: 1.15;
+}
+#favoriteBtn::before,
+#favoriteBtn.is-favorite::before {
+    content: "♡";
+}
+#favoriteBtn::after {
+    content: "Yêu thích";
+}
+#addListBtn::before,
+#addListBtn.is-added::before {
+    content: "+";
+}
+#addListBtn::after {
+    content: "Danh sách";
+}
+#shareBtn::before {
+    content: "↗";
+}
+#shareBtn::after {
+    content: "Chia sẻ";
+}
+#commentBtn::before {
+    content: "💬";
+}
+#commentBtn::after {
+    content: "Bình luận";
+}
 .detail-action-btn:hover {
     color: var(--color-link-hover);
     opacity: 1;
     transform: translateY(-2px);
 }
-
-.detail-action-btn.is-favorite,
-.detail-action-btn.is-favorite:hover {
+.detail-action-btn.is-favorite {
     color: #f75799;
 }
-
-.detail-action-btn.is-favorite {
-    font-weight: 700;
-    opacity: 1;
-}
-
 .detail-action-btn.is-added {
     color: var(--color-link);
-    font-weight: 700;
-    opacity: 1;
 }
-
-.detail-action-btn.is-added:hover {
-    color: var(--color-link-hover);
-}
-
-/* Tabs */
 .detail-tabs {
-    margin: 0 0 1.8rem;
     display: flex;
     justify-content: center;
     gap: 2rem;
+    margin: 0 0 1.8rem;
     overflow-x: auto;
+    scrollbar-width: none;
 }
-
+.detail-tabs::-webkit-scrollbar {
+    display: none;
+}
 .detail-tab {
-    background: transparent;
-    border: none;
-    color: var(--color-text);
+    flex: 0 0 auto;
     padding: 0.75rem 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
     cursor: pointer;
     font-size: 1rem;
     font-weight: 700;
-    white-space: nowrap;
     opacity: 0.9;
+    white-space: nowrap;
 }
-
 .detail-tab.active {
-    color: var(--color-link);
     border-bottom: 2px solid var(--color-link);
+    color: var(--color-link);
 }
-
-/* Tab panels */
 .detail-tab-panel {
     display: none;
 }
-
 .detail-tab-panel.active {
     display: block;
 }
-
-/* Placeholder */
 .detail-placeholder,
 .rating-box {
-    background: var(--color-card-bg);
+    padding: 1.2rem;
     border: 1px solid var(--color-border-muted);
     border-radius: 16px;
-    padding: 1.2rem;
+    background: var(--color-card-bg);
 }
 
 .detail-placeholder {
@@ -357,34 +403,44 @@
 .detail-main-content .movie-section::before {
     display: none;
 }
+.detail-page .detail-main-content .section-head {
+    justify-content: flex-start !important;
+    text-align: left !important;
+}
 
-/* Episodes */
+.detail-page .detail-main-content .section-head h2,
+.detail-page .detail-main-content .comment-section h2,
+.detail-page .detail-main-content .rating-section h2,
+.detail-page .detail-main-content .rating-box h2,
+.detail-page .detail-main-content > h2 {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-align: left !important;
+}
+
 .episode-head {
     display: flex;
     align-items: center;
     gap: 1.5rem;
     margin-bottom: 1rem;
 }
-
 .episode-head h2 {
+    margin: 0;
     color: var(--color-text);
     font-size: 1.25rem;
-    margin: 0;
 }
-
 .episode-options {
     display: flex;
     gap: 0.6rem;
 }
-
 .episode-options span {
     padding: 0.4rem 0.7rem;
-    border-radius: 6px;
     border: 1px solid var(--color-border);
+    border-radius: 6px;
     color: var(--color-text);
     font-size: 0.8rem;
 }
-
 .episode-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -392,293 +448,228 @@
 }
 
 .episode-btn {
+    padding: 1rem;
+    border: 1px solid var(--color-border-muted);
+    border-radius: 8px;
     background: var(--color-surface-muted);
     color: var(--color-text);
-    text-decoration: none;
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
     font-size: 1rem;
-    border: 1px solid var(--color-border-muted);
+    text-align: center;
+    text-decoration: none;
 }
-
 .episode-btn:hover {
-    color: var(--color-link-hover);
     background: var(--color-primary-soft);
+    color: var(--color-link-hover);
 }
-
 .episode-btn--locked {
     cursor: not-allowed;
     opacity: 0.65;
 }
-
 a.episode-btn--locked {
     cursor: pointer;
 }
-
-/* Comments */
 .section-head {
-    margin-top: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    margin-top: 1rem;
 }
-
 .view-more {
     color: var(--color-text-soft);
     font-size: 0.9rem;
     text-decoration: none;
 }
-
 .view-more:hover {
     color: var(--color-link-hover);
 }
-
 .comment-login-note,
 .detail-empty {
-    color: var(--color-text-soft);
     margin-bottom: 1rem;
+    color: var(--color-text-soft);
 }
-
 .comment-login-note a,
 .rating-login-note a {
     color: var(--color-link);
     font-weight: 700;
     text-decoration: none;
 }
-
 .comment-login-note a:hover,
 .rating-login-note a:hover {
     color: var(--color-link-hover);
     text-decoration: underline;
 }
-
 .comment-box {
-    background: var(--color-surface-muted);
+    padding: 0.8rem;
     border: 1px solid var(--color-border-muted);
     border-radius: 12px;
-    padding: 0.8rem;
+    background: var(--color-surface-muted);
 }
-
 .comment-box textarea {
     width: 100%;
     min-height: 110px;
-    resize: none;
-    border: none;
-    outline: none;
+    padding: 1rem;
+    border: 0;
     border-radius: 10px;
+    outline: 0;
+    resize: none;
     background: var(--color-bg);
     color: var(--color-text);
-    padding: 1rem;
 }
-
 .comment-actions {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    margin-top: 0.6rem;
     color: var(--color-text-soft);
     font-size: 0.85rem;
-    margin-top: 0.6rem;
 }
-
 .comment-actions button {
-    border: none;
+    border: 0;
     background: transparent;
     color: var(--color-link);
     font-weight: 700;
 }
-
 .comment-empty {
-    margin-top: 2rem;
-    min-height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-card-bg);
+    min-height: 140px;
+    margin-top: 2rem;
     border-radius: 16px;
+    background: var(--color-card-bg);
     color: var(--color-text-soft);
 }
-
 .comment-empty.has-comments {
     display: block;
     background: transparent;
 }
-
 .comment-item {
-    background: var(--color-surface-muted);
+    margin-bottom: 1rem;
+    padding: 1rem;
     border: 1px solid var(--color-border-muted);
     border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    background: var(--color-surface-muted);
 }
-
 .comment-item-head {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
+    justify-content: space-between;
     gap: 1rem;
     margin-bottom: 1rem;
 }
-
 .comment-author {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
-
 .comment-author strong {
     color: var(--color-text);
 }
-
 .comment-author span {
     color: var(--color-text-soft);
     font-size: 0.85rem;
 }
-
 .comment-item p {
+    margin: 0;
     color: var(--color-text-soft);
     line-height: 1.6;
-    margin: 0;
 }
-
 .delete-comment-btn {
-    border: none;
+    border: 0;
     background: transparent;
     color: var(--color-text-soft);
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 700;
 }
-
 .delete-comment-btn:hover {
     color: var(--color-warning);
 }
-
-/* Rating */
 .rating-summary {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
     margin-bottom: 1rem;
 }
-
 .rating-summary strong {
     color: var(--color-text);
     font-size: 1.25rem;
 }
-
 .rating-summary span,
 .rating-message,
 .rating-login-note {
     color: var(--color-text-soft);
     font-size: 0.9rem;
 }
-
 .rating-stars {
     display: flex;
     gap: 0.45rem;
     margin-bottom: 0.8rem;
 }
-
 .rating-stars button {
-    border: none;
+    padding: 0;
+    border: 0;
     background: transparent;
     color: var(--color-text-soft);
     cursor: pointer;
     font-size: 2rem;
     line-height: 1;
-    padding: 0;
 }
-
 .rating-stars button:hover,
 .rating-stars button.active {
     color: var(--color-link);
 }
-
-/* Layout */
-.detail-body {
-    width: min(100% - 80px, 1680px);
-    margin: clamp(-150px, -9vw, -105px) auto 0;
-    position: relative;
-    z-index: 3;
-    display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    gap: 2.5rem;
-    align-items: start;
-}
-
-.detail-sidebar {
-    position: relative;
-    z-index: 4;
-    margin-top: clamp(-140px, -10vw, -90px);
-}
-
-.detail-main-content {
-    min-width: 0;
-    padding-top: 0;
-}
-
-/* Related movies */
 .related-movie-grid {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 1rem;
 }
-
 .related-movie-card {
     display: block;
     color: var(--color-text);
     text-decoration: none;
 }
-
 .related-movie-card img {
     width: 100%;
     aspect-ratio: 2 / 3;
     object-fit: cover;
+    border: 1px solid var(--color-border-muted);
     border-radius: 12px;
     background: var(--color-surface-muted);
-    border: 1px solid var(--color-border-muted);
 }
-
 .related-movie-card h3 {
+    margin: 0.6rem 0 0;
     font-size: 0.9rem;
     line-height: 1.4;
-    margin: 0.6rem 0 0;
 }
-
 .related-movie-card:hover h3 {
     color: var(--color-link-hover);
 }
-
-/* Actors */
 .actors-section .detail-actor-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 18px;
     align-items: stretch;
+    gap: 18px;
 }
-
 .actors-section .detail-actor-item {
     min-height: 170px;
     padding: 16px 12px;
+    border: 1px solid var(--color-border-muted);
     border-radius: 16px;
     background: var(--color-card-bg);
-    border: 1px solid var(--color-border-muted);
     text-align: center;
 }
-
 .actors-section .detail-actor-item img {
     display: block;
     width: 96px;
     height: 96px;
     margin: 0 auto 12px;
-    border-radius: 50%;
     object-fit: cover;
-    background: var(--color-surface-muted);
     border: 1px solid var(--color-border-muted);
+    border-radius: 50%;
+    background: var(--color-surface-muted);
 }
-
 .actors-section .detail-actor-item span {
     display: block;
     color: var(--color-text);
@@ -688,102 +679,133 @@ a.episode-btn--locked {
     overflow-wrap: anywhere;
 }
 
-.detail-main-content h2,
-.detail-main-content h3,
-.detail-main-content .section-title,
-.detail-main-content .section-head,
-.detail-main-content .section-head h2,
-.detail-main-content .movie-section h2,
-.detail-main-content .movie-section h3,
-.detail-main-content .rating-box h2,
-.detail-main-content .rating-box h3 {
-    text-align: left;
-}
-
-.detail-main-content .section-head {
-    justify-content: flex-start;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .detail-body {
-        width: min(100% - 32px, 900px);
-        margin-top: -80px;
         grid-template-columns: 1fr;
+        gap: 2rem;
+        width: min(100% - 64px, 980px);
+        margin-top: -80px;
+    }
+    .detail-sidebar {
+        width: 100%;
+        margin: 0 auto;
+    }
+    .detail-actions {
+        --action-size: 60px;
+        --action-label-size: 0.64rem;
+        column-gap: 0.75rem;
+    }
+    .episode-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
-
 @media (max-width: 768px) {
+    .detail-hero {
+        min-height: 360px;
+    }
     .detail-body {
         width: calc(100% - 24px);
         margin-top: -60px;
     }
-
-    .detail-hero {
-        min-height: 360px;
+    .detail-info-card {
+        padding: 1.1rem;
     }
-
     .detail-poster img {
         width: 110px;
         height: 160px;
     }
-
     .detail-info-text h1 {
         font-size: 1.6rem;
     }
-
-    .detail-info-card {
-        padding: 1.1rem;
-    }
-
     .detail-actions {
-        align-items: flex-start;
-        gap: 0.9rem;
+        --action-size: 54px;
+        --action-icon-size: 1rem;
+        --action-label-size: 0.6rem;
+        column-gap: 0.55rem;
+        row-gap: 0.8rem;
     }
-
+    .detail-actions .play-btn,
+    .detail-actions .continue-watch-btn {
+        min-width: 140px;
+    }
     .detail-actions .play-btn {
-        width: 100%;
-        justify-content: flex-start;
+        padding: 0.9rem 1.35rem;
     }
-
-    .detail-action-btn {
-        width: calc(50% - 0.5rem);
-        text-align: left;
+    .detail-actions .continue-watch-btn {
+        padding: 0.78rem 1.1rem;
     }
-
     .detail-tabs {
-        gap: 1.2rem;
+        gap: 1.4rem;
     }
-
     .episode-head {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.8rem;
     }
-
-    .episode-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     .related-movie-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
-
+@media (max-width: 560px) {
+    .detail-actions {
+        --action-size: 46px;
+        --action-icon-size: 1rem;
+        --action-label-size: 0.56rem;
+        grid-template-columns: repeat(6, var(--action-size));
+        column-gap: 0.45rem;
+        row-gap: 0.6rem;
+    }
+    .detail-actions:not(:has(.continue-watch-btn)) {
+        grid-template-columns: repeat(5, var(--action-size));
+    }
+    .detail-actions .play-btn,
+    .detail-actions .continue-watch-btn {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        max-width: 44px;
+        padding: 0;
+        border-radius: 50%;
+        font-size: 0;
+    }
+    .detail-actions .play-btn::before {
+        content: "▶";
+        margin-left: 2px;
+        font-size: 1rem;
+        line-height: 1;
+    }
+    .detail-actions .continue-watch-btn::before {
+        content: "↻";
+        font-size: 1rem;
+        line-height: 1;
+    }
+    .detail-action-btn::after {
+        margin-top: 0.32rem;
+    }
+}
 @media (max-width: 480px) {
     .episode-list {
         grid-template-columns: 1fr;
     }
-
-    .detail-action-btn {
-        width: 100%;
-    }
-
     .comment-box textarea {
         min-height: 90px;
     }
-
     .related-movie-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 420px) {
+    .detail-actions {
+        --action-size: 42px;
+        --action-icon-size: 0.95rem;
+        --action-label-size: 0.52rem;
+        column-gap: 0.35rem;
+    }
+    .detail-actions .play-btn,
+    .detail-actions .continue-watch-btn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        max-width: 40px;
     }
 }
