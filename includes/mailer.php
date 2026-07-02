@@ -6,6 +6,16 @@ function mailer_config(string $name, $default = "")
     return defined($name) ? constant($name) : $default;
 }
 
+function mailer_set_last_error(string $message): void
+{
+    $GLOBALS["MAILER_LAST_ERROR"] = $message;
+}
+
+function mailer_last_error(): string
+{
+    return (string) ($GLOBALS["MAILER_LAST_ERROR"] ?? "");
+}
+
 function mailer_is_placeholder(string $value): bool
 {
     $value = trim($value);
@@ -42,7 +52,9 @@ function mailer_load_phpmailer(): bool
 function mailer_send(string $toEmail, string $toName, string $subject, string $htmlBody, string $textBody): bool
 {
     if (!filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
-        error_log("Cannot send email to invalid address.");
+        $message = "Cannot send email to invalid address.";
+        mailer_set_last_error($message);
+        error_log($message);
         return false;
     }
 
@@ -56,7 +68,9 @@ function mailer_send(string $toEmail, string $toName, string $subject, string $h
         return mailer_send_mail($toEmail, $toName, $subject, $htmlBody, $textBody);
     }
 
-    error_log("Unsupported MAIL_DRIVER: " . $driver);
+    $message = "Unsupported MAIL_DRIVER: " . $driver;
+    mailer_set_last_error($message);
+    error_log($message);
     return false;
 }
 
@@ -67,12 +81,16 @@ function mailer_send_smtp(string $toEmail, string $toName, string $subject, stri
     $password = (string) mailer_config("SMTP_PASSWORD");
 
     if (mailer_is_placeholder($host) || mailer_is_placeholder($username) || mailer_is_placeholder($password)) {
-        error_log("SMTP mail is not fully configured. Update SMTP_HOST, SMTP_USERNAME, and SMTP_PASSWORD.");
+        $message = "SMTP mail is not fully configured. Update SMTP_HOST, SMTP_USERNAME, and SMTP_PASSWORD.";
+        mailer_set_last_error($message);
+        error_log($message);
         return false;
     }
 
     if (!mailer_load_phpmailer()) {
-        error_log("MAIL_DRIVER=smtp requires PHPMailer. Install PHPMailer or set MAIL_DRIVER to mail if hosting supports PHP mail().");
+        $message = "MAIL_DRIVER=smtp requires PHPMailer. Install PHPMailer or set MAIL_DRIVER to mail if hosting supports PHP mail().";
+        mailer_set_last_error($message);
+        error_log($message);
         return false;
     }
 
@@ -105,7 +123,9 @@ function mailer_send_smtp(string $toEmail, string $toName, string $subject, stri
 
         return $mail->send();
     } catch (Throwable $exception) {
-        error_log("SMTP mail failed: " . $exception->getMessage());
+        $message = "SMTP mail failed: " . $exception->getMessage();
+        mailer_set_last_error($message);
+        error_log($message);
         return false;
     }
 }
@@ -116,7 +136,9 @@ function mailer_send_mail(string $toEmail, string $toName, string $subject, stri
     $fromName = (string) mailer_config("MAIL_FROM_NAME", "ThauPhim");
 
     if (mailer_is_placeholder($fromEmail) || !filter_var($fromEmail, FILTER_VALIDATE_EMAIL)) {
-        error_log("PHP mail() is not configured with a valid MAIL_FROM address.");
+        $message = "PHP mail() is not configured with a valid MAIL_FROM address.";
+        mailer_set_last_error($message);
+        error_log($message);
         return false;
     }
 
@@ -130,7 +152,9 @@ function mailer_send_mail(string $toEmail, string $toName, string $subject, stri
 
     $sent = @mail($toEmail, $encodedSubject, $htmlBody, implode("\r\n", $headers));
     if (!$sent) {
-        error_log("PHP mail() failed while sending password reset email.");
+        $message = "PHP mail() failed while sending password reset email.";
+        mailer_set_last_error($message);
+        error_log($message);
     }
 
     return $sent;

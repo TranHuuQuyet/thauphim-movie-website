@@ -6,7 +6,19 @@ if (PHP_SAPI !== "cli") {
     exit;
 }
 
-$email = trim((string) ($argv[1] ?? ""));
+$email = "";
+$sendResetEmail = false;
+foreach (array_slice($argv, 1) as $argument) {
+    if ($argument === "--send") {
+        $sendResetEmail = true;
+        continue;
+    }
+
+    if ($email === "") {
+        $email = trim((string) $argument);
+    }
+}
+
 $smtpPort = (int) SMTP_PORT;
 $smtpEncryption = strtolower(trim((string) SMTP_ENCRYPTION));
 $checks = [
@@ -22,13 +34,25 @@ $checks = [
     "smtp_password_configured" => !mailer_is_placeholder((string) SMTP_PASSWORD),
     "phpmailer_available" => mailer_load_phpmailer(),
     "app_url" => (string) APP_URL,
+    "send_reset_email" => $sendResetEmail,
 ];
 
 if ($email !== "") {
     try {
         $pdo = getDatabaseConnection();
         $checks["email_valid"] = filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
-        $checks["active_user_found"] = password_reset_find_active_user_by_email($pdo, $email) !== null;
+        $activeUser = $checks["email_valid"] ? password_reset_find_active_user_by_email($pdo, $email) : null;
+        $checks["active_user_found"] = $activeUser !== null;
+
+        if ($sendResetEmail && $activeUser !== null) {
+            $result = password_reset_request($pdo, $email);
+            $checks["reset_user_found"] = !empty($result["user_found"]);
+            $checks["reset_email_sent"] = !empty($result["email_sent"]);
+
+            if (!$checks["reset_email_sent"] && mailer_last_error() !== "") {
+                $checks["mailer_error"] = mailer_last_error();
+            }
+        }
     } catch (Throwable $exception) {
         $checks["database_error"] = $exception->getMessage();
     }
@@ -44,6 +68,14 @@ foreach ($checks as $name => $value) {
 
 if (!$checks["smtp_password_configured"]) {
     echo "action: set SMTP_PASSWORD in the environment or includes/config.local.php" . PHP_EOL;
+}
+
+if ($sendResetEmail && empty($checks["active_user_found"])) {
+    echo "action: use an email that exists in users.email and has status active" . PHP_EOL;
+}
+
+if ($sendResetEmail && isset($checks["reset_email_sent"]) && !$checks["reset_email_sent"]) {
+    echo "action: check the mailer_error above and the hosting PHP error log" . PHP_EOL;
 }
 
 if ($checks["mail_driver"] === "smtp" && $smtpPort === 587 && $smtpEncryption === "ssl") {
