@@ -20,6 +20,18 @@ $notificationUnreadCount = count(array_filter(
 $pageStyles = $pageStyles ?? [];
 $pageScripts = $pageScripts ?? [];
 $bodyClass = trim((string) ($bodyClass ?? ""));
+
+$currentPath = parse_url($_SERVER["REQUEST_URI"] ?? "", PHP_URL_PATH) ?: "";
+
+$isActivePath = static function (string $path) use ($currentPath): bool {
+    return rtrim($currentPath, "/") === rtrim(app_url($path), "/");
+};
+
+$activeClass = static function (string $path) use ($isActivePath): string {
+    return $isActivePath($path) ? " is-active" : "";
+};
+
+$isCountryActive = str_contains($currentPath, app_url("pages/country.php"));
 ?>
 
 <!DOCTYPE html>
@@ -76,14 +88,18 @@ $bodyClass = trim((string) ($bodyClass ?? ""));
             <div class="header-actions" id="primary-menu">
                 <nav class="main-nav" aria-label="Điều hướng chính">
                     <a href="<?= htmlspecialchars(app_url('pages/genres.php'), ENT_QUOTES, 'UTF-8') ?>"
-                        class="menu-link">Chủ đề</a>
-                    <a href="<?= htmlspecialchars(app_url('pages/browse.php?q='), ENT_QUOTES, 'UTF-8') ?>">Bộ lọc</a>
-                    <a href="<?= htmlspecialchars(app_url('pages/single-movies.php'), ENT_QUOTES, 'UTF-8') ?>">Phim
-                        lẻ</a>
-                    <a href="<?= htmlspecialchars(app_url('pages/series-movies.php'), ENT_QUOTES, 'UTF-8') ?>">Phim
-                        bộ</a>
+                        class="menu-link<?= $activeClass('pages/genres.php') ?>">Chủ đề</a>
 
-                    <details class="nav-dropdown">
+                    <a href="<?= htmlspecialchars(app_url('pages/browse.php?q='), ENT_QUOTES, 'UTF-8') ?>"
+                        class="<?= $activeClass('pages/browse.php') ?>">Bộ lọc</a>
+
+                    <a href="<?= htmlspecialchars(app_url('pages/single-movies.php'), ENT_QUOTES, 'UTF-8') ?>"
+                        class="<?= $activeClass('pages/single-movies.php') ?>">Phim lẻ</a>
+
+                    <a href="<?= htmlspecialchars(app_url('pages/series-movies.php'), ENT_QUOTES, 'UTF-8') ?>"
+                        class="<?= $activeClass('pages/series-movies.php') ?>">Phim bộ</a>
+
+                    <details class="nav-dropdown<?= $isCountryActive ? ' is-active' : '' ?>">
                         <summary>
                             Quốc gia
                             <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
@@ -97,7 +113,9 @@ $bodyClass = trim((string) ($bodyClass ?? ""));
                             <?php endforeach; ?>
                         </div>
                     </details>
-                    <a href="<?= htmlspecialchars(app_url('pages/actor.php'), ENT_QUOTES, 'UTF-8') ?>">Diễn viên</a>
+
+                    <a href="<?= htmlspecialchars(app_url('pages/actor.php'), ENT_QUOTES, 'UTF-8') ?>"
+                        class="<?= $activeClass('pages/actor.php') ?>">Diễn viên</a>
                 </nav>
 
                 <form class="search-form"
