@@ -638,3 +638,9 @@ body.light-mode .icon-sun {
     transition: none;
   }
 }
+
+
+.main-nav a.is-active,
+.main-nav .nav-dropdown.is-active > summary {
+    color: var(--color-primary);
+}
