@@ -91,7 +91,7 @@ if (!defined("MAIL_FROM_NAME")) {
 }
 
 if (!defined("SMTP_HOST")) {
-    define("SMTP_HOST", app_config_value("SMTP_HOST", "mail.fnbstore.store"));
+    define("SMTP_HOST", app_config_value("SMTP_HOST", "fnbstore.store"));
 }
 
 if (!defined("SMTP_PORT")) {

@@ -8,9 +8,15 @@ if (PHP_SAPI !== "cli") {
 
 $email = "";
 $sendResetEmail = false;
+$showResetUrl = false;
 foreach (array_slice($argv, 1) as $argument) {
     if ($argument === "--send") {
         $sendResetEmail = true;
+        continue;
+    }
+
+    if ($argument === "--show-url") {
+        $showResetUrl = true;
         continue;
     }
 
@@ -35,6 +41,7 @@ $checks = [
     "phpmailer_available" => mailer_load_phpmailer(),
     "app_url" => (string) APP_URL,
     "send_reset_email" => $sendResetEmail,
+    "show_reset_url" => $showResetUrl,
 ];
 
 if ($email !== "") {
@@ -45,9 +52,18 @@ if ($email !== "") {
         $checks["active_user_found"] = $activeUser !== null;
 
         if ($sendResetEmail && $activeUser !== null) {
-            $result = password_reset_request($pdo, $email);
-            $checks["reset_user_found"] = !empty($result["user_found"]);
-            $checks["reset_email_sent"] = !empty($result["email_sent"]);
+            if ($showResetUrl) {
+                $tokenData = password_reset_create_token($pdo, (int) $activeUser["id"]);
+                $resetUrl = password_reset_url((string) $tokenData["token"]);
+                $checks["reset_user_found"] = true;
+                $checks["reset_email_sent"] = password_reset_send_email($activeUser, $resetUrl);
+                $checks["reset_url"] = $resetUrl;
+                $checks["reset_expires_at"] = (string) $tokenData["expires_at"];
+            } else {
+                $result = password_reset_request($pdo, $email);
+                $checks["reset_user_found"] = !empty($result["user_found"]);
+                $checks["reset_email_sent"] = !empty($result["email_sent"]);
+            }
 
             if (!$checks["reset_email_sent"] && mailer_last_error() !== "") {
                 $checks["mailer_error"] = mailer_last_error();
