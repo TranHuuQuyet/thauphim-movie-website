@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let guestHistoryToastShown = false;
     let watchPlayer = null;
     let saveProgressTimer = null;
+    let viewRecordRequested = false;
 
     const showWatchToast = (message, type = "info") => {
         if (typeof Toastify === "function") {
@@ -107,6 +108,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    const recordMovieView = async () => {
+        if (
+            viewRecordRequested ||
+            !watchHistoryData.movieId ||
+            !watchHistoryData.episodeId
+        ) {
+            return;
+        }
+
+        viewRecordRequested = true;
+
+        try {
+            const response = await fetch("/api/record-view.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    movie_id: watchHistoryData.movieId,
+                    episode_id: watchHistoryData.episodeId
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+        } catch (error) {
+            viewRecordRequested = false;
+            console.log("Khong ghi nhan duoc luot xem:", error);
+        }
+    };
+
     const initYoutubePlayer = () => {
         const iframe = document.querySelector("#watchPlayer");
 
@@ -120,6 +153,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     }, 10000);
                 },
                 onStateChange: (event) => {
+                    if (event.data === YT.PlayerState.PLAYING) {
+                        recordMovieView();
+                    }
+
                     if (
                         event.data === YT.PlayerState.PAUSED ||
                         event.data === YT.PlayerState.ENDED
