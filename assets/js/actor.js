@@ -1,11 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = "/api";
+  const actorPage = document.querySelector(".actor-page");
   const actorList = document.querySelector("#actorList");
   const actorStatus = document.querySelector("#actorStatus");
   const actorPagination = document.querySelector("#actorPagination");
   const actorSearchInput = document.querySelector("#actorSearchInput");
 
-  if (!actorList) return;
+  if (!actorPage || !actorList) return;
+
+  const actorsApiUrl = actorPage.dataset.actorsApi;
 
   let currentPage = 1;
   const limit = 18;
@@ -16,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!actorStatus) return;
     actorStatus.textContent = message;
     actorStatus.className = `actor-status${state ? ` is-${state}` : ""}`;
+    actorStatus.hidden = message === "";
   };
 
   const createActorFallback = () => {
@@ -53,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const count = document.createElement("span");
       count.className = "actor-movie-count";
       count.textContent = `${actor.movie_count} phim`;
-      count.style.cssText = "display:flex; justify-content: center; align-items: center; font-size:12px; color:#aaa; margin-top:5px;";
       card.append(count);
     }
 
@@ -163,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setStatus("Đang tải danh sách diễn viên...", "loading");
 
     try {
-      const url = `${API_BASE}/actors.php?page=${currentPage}&limit=${limit}&q=${encodeURIComponent(searchQuery)}`;
+      const url = `${actorsApiUrl}?page=${currentPage}&limit=${limit}&q=${encodeURIComponent(searchQuery)}`;
       const response = await fetch(url, { headers: { Accept: "application/json" } });
       const payload = await response.json().catch(() => null);
 
