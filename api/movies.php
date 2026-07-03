@@ -54,31 +54,53 @@ try {
         $params['year'] = (int) $year;
     }
 
-    $query = apiStringParam('q');
+    $query = trim(apiStringParam('q'));
+    $searchOrderParams = [];
+
     if ($query !== '') {
         $where[] = '(
             m.title LIKE :q_title
             OR m.original_title LIKE :q_original_title
-            OR m.description LIKE :q_description
-            OR m.overview LIKE :q_overview
         )';
-        $searchPattern = '%' . $query . '%';
-        $params['q_title'] = $searchPattern;
-        $params['q_original_title'] = $searchPattern;
-        $params['q_description'] = $searchPattern;
-        $params['q_overview'] = $searchPattern;
+
+        $params['q_title'] = '%' . $query . '%';
+        $params['q_original_title'] = '%' . $query . '%';
+
+        $searchOrderParams = [
+            'q_exact_title' => $query,
+            'q_exact_original_title' => $query,
+            'q_prefix_title' => $query . '%',
+            'q_prefix_original_title' => $query . '%',
+        ];
     }
 
     $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
     $sort = strtolower(apiStringParam('sort'));
-    $orderSql = match ($sort) {
-        'popular' => 'ORDER BY m.popularity DESC, m.vote_count DESC, m.id DESC',
-        'top_rated' => 'ORDER BY m.vote_average DESC, m.vote_count DESC, m.id DESC',
-        'most_viewed' => 'ORDER BY m.views DESC, m.id DESC',
-        'newest', '' => 'ORDER BY m.release_date DESC, m.created_at DESC, m.id DESC',
-        default => null,
-    };
+    $searchMode = strtolower(apiStringParam('search_mode'));
+    $useSearchRelevanceOrder = $query !== '' && ($searchMode === 'suggest' || $sort === '');
+
+    if ($useSearchRelevanceOrder) {
+        $orderSql = 'ORDER BY
+            CASE
+                WHEN m.title = :q_exact_title THEN 0
+                WHEN m.original_title = :q_exact_original_title THEN 1
+                WHEN m.title LIKE :q_prefix_title THEN 2
+                WHEN m.original_title LIKE :q_prefix_original_title THEN 3
+                ELSE 4
+            END,
+            m.release_date DESC,
+            m.created_at DESC,
+            m.id DESC';
+    } else {
+        $orderSql = match ($sort) {
+            'popular' => 'ORDER BY m.popularity DESC, m.vote_count DESC, m.id DESC',
+            'top_rated' => 'ORDER BY m.vote_average DESC, m.vote_count DESC, m.id DESC',
+            'most_viewed' => 'ORDER BY m.views DESC, m.id DESC',
+            'newest', '' => 'ORDER BY m.release_date DESC, m.created_at DESC, m.id DESC',
+            default => null,
+        };
+    }
 
     if ($orderSql === null) {
         apiError('Sap xep khong hop le.', 400);
@@ -105,9 +127,14 @@ try {
          LIMIT :limit OFFSET :offset"
     );
 
-    foreach ($params as $key => $value) {
+    $statementParams = $useSearchRelevanceOrder
+        ? array_merge($params, $searchOrderParams)
+        : $params;
+
+    foreach ($statementParams as $key => $value) {
         $statement->bindValue(':' . $key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
     }
+    
     $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
     $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
     $statement->execute();
