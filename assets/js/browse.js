@@ -94,9 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
             a.className = `page-link ${i === currentPage ? 'active-page' : ''}`;
 
             if (i === currentPage) {
-                a.style.backgroundColor = "var(--color-page-button)";
+                a.style.backgroundColor = "#e50914";
                 a.style.color = "#fff";
-
+                a.style.borderColor = "#e50914";
                 a.style.fontWeight = "bold";
             }
 

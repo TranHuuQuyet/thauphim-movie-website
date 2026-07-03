@@ -67,17 +67,11 @@ $isCountryActive = str_contains($currentPath, app_url("pages/country.php"));
 <body<?= $bodyClass !== "" ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : "" ?>>
     <header class="site-header">
         <div class="header-inner">
-            <a class="brand" href="<?= htmlspecialchars(app_url('index.php#hero'), ENT_QUOTES, 'UTF-8') ?>"
-                aria-label="ThauPhim trang chủ">
-                <span class="brand-icon" aria-hidden="true">
-                    <img src="<?= htmlspecialchars(app_url('assets/images/favicon.png'), ENT_QUOTES, 'UTF-8') ?>"
-                        alt="">
-                </span>
-                <span class="brand-copy">
-                    <span class="brand-title">Thau<strong>Phim</strong></span>
-                    <span class="brand-tagline">Phim hay cả thau</span>
-                </span>
-            </a>
+            <?php
+            $brandClass = 'brand';
+            $brandHref = app_url('index.php#hero');
+            include __DIR__ . '/brand_lockup.php';
+            ?>
 
             <button class="menu-toggle" type="button" aria-label="Mở menu" aria-controls="primary-menu"
                 aria-expanded="false">

@@ -50,6 +50,33 @@ $latestMovies = $pdo->query('
     LIMIT 5
 ')->fetchAll();
 
+$topViewedMovies = $pdo->query('
+    SELECT id, title, views AS total
+    FROM movies
+    WHERE views > 0
+    ORDER BY views DESC, title ASC, id ASC
+    LIMIT 10
+')->fetchAll();
+
+$topFavoriteMovies = $pdo->query('
+    SELECT movies.id, movies.title, COUNT(favorites.id) AS total
+    FROM favorites
+    INNER JOIN movies ON movies.id = favorites.movie_id
+    GROUP BY movies.id, movies.title
+    ORDER BY total DESC, movies.title ASC, movies.id ASC
+    LIMIT 10
+')->fetchAll();
+
+$topCommentedMovies = $pdo->query("
+    SELECT movies.id, movies.title, COUNT(comments.id) AS total
+    FROM comments
+    INNER JOIN movies ON movies.id = comments.movie_id
+    WHERE comments.status = 'visible'
+    GROUP BY movies.id, movies.title
+    ORDER BY total DESC, movies.title ASC, movies.id ASC
+    LIMIT 10
+")->fetchAll();
+
 $moviesByType = $pdo->query('
     SELECT type AS label, COUNT(*) AS total
     FROM movies
@@ -74,6 +101,18 @@ $moviesByCountry = $pdo->query('
 ')->fetchAll();
 
 $chartData = [
+    'topViews' => [
+        'labels' => array_column($topViewedMovies, 'title'),
+        'values' => array_map('intval', array_column($topViewedMovies, 'total')),
+    ],
+    'topFavorites' => [
+        'labels' => array_column($topFavoriteMovies, 'title'),
+        'values' => array_map('intval', array_column($topFavoriteMovies, 'total')),
+    ],
+    'topComments' => [
+        'labels' => array_column($topCommentedMovies, 'title'),
+        'values' => array_map('intval', array_column($topCommentedMovies, 'total')),
+    ],
     'movieTypes' => [
         'labels' => array_column($moviesByType, 'label'),
         'values' => array_map('intval', array_column($moviesByType, 'total')),
@@ -190,8 +229,52 @@ include __DIR__ . '/layout_sidebar.php';
         </table>
     </section>
 
+    <section class="dashboard-charts dashboard-charts--rankings" aria-label="Top movie charts">
+        <article class="chart-card chart-card--views">
+            <div class="chart-card__header">
+                <div>
+                    <span>Audience activity</span>
+                    <h2>Top movies by views</h2>
+                </div>
+                <i class="fa-solid fa-eye" aria-hidden="true"></i>
+            </div>
+            <div class="chart-container chart-container--ranking">
+                <canvas id="topViewsChart"></canvas>
+                <p class="chart-empty-state" id="topViewsChartStatus" hidden></p>
+            </div>
+        </article>
+
+        <article class="chart-card chart-card--favorites">
+            <div class="chart-card__header">
+                <div>
+                    <span>Viewer interest</span>
+                    <h2>Top movies by favorites</h2>
+                </div>
+                <i class="fa-solid fa-heart" aria-hidden="true"></i>
+            </div>
+            <div class="chart-container chart-container--ranking">
+                <canvas id="topFavoritesChart"></canvas>
+                <p class="chart-empty-state" id="topFavoritesChartStatus" hidden></p>
+            </div>
+        </article>
+
+        <article class="chart-card chart-card--comments chart-card--wide">
+            <div class="chart-card__header">
+                <div>
+                    <span>Community discussion</span>
+                    <h2>Top movies by visible comments</h2>
+                </div>
+                <i class="fa-solid fa-comments" aria-hidden="true"></i>
+            </div>
+            <div class="chart-container chart-container--ranking">
+                <canvas id="topCommentsChart"></canvas>
+                <p class="chart-empty-state" id="topCommentsChartStatus" hidden></p>
+            </div>
+        </article>
+    </section>
+
     <section class="dashboard-charts" aria-label="Dashboard charts">
-        <article class="chart-card">
+        <article class="chart-card chart-card--types">
             <div class="chart-card__header">
                 <div>
                     <span>Content library</span>
@@ -204,7 +287,7 @@ include __DIR__ . '/layout_sidebar.php';
             </div>
         </article>
 
-        <article class="chart-card">
+        <article class="chart-card chart-card--memberships">
             <div class="chart-card__header">
                 <div>
                     <span>Audience</span>
@@ -217,7 +300,7 @@ include __DIR__ . '/layout_sidebar.php';
             </div>
         </article>
 
-        <article class="chart-card chart-card--wide">
+        <article class="chart-card chart-card--countries chart-card--wide">
             <div class="chart-card__header">
                 <div>
                     <span>Catalog coverage</span>
@@ -265,6 +348,29 @@ include __DIR__ . '/layout_sidebar.php';
         JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
     ) ?>;
 
+    const setChartStatus = (canvasId, statusId, message) => {
+        const canvas = document.getElementById(canvasId);
+        const status = document.getElementById(statusId);
+
+        if (canvas) {
+            canvas.hidden = true;
+        }
+
+        if (status) {
+            status.textContent = message;
+            status.hidden = false;
+        }
+    };
+
+    if (typeof Chart === 'undefined') {
+        [
+            ['topViewsChart', 'topViewsChartStatus'],
+            ['topFavoritesChart', 'topFavoritesChartStatus'],
+            ['topCommentsChart', 'topCommentsChartStatus'],
+        ].forEach(([canvasId, statusId]) => {
+            setChartStatus(canvasId, statusId, 'Chart.js could not be loaded. Please refresh the page.');
+        });
+    } else {
     Chart.defaults.color = '#667085';
     Chart.defaults.font.family = 'Arial, Helvetica, sans-serif';
     Chart.defaults.animation.duration = 700;
@@ -321,6 +427,100 @@ include __DIR__ . '/layout_sidebar.php';
             }
         }
     };
+
+    const createRankingChart = ({
+        canvasId,
+        statusId,
+        data,
+        label,
+        color,
+        unit
+    }) => {
+        if (!data.labels.length) {
+            setChartStatus(canvasId, statusId, `No ${unit} data available yet.`);
+            return;
+        }
+
+        new Chart(document.getElementById(canvasId), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label,
+                    data: data.values,
+                    backgroundColor: color,
+                    borderWidth: 0,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    maxBarThickness: 24
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: items => items[0]?.label || '',
+                            label: context => ` ${Number(context.raw).toLocaleString()} ${unit}`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            callback: value => Number(value).toLocaleString()
+                        },
+                        grid: { color: '#eef2f6' },
+                        border: { display: false }
+                    },
+                    y: {
+                        grid: { display: false },
+                        border: { display: false },
+                        ticks: {
+                            color: '#344054',
+                            font: { weight: '600' },
+                            callback(value) {
+                                const title = this.getLabelForValue(value);
+                                return title.length > 28 ? `${title.slice(0, 28)}...` : title;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    };
+
+    createRankingChart({
+        canvasId: 'topViewsChart',
+        statusId: 'topViewsChartStatus',
+        data: dashboardChartData.topViews,
+        label: 'Views',
+        color: '#2563eb',
+        unit: 'views'
+    });
+
+    createRankingChart({
+        canvasId: 'topFavoritesChart',
+        statusId: 'topFavoritesChartStatus',
+        data: dashboardChartData.topFavorites,
+        label: 'Favorites',
+        color: '#dc6803',
+        unit: 'favorites'
+    });
+
+    createRankingChart({
+        canvasId: 'topCommentsChart',
+        statusId: 'topCommentsChartStatus',
+        data: dashboardChartData.topComments,
+        label: 'Comments',
+        color: '#039855',
+        unit: 'comments'
+    });
 
     new Chart(document.getElementById('movieTypesChart'), {
         type: 'doughnut',
@@ -417,5 +617,6 @@ include __DIR__ . '/layout_sidebar.php';
             }
         }
     });
+    }
 </script>
 <?php include __DIR__ . '/layout_footer.php'; ?>

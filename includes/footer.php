@@ -2,12 +2,11 @@
     <div class="footer-container">
         <div class="footer-top">
             <div class="footer-brand">
-                <a class="footer-logo" href="/index.php#hero" aria-label="ThauPhim trang chủ">
-                    <img class="footer-img" src="/assets/images/favicon.png" alt="">
-                    <span class="footer-brand-title">Thau<strong>Phim</strong></span>
-                </a>
-
-                <p class="footer-tagline">Xem phim hay mỗi ngày.</p>
+                <?php
+                $brandClass = 'brand footer-brand-lockup';
+                $brandHref = app_url('index.php#hero');
+                include __DIR__ . '/brand_lockup.php';
+                ?>
 
                 <div class="footer-socials" aria-label="Theo dõi ThauPhim">
                     <a href="#footer" aria-label="Facebook" title="Facebook">
@@ -28,10 +27,10 @@
             <nav class="footer-links" aria-label="Điều hướng chân trang">
                 <div class="footer-col">
                     <h2>Khám phá</h2>
-                    <a href="/index.php#hero">Trang chủ</a>
-                    <a href="/index.php#single-movies">Phim lẻ</a>
-                    <a href="/index.php#series-movies">Phim bộ</a>
-                    <a href="/pages/genres.php">Thể loại</a>
+                    <a href="<?= htmlspecialchars(app_url('index.php#hero'), ENT_QUOTES, 'UTF-8') ?>">Trang chủ</a>
+                    <a href="<?= htmlspecialchars(app_url('index.php#single-movies'), ENT_QUOTES, 'UTF-8') ?>">Phim lẻ</a>
+                    <a href="<?= htmlspecialchars(app_url('index.php#series-movies'), ENT_QUOTES, 'UTF-8') ?>">Phim bộ</a>
+                    <a href="<?= htmlspecialchars(app_url('pages/genres.php'), ENT_QUOTES, 'UTF-8') ?>">Thể loại</a>
                 </div>
 
                 <div class="footer-col">
@@ -47,7 +46,7 @@
                     <a href="#footer">Đồ án Web</a>
                     <a href="#footer">PHP + MySQL</a>
                     <a href="#footer">HTML/CSS/JS</a>
-                    <a href="/index.php#hero">ThauPhim</a>
+                    <a href="<?= htmlspecialchars(app_url('index.php#hero'), ENT_QUOTES, 'UTF-8') ?>">ThauPhim</a>
                 </div>
             </nav>
         </div>

@@ -489,25 +489,6 @@ const setupHeader = () => {
   }
 };
 
-const applyStoredTheme = () => {
-  if (localStorage.getItem("theme") === "light") {
-    document.body.classList.add("light-mode");
-  }
-};
-
-const setupThemeToggle = () => {
-  const themeToggle = document.querySelector("#themeToggle");
-  if (!themeToggle) return;
-
-  themeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("light-mode");
-    localStorage.setItem(
-      "theme",
-      document.body.classList.contains("light-mode") ? "light" : "dark",
-    );
-  });
-};
-
 const setupHomeSearch = () => {
   document.querySelectorAll("[data-home-search]").forEach((form) => {
     form.addEventListener("submit", (event) => {
@@ -605,11 +586,8 @@ const setupPlaceholderButtons = () => {
   });
 };
 
-applyStoredTheme();
-
 document.addEventListener("DOMContentLoaded", () => {
   setupHeader();
-  setupThemeToggle();
   setupHomeSearch();
   setupPlaceholderButtons();
 
