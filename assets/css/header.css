@@ -26,6 +26,7 @@
   flex: 0 0 auto;
   gap: 12px;
   min-width: 156px;
+  text-decoration: none;
 }
 
 .brand-icon {
