@@ -623,7 +623,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sort: "popular",
       page: 1,
     },
-    limit: 14,
+    limit: 7,
     anchorId: "single-movies",
   });
   loadMovieGrid({
@@ -633,7 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sort: "popular",
       page: 1,
     },
-    limit: 14,
+    limit: 7,
     anchorId: "series-movies",
   });
 });

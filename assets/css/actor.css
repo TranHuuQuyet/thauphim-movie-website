@@ -19,6 +19,7 @@
   gap: 24px;
   margin-top: 30px;
 }
+
 .actor-card {
   overflow: hidden;
   border-radius: 16px;
@@ -30,6 +31,7 @@
 .actor-card:hover {
   transform: translateY(-8px);
 }
+
 .actor-card img {
   width: 100%;
   height: 260px;
@@ -56,6 +58,12 @@
   font-weight: 600;
   text-align: center;
   color: #fff;
+}
+
+.actor-moive-count {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Bổ sung trạng thái tải dữ liệu diễn viên */
@@ -109,8 +117,8 @@
 }
 
 .pagination-container .page-link.active-page {
-  border-color: var(--color-primary, #e50914);
-  background: var(--color-primary, #e50914);
+  /* border-color: var(--color-text, #e0e0e027); */
+  background: var(--color-page-button);
   color: #fff;
 }
 

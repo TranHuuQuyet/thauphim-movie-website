@@ -249,7 +249,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  const validatePasswordForm = (form) => {
+  const validatePasswordForm = (form, options = {}) => {
+    const shouldFocusInvalid = options.focusInvalid ?? true;
     const passwordInput = form.querySelector("[data-password-input]");
     const confirmInput = form.querySelector("[data-confirm-input]");
     const password = passwordInput?.value || "";
@@ -278,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setFieldError(confirmField, "");
     }
 
-    if (!valid) {
+    if (!valid && shouldFocusInvalid) {
       (passwordInput && !password ? passwordInput : confirmInput)?.focus();
     }
 
@@ -337,11 +338,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     passwordInput?.addEventListener("input", () => {
       updatePasswordStrength(form);
-      validatePasswordForm(form);
+      validatePasswordForm(form, { focusInvalid: false });
     });
 
     confirmInput?.addEventListener("input", () => {
-      validatePasswordForm(form);
+      validatePasswordForm(form, { focusInvalid: false });
     });
 
     form.addEventListener("submit", (event) => {

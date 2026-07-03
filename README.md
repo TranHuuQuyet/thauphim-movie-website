@@ -1,99 +1,195 @@
-# ThauPhim - Online Movie Streaming Website
+# ThauPhim
 
-ThauPhim la website xem phim truc tuyen cho do an Lap trinh Web. Du an dung PHP, MySQL/MariaDB, HTML, CSS va JavaScript, gom giao dien nguoi dung, API JSON noi bo, trang quan tri va cong cu import metadata tu TMDB.
+[![PHP 8+](https://img.shields.io/badge/PHP-8.0%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
+[![MySQL / MariaDB](https://img.shields.io/badge/Database-MySQL%20%2F%20MariaDB-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](#license)
 
-## 1. Luong du lieu
+## Project Overview
+
+ThauPhim is a server-rendered movie website built with plain PHP, MySQL/MariaDB, HTML, CSS, and JavaScript. It includes a public catalog, YouTube-based episode playback, member interactions, an administration panel, JSON endpoints used by the frontend, password-reset email support, and a CLI importer for TMDB metadata.
+
+TMDB is used only by the CLI importer. Imported metadata is stored in MySQL and served by the PHP application. Playback URLs are managed separately in `episodes.youtube_url`; the importer does not provide or create playable episodes.
+
+## Features
+
+### Public catalog
+
+- Homepage sections for featured, most-viewed, recent, movie, and series content.
+- Search, pagination, and filtering by type, genre, country, and release year.
+- Sorting by newest, popularity, rating, and view count.
+- Movie detail pages with metadata, cast, genres, published episodes, ratings, comments, and related titles.
+- Country, genre, actor, movie, and series listing pages.
+- Responsive layout and a persisted light/dark theme preference.
+- Published upcoming-release notifications in the site header.
+
+### Accounts and playback
+
+- Registration, login, logout, session authentication, and account locking.
+- One-time password-reset tokens with a configurable expiry and SMTP or PHP `mail()` delivery.
+- Free and premium memberships; premium titles require an active premium account.
+- YouTube iframe playback with episode navigation.
+- Watch progress and history for signed-in users.
+- Favorites, comments, and one rating from 1 to 5 per user and movie.
+- Playback issue reports stored as hidden `[Error]` comments for admin review.
+- View counting when playback starts, limited to one view per movie in each PHP session.
+
+### Administration
+
+- Role-protected dashboard with catalog, user, episode, view, error, and chart summaries.
+- Create, edit, list, and delete movies, episodes, genres, countries, and actors.
+- Normalize supported YouTube watch, short, live, and embed URLs before saving episodes.
+- Publish/unpublish episodes.
+- Manage user membership and account status.
+- Hide or delete comments and inspect/delete ratings.
+- Create, edit, publish, filter, and delete upcoming release schedules.
+- Review playback reports and mark them as open or fixed.
+- CSRF protection on admin mutation forms.
+
+### Data tooling
+
+- Destructive full schema for a fresh database.
+- Seed script for the default administrator.
+- Idempotent upgrade scripts for password reset and upcoming-notification support on older databases.
+- CLI importer for up to 100 TMDB titles: 50 movies and 50 TV series, including countries, genres, cast, and relationships.
+- CLI diagnostics for password-reset mail configuration.
+
+## Tech Stack
+
+| Area | Technology |
+| --- | --- |
+| Backend | PHP 8.0+, PDO, PHP sessions |
+| Database | MySQL or MariaDB, `utf8mb4` |
+| Frontend | HTML5, CSS3, vanilla JavaScript |
+| Dependency management | Composer |
+| Email | PHPMailer `^7.1` for SMTP, with optional PHP `mail()` fallback |
+| Metadata | TMDB API v3 |
+| Playback | YouTube iframe and iframe Player API |
+| Browser libraries | Swiper 12, Chart.js 4.5.1, Toastify, Font Awesome 6.5.2 |
+| Web server | Apache/XAMPP with the project as the web root; the PHP development server also works locally |
+
+Frontend libraries are loaded from CDNs. There is no JavaScript package manager or asset build step.
+
+## Project Architecture
 
 ```text
-TMDB API
--> tools/import_tmdb.php
--> MySQL database
--> PHP API trong /api
--> Website user + Admin
+Browser
+  ├── server-rendered PHP pages
+  └── vanilla JavaScript ──> /api/*.php
+                                  │
+PHP sessions ──> authentication   │
+                                  ▼
+                           PDO / MySQL
+                                  ▲
+TMDB API ──> tools/import_tmdb.php│
+YouTube  ──> episode playback
+SMTP     <── password-reset mail
 ```
 
-TMDB chi dung de import metadata ban dau. Sau khi import, MySQL la nguon du lieu chinh. Frontend khong goi TMDB truc tiep va khong expose `TMDB_API_KEY`.
+### Folder Structure
 
-Video xem phim/tap phim duoc luu trong `episodes.youtube_url`. Admin nhap URL YouTube dang `watch`, `youtu.be`, `shorts/live` hoac `embed`; form admin se chuan hoa ve link embed.
+The following structure was generated from the current repository. Composer internals and individual asset files are condensed for readability.
 
-## 2. Cong nghe
+```text
+thauphim-movie-website/
+├── admin/
+│   ├── actors/             # Actor CRUD
+│   ├── comments/           # Comment moderation
+│   ├── countries/          # Country CRUD
+│   ├── episodes/           # Episode CRUD and publishing
+│   ├── genres/             # Genre CRUD
+│   ├── movies/             # Movie CRUD
+│   ├── ratings/            # Rating management
+│   ├── schedules/          # Upcoming-release schedules
+│   ├── users/              # Membership and status management
+│   ├── watch-errors/       # Playback report workflow
+│   └── dashboard.php
+├── api/
+│   ├── _helpers.php
+│   ├── actors.php
+│   ├── comments.php
+│   ├── countries.php
+│   ├── episodes.php
+│   ├── favorites.php
+│   ├── genres.php
+│   ├── movie-detail.php
+│   ├── movies-by-country.php
+│   ├── movies.php
+│   ├── notifications.php
+│   ├── ratings.php
+│   ├── record-view.php
+│   └── update-watch-history.php
+├── assets/
+│   ├── css/
+│   ├── images/
+│   └── js/
+├── database/
+│   ├── notification_upgrade.sql
+│   ├── password_reset_upgrade.sql
+│   ├── schema.sql
+│   └── seed.sql
+├── deploy/
+│   ├── DEPLOYMENT.md
+│   ├── apache-vhost.example.conf
+│   └── htaccess.example
+├── includes/               # Configuration, database, auth, mail, and shared UI
+├── pages/                  # Public catalog, account, detail, and watch pages
+├── tmp/                    # Password-reset HTML fixtures
+├── tools/
+│   ├── diagnose_password_reset_mail.php
+│   └── import_tmdb.php
+├── vendor/                 # Composer dependencies; do not edit directly
+├── composer.json
+├── composer.lock
+├── forgot-password.php
+├── index.php
+├── login.php
+├── logout.php
+├── README.md
+├── register.php
+├── reset-password.php
+└── UPCOMING_MOVIES.md      # Detailed upcoming-notification notes
+```
 
-- PHP 8+
-- MySQL/MariaDB
-- PDO prepared statements
-- Session-based authentication
-- HTML5, CSS3, JavaScript ES6
-- TMDB API de import metadata
-- YouTube iframe de phat video
-- Font Awesome icons
+## Prerequisites
 
-## 3. Trang thai hien tai
+- PHP 8.0 or newer.
+- PHP extensions:
+  - `pdo_mysql` and `json` are required.
+  - `openssl` is required for encrypted SMTP connections.
+  - `iconv` and `mbstring` are recommended; the application has limited fallbacks where possible.
+- MySQL or MariaDB.
+- Apache with PHP support, or PHP's built-in development server.
+- Composer 2 to install PHPMailer.
+- A TMDB API key only if importing metadata.
+- Outbound access to TMDB, YouTube, image hosts, CDNs, and the configured mail server for the corresponding features.
 
-| Hang muc | Trang thai | Ghi chu |
-| --- | --- | --- |
-| Schema MySQL | Done | `database/schema.sql` |
-| Seed admin | Done | `database/seed.sql` tao admin mac dinh |
-| Config mau | Done | `includes/config.example.php` |
-| Import TMDB | Done | `tools/import_tmdb.php` import metadata phim le/phim bo |
-| API doc MySQL | Done | Cac endpoint trong `/api` |
-| Trang chu/danh sach/loc | Done | Doc du lieu tu API/MySQL |
-| Trang chi tiet phim | Done | Hien genres, actors, episodes, favorite/comment/rating |
-| Trang xem phim | Done | YouTube iframe, chuyen tap, luu tien do xem |
-| Dang ky/dang nhap/dang xuat | Done | Dung bang `users`, `password_hash`, session |
-| Quen mat khau | Done | Dung reset token gui qua email, het han sau 60 phut |
-| Trang tai khoan | Done | Tong quan, phim yeu thich, lich su xem |
-| Admin dashboard | Done | Guard bang role admin |
-| Admin CRUD movies/episodes | Done | Co nhap/publish YouTube URL |
-| Admin CRUD genres/countries/actors | Done | Co create/edit/delete/list |
-| Admin users/comments/ratings | Done | Quan ly membership/status, an/xoa comment, xem/xoa rating |
-| Deploy docs | Done | `deploy/DEPLOYMENT.md`, `.htaccess` va vhost mau |
+The local repository has been checked with PHP 8.2.12 and MariaDB client 10.4.32. No Docker, Docker Compose, Makefile, Node.js manifest, or test runner is included.
 
-## 4. Chuc nang chinh
+## Installation
 
-### Website user
+```bash
+git clone https://github.com/TranHuuQuyet/thauphim-movie-website.git
+cd thauphim-movie-website
+composer install
+```
 
-- Trang chu voi banner, danh sach phim moi, phim le, phim bo.
-- Duyet phim, tim kiem, loc theo the loai/quoc gia/nam/loai phim.
-- Trang quoc gia va trang dien vien.
-- Trang chi tiet phim voi poster, backdrop, metadata, dien vien, the loai, tap phim, phim lien quan.
-- Trang xem phim bang YouTube iframe.
-- Dang ky, dang nhap, dang xuat.
-- Tai khoan nguoi dung: thong ke, phim yeu thich, lich su xem.
-- Yeu thich phim.
-- Binh luan phim.
-- Danh gia 1-5 sao.
-- Luu tien do xem theo episode.
-- Kiem tra phim premium/free theo membership.
+Create the runtime configuration from the provided template:
 
-### Admin
+```bash
+cp includes/config.example.php includes/config.php
+```
 
-- Dashboard tong quan.
-- CRUD movies.
-- CRUD episodes va YouTube URL.
-- CRUD genres.
-- CRUD countries.
-- CRUD actors.
-- Quan ly users: membership va status.
-- Quan ly comments: an hoac xoa.
-- Quan ly ratings: xem/xoa.
-
-## 5. Cai dat local voi XAMPP
-
-### 5.1 Chuan bi config
-
-Copy file cau hinh mau:
+PowerShell equivalent:
 
 ```powershell
 Copy-Item includes\config.example.php includes\config.php
 ```
 
-Cap nhat `includes/config.php`:
+Edit `includes/config.php` and set at least:
 
 ```php
-define("APP_BASE_PATH", "/");
-define("APP_DEBUG", true);
-
-define("TMDB_API_KEY", "your-tmdb-api-key");
+define("APP_URL", "http://localhost:8000/");
+define("TMDB_API_KEY", "replace-with-your-tmdb-api-key");
 
 define("DB_HOST", "localhost");
 define("DB_PORT", 3306);
@@ -101,92 +197,115 @@ define("DB_NAME", "thauphim");
 define("DB_USER", "root");
 define("DB_PASS", "");
 define("DB_CHARSET", "utf8mb4");
-
-define("APP_URL", "https://fnbstore.store/");
-define("MAIL_DRIVER", "smtp");
-define("MAIL_FROM", "thauphim@fnbstore.store");
-define("MAIL_FROM_NAME", "ThauPhim");
-define("SMTP_HOST", "smtp.fnbstore.store");
-define("SMTP_PORT", 465);
-define("SMTP_ENCRYPTION", "ssl");
-define("SMTP_USERNAME", "thauphim@fnbstore.store");
-define("SMTP_PASSWORD", "replace-with-smtp-password");
 ```
 
-Không commit mật khẩu SMTP thật. Đặt biến môi trường `SMTP_PASSWORD` hoặc tạo file local `includes/config.local.php`:
+`APP_BASE_PATH` is detected by the example configuration and can be defined explicitly. For reliable operation, serve the application at the web root: several public templates and scripts still use root-relative `/assets`, `/api`, and `/pages` URLs.
+
+Do not commit real database or mail credentials. The repository ignores `includes/config.local.php`, but `includes/config.php` itself is tracked.
+
+## Environment Variables
+
+There is no `.env` loader and no `.env.example`. Creating a `.env` file alone has no effect.
+
+Database and TMDB settings are PHP constants configured in `includes/config.php`. The mail settings below can be supplied through actual process/server environment variables because `includes/config.example.php` reads them with `getenv()`:
+
+| Variable | Default in example config | Purpose |
+| --- | --- | --- |
+| `MAIL_DRIVER` | `smtp` | `smtp` or `mail` |
+| `MAIL_FROM` | Project mailbox placeholder | Sender address |
+| `MAIL_FROM_NAME` | `ThauPhim` | Sender display name |
+| `SMTP_HOST` | Project SMTP placeholder | SMTP server |
+| `SMTP_PORT` | `465` | SMTP port |
+| `SMTP_ENCRYPTION` | `ssl` | PHPMailer encryption value, such as `ssl`, `tls`, or empty |
+| `SMTP_USERNAME` | Project mailbox placeholder | SMTP username |
+| `SMTP_PASSWORD` | Placeholder | SMTP password |
+| `PASSWORD_RESET_TTL_MINUTES` | `60` | Reset-token lifetime; application minimum is 5 minutes |
+
+For local development, a safe way to provide only the SMTP password is:
 
 ```php
 <?php
+// includes/config.local.php
 define("SMTP_PASSWORD", "your-real-smtp-password");
 ```
 
-SMTP cần PHPMailer qua `vendor/autoload.php`:
+## Database Setup and Migration
 
-```powershell
-composer install
+### Fresh database
+
+> **Warning:** `database/schema.sql` drops and recreates every application table. Do not run it against a database containing data you need to keep.
+
+The schema creates and selects a database named `thauphim`. From the project root:
+
+```bash
+mysql -u root -p --default-character-set=utf8mb4 < database/schema.sql
+mysql -u root -p --default-character-set=utf8mb4 < database/seed.sql
 ```
 
-Kiem tra cau hinh email reset ma khong gui email:
+PowerShell with the XAMPP MySQL client:
 
 ```powershell
-D:\Xampp\php\php.exe tools\diagnose_password_reset_mail.php user@example.com
+& "D:\Xampp\mysql\bin\mysql.exe" -u root -p --default-character-set=utf8mb4 -e "SOURCE database/schema.sql; SOURCE database/seed.sql;"
 ```
 
-Neu chay trong subfolder cua Apache, cap nhat `APP_BASE_PATH` theo duong dan public cua project.
+Keep `DB_NAME` set to `thauphim` unless the SQL files and runtime configuration are adjusted together.
 
-### 5.2 Tao database va seed admin
+### Existing database upgrades
 
-```powershell
-D:\Xampp\mysql\bin\mysql.exe -uroot -P3306 --default-character-set=utf8mb4 -e "SOURCE D:/Xampp/htdocs/thauphim-movie-website/database/schema.sql; SOURCE D:/Xampp/htdocs/thauphim-movie-website/database/seed.sql;"
+There is no migration framework or migration history table. Apply only the upgrade required by an older installation:
+
+```bash
+mysql -u root -p thauphim < database/password_reset_upgrade.sql
+mysql -u root -p thauphim < database/notification_upgrade.sql
 ```
 
-### 5.3 Import metadata TMDB
+- `password_reset_upgrade.sql` creates `password_resets` if it is missing.
+- `notification_upgrade.sql` adds `schedules.show_time` if needed and creates `notification_reads`.
+- A database created from the current `schema.sql` already contains both features.
 
-```powershell
-D:\Xampp\php\php.exe tools\import_tmdb.php
+### Optional TMDB import
+
+Set `TMDB_API_KEY` first, then run:
+
+```bash
+php tools/import_tmdb.php
 ```
 
-Script import se:
+The importer:
 
-- Goi cac endpoint TMDB popular/top rated/now playing/upcoming/trending cho movie va tv.
-- Luu movie/series vao MySQL.
-- Luu genres, countries, actors va bang lien ket.
-- Chong trung bang unique key `tmdb_id + tmdb_type`.
-- Khong tao episode va khong tu gan YouTube URL.
-- Dung som neu database da co du 100 phim/phim bo.
+- Runs only from the CLI.
+- Stops when the database already contains the target total of 100 TMDB imports.
+- Targets 50 movies and 50 TV series.
+- Upserts movie metadata, countries, genres, actors, and relationships.
+- Uses `(tmdb_id, tmdb_type)` to prevent duplicate imports.
+- Does not create episodes or YouTube playback URLs.
 
-### 5.4 Mo website
+## Running the Project
 
-Neu project nam tai:
+### XAMPP / Apache
+
+Start Apache and MySQL, then configure a virtual host whose `DocumentRoot` is the repository root. Adapt [deploy/apache-vhost.example.conf](deploy/apache-vhost.example.conf) and map its `ServerName` in the local hosts file. With a host such as `thauphim.local`, open:
 
 ```text
-D:\Xampp\htdocs\thauphim-movie-website
+http://thauphim.local/
+http://thauphim.local/admin/dashboard.php
 ```
 
-Co the mo:
+Serving the project only as `http://localhost/thauphim-movie-website/` is not fully supported because some frontend URLs are root-relative.
 
-```text
-http://localhost/thauphim-movie-website/
+### PHP development server
+
+From the project root:
+
+```bash
+php -S 127.0.0.1:8000
 ```
 
-Hoac cau hinh virtual host theo `deploy/apache-vhost.example.conf`.
+Then open `http://127.0.0.1:8000/`. The configured MySQL/MariaDB service must already be running.
 
-## 6. Tai khoan demo
+## API Documentation
 
-```text
-Admin:
-Username: admin
-Email: admin@thauphim.local
-Password: admin123
-```
-
-Nen doi mat khau admin khi deploy that.
-
-## 7. API noi bo
-
-Tat ca API tra JSON.
-
-Thanh cong:
+The API is internal, session-aware, and not versioned. Most endpoints return:
 
 ```json
 {
@@ -195,263 +314,159 @@ Thanh cong:
   "meta": {
     "page": 1,
     "limit": 20,
-    "total": 100
+    "total": 100,
+    "total_pages": 5
   }
 }
 ```
 
-Loi:
+Errors use:
 
 ```json
 {
   "success": false,
-  "message": "Thong bao loi"
+  "message": "Error description"
 }
 ```
 
-### Endpoint danh sach phim va metadata
+`meta` is included only by paginated endpoints. `update-watch-history.php` is an older endpoint and returns a flat `success`/`message` response.
 
-| Endpoint | Method | Chuc nang |
-| --- | --- | --- |
-| `/api/movies.php` | GET | Danh sach phim, tim kiem, loc, sap xep, phan trang |
-| `/api/movie-detail.php?id=1` | GET | Chi tiet phim, genres, actors, episodes |
-| `/api/genres.php` | GET | Danh sach the loai |
-| `/api/countries.php` | GET | Danh sach quoc gia |
-| `/api/actors.php` | GET | Danh sach dien vien, co phan trang |
-| `/api/episodes.php?movie_id=1` | GET | Danh sach tap phim da publish |
-| `/api/movies-by-country.php?code=US` | GET | Phim theo ma quoc gia |
+### Catalog endpoints
 
-Query ho tro cho `/api/movies.php`:
+| Method | Endpoint | Parameters | Authentication |
+| --- | --- | --- | --- |
+| `GET` | `/api/movies.php` | `page`, `limit`, `type`, `genre_id`, `country`, `year`, `q`, `sort` | Public |
+| `GET` | `/api/movie-detail.php` | `id` | Public |
+| `GET` | `/api/genres.php` | `type`, `hide_empty` | Public |
+| `GET` | `/api/countries.php` | `type`, `hide_empty` | Public |
+| `GET` | `/api/actors.php` | `page`, `limit`, `q` | Public |
+| `GET` | `/api/episodes.php` | `movie_id` | Public |
+| `GET` | `/api/movies-by-country.php` | `code`, `page`, `limit`, `type` | Public |
 
-```text
-type=movie|series
-genre_id=1
-country=US
-year=2026
-q=spider
-sort=newest|popular|top_rated|most_viewed
-limit=20
-page=1
-```
+`type` accepts `movie`, `series`, or the `tv` alias. `country` on `/api/movies.php` accepts a country ID or two-letter code. `sort` accepts `newest`, `popular`, `top_rated`, or `most_viewed`. Page size is limited to 50.
 
-### Endpoint tuong tac user
+Only published episodes are returned by the episode and movie-detail APIs.
 
-| Endpoint | Method | Chuc nang |
-| --- | --- | --- |
-| `/api/favorites.php?movie_id=1` | GET | Lay trang thai yeu thich cua user hien tai |
-| `/api/favorites.php` | POST | Toggle yeu thich phim |
-| `/api/comments.php?movie_id=1` | GET | Lay comment visible cua phim |
-| `/api/comments.php` | POST | Them comment, can dang nhap |
-| `/api/comments.php` | DELETE | Xoa comment cua chinh user hoac admin |
-| `/api/ratings.php?movie_id=1` | GET | Lay diem trung binh va diem cua user hien tai |
-| `/api/ratings.php` | POST | Tao/cap nhat danh gia 1-5 sao |
-| `/api/update-watch-history.php` | POST | Luu tien do xem episode |
+### Interaction endpoints
 
-Payload mau:
+| Method | Endpoint | JSON body / query | Authentication |
+| --- | --- | --- | --- |
+| `GET` | `/api/favorites.php?movie_id=1` | Query parameter | Required |
+| `POST` | `/api/favorites.php` | `{"movie_id": 1}` | Required |
+| `GET` | `/api/comments.php?movie_id=1` | Query parameter | Public |
+| `POST` | `/api/comments.php` | `{"movie_id": 1, "content": "..."}` | Required |
+| `DELETE` | `/api/comments.php` | `{"comment_id": 1}` | Owner or admin |
+| `GET` | `/api/ratings.php?movie_id=1` | Query parameter | Public |
+| `POST` | `/api/ratings.php` | `{"movie_id": 1, "rating": 5}` | Required |
+| `POST` | `/api/notifications.php` | `{"schedule_ids": [1, 2]}` | Required |
+| `POST` | `/api/record-view.php` | `{"movie_id": 1, "episode_id": 2}` | Guest or authorized member |
+| `POST` | `/api/update-watch-history.php` | `{"movie_id": 1, "episode_id": 2, "progress_seconds": 120}` | Required |
 
-```json
-{
-  "movie_id": 1,
-  "episode_id": 2,
-  "progress_seconds": 120
-}
-```
+The view endpoint validates that the episode is published and playable, enforces premium access, and returns `data.counted`. It increments a movie only once per PHP session.
 
-## 8. Database
+## Screenshots and Demo
 
-Bang chinh:
+No verified live demo URL or application screenshots are currently included in the repository.
 
-- `users`: tai khoan, role, membership, status.
-- `password_resets`: token dat lai mat khau, het han va dung mot lan.
-- `movies`: metadata phim, TMDB id/type, poster/backdrop, type movie/series, rating, premium.
-- `episodes`: tap phim, YouTube URL, publish state.
-- `genres`: the loai.
-- `countries`: quoc gia.
-- `actors`: dien vien.
-- `movie_genres`: lien ket phim-the loai.
-- `movie_actors`: lien ket phim-dien vien.
-- `schedules`: lich/thong bao phim sap chieu.
-- `favorites`: phim yeu thich.
-- `watch_history`: lich su va tien do xem.
-- `comments`: binh luan.
-- `ratings`: danh gia 1-5 sao.
+| View | Status |
+| --- | --- |
+| Homepage | Screenshot placeholder |
+| Movie detail and player | Screenshot placeholder |
+| Admin dashboard | Screenshot placeholder |
 
-Ghi chu quan trong:
+<!-- Add project screenshots under assets/images/ and replace the placeholders above. -->
 
-- `movies.tmdb_id + movies.tmdb_type` la unique key chong import trung.
-- `movies.type` dung cho website: `movie` hoac `series`.
-- `movies.tmdb_type` dung theo TMDB: `movie` hoac `tv`.
-- `episodes.youtube_url` co the rong khi moi import.
-- Chi episode co `is_published = 1` moi nen hien cho user qua API.
-- Moi user chi co mot rating cho moi phim.
-- Moi user chi co mot record watch history cho moi episode.
+The current database relationship diagram is available here:
 
-## 9. Cau truc thu muc
+![ThauPhim database diagram](assets/images/database-diagram.png)
 
-```text
-thauphim-movie-website/
-|-- admin/
-|   |-- dashboard.php
-|   |-- movies/
-|   |-- episodes/
-|   |-- genres/
-|   |-- countries/
-|   |-- actors/
-|   |-- users/
-|   |-- comments/
-|   |-- ratings/
-|
-|-- api/
-|   |-- _helpers.php
-|   |-- movies.php
-|   |-- movie-detail.php
-|   |-- genres.php
-|   |-- countries.php
-|   |-- actors.php
-|   |-- episodes.php
-|   |-- movies-by-country.php
-|   |-- favorites.php
-|   |-- comments.php
-|   |-- ratings.php
-|   |-- update-watch-history.php
-|
-|-- assets/
-|   |-- css/
-|   |-- js/
-|   |-- images/
-|
-|-- database/
-|   |-- schema.sql
-|   |-- seed.sql
-|
-|-- deploy/
-|   |-- DEPLOYMENT.md
-|   |-- htaccess.example
-|   |-- apache-vhost.example.conf
-|
-|-- includes/
-|   |-- config.php
-|   |-- config.example.php
-|   |-- db.php
-|   |-- auth.php
-|   |-- header.php
-|   |-- footer.php
-|   |-- functions.php
-|
-|-- pages/
-|   |-- movie-detail.php
-|   |-- watch.php
-|   |-- account.php
-|   |-- country.php
-|   |-- actor.php
-|
-|-- tools/
-|   |-- import_tmdb.php
-|
-|-- index.php
-|-- login.php
-|-- register.php
-|-- logout.php
-|-- README.md
-```
+## Default Account
 
-## 10. Kiem tra nhanh
+`database/seed.sql` creates one administrator:
 
-### Database/import
+| Field | Value |
+| --- | --- |
+| Username | `admin` |
+| Email | `admin@thauphim.local` |
+| Password | `admin123` |
+| Role | `admin` |
+| Membership | `premium` |
+| Status | `active` |
 
-```sql
-SELECT COUNT(*) FROM movies;
-SELECT type, COUNT(*) FROM movies GROUP BY type;
-SELECT COUNT(*) FROM genres;
-SELECT COUNT(*) FROM actors;
-SELECT COUNT(*) FROM movie_genres;
-SELECT COUNT(*) FROM movie_actors;
-SELECT tmdb_id, tmdb_type, COUNT(*)
-FROM movies
-GROUP BY tmdb_id, tmdb_type
-HAVING COUNT(*) > 1;
-```
+Change this password immediately outside local development. The seed is intended for a fresh database and is not an idempotent account migration.
 
-Ket qua mong muon sau import mac dinh:
+## Scripts and Tooling
 
-```text
-movies: 100
-movie: gan 50
-series: gan 50
-duplicate tmdb_id + tmdb_type: 0
-episodes: co the rong neu admin chua tao
-```
+| Command | Purpose |
+| --- | --- |
+| `composer install` | Install PHPMailer and generate Composer autoload files |
+| `composer install --no-dev --optimize-autoloader` | Install production dependencies |
+| `php tools/import_tmdb.php` | Import TMDB metadata |
+| `php tools/diagnose_password_reset_mail.php user@example.com` | Inspect mail and user configuration without sending |
+| `php tools/diagnose_password_reset_mail.php user@example.com --send` | Create a reset request and send a test email |
+| `php tools/diagnose_password_reset_mail.php user@example.com --send --show-url` | Send and print the generated reset URL; use only in a trusted environment |
 
-### API
+There is no `package.json`, so there are no npm, Yarn, or pnpm scripts. CSS and JavaScript are served directly without compilation.
 
-- `/api/movies.php?type=movie`
-- `/api/movies.php?type=series`
-- `/api/movies.php?q=test`
-- `/api/movies.php?sort=popular`
-- `/api/movie-detail.php?id=1`
-- `/api/episodes.php?movie_id=1`
-- `/api/genres.php`
-- `/api/countries.php`
-- `/api/actors.php?limit=5`
-- `/api/movies-by-country.php?code=US`
+## Deployment
 
-### User/admin
+See [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md) for the repository's deployment checklist and [deploy/apache-vhost.example.conf](deploy/apache-vhost.example.conf) for an Apache virtual-host example.
 
-- Dang ky user moi.
-- Dang nhap/dang xuat.
-- Admin dang nhap bang tai khoan seed.
-- Admin tao movie.
-- Admin tao episode voi YouTube URL va tick publish.
-- Trang chi tiet hien episode da publish.
-- Trang xem phim phat iframe YouTube.
-- User them yeu thich, binh luan, danh gia.
-- User xem lai tai khoan, favorites va history.
+Production checklist:
 
-## 11. Bao mat
+1. Use PHP 8.0+ with `pdo_mysql` and HTTPS.
+2. Create a dedicated database and least-privilege database user.
+3. Run the fresh schema and seed only on a new database, or apply the relevant upgrade SQL to an existing database.
+4. Configure `APP_URL`, base path, database credentials, TMDB key, and mail settings.
+5. Run `composer install --no-dev --optimize-autoloader`.
+6. Configure the Apache document root and optionally adapt `deploy/htaccess.example`.
+7. Add at least one published episode with a valid YouTube URL.
+8. Test authentication, password reset, public APIs, playback, and `/admin/dashboard.php`.
+9. Change or remove the seeded administrator password.
+10. Disable debug output and prevent directory listing.
 
-- Mat khau hash bang `password_hash()`.
-- Dang nhap kiem tra bang `password_verify()`.
-- Quen mat khau dung reset token hash, het han sau 60 phut va chi dung mot lan.
-- Truy van DB dung PDO prepared statements.
-- Validate input tu form va query API.
-- Escape output bang `htmlspecialchars()`.
-- Kiem tra role admin truoc khi vao `/admin`.
-- Kiem tra user locked truoc khi cho dang nhap.
-- Kiem tra membership khi xem phim premium.
-- Chi cho user dang nhap favorite/comment/rating/history.
-- Validate YouTube URL truoc khi luu episode.
-- Khong dua `TMDB_API_KEY` vao JavaScript frontend.
+The example `.htaccess` sets basic response headers and disables directory indexes. It does not provide routing rules because the application uses direct `.php` paths.
 
-## 12. Deploy
+## Known Limitations
 
-Xem chi tiet trong:
+- There is no automated test suite, CI configuration, migration runner, Docker setup, or frontend build pipeline.
+- `database/schema.sql` is destructive and the upgrade SQL files are managed manually.
+- Runtime configuration is PHP-based; there is no general `.env` loader. Database and TMDB values are not read from environment variables by the example config.
+- Subdirectory deployment is inconsistent because several templates and scripts use root-relative asset, page, and API URLs.
+- The homepage hero content and its linked movie ID are hard-coded.
+- Some fallback image references (`assets/images/avatar-default.png` and `assets/images/default.jpg`) do not exist in the repository.
+- TMDB import requires `allow_url_fopen` and outbound HTTPS; it imports metadata only.
+- Playback depends on manually managed YouTube URLs and YouTube iframe availability.
+- External browser libraries and several images are loaded from third-party CDNs/services.
+- Watch history is available only to signed-in users. View counts are session-based, not unique-user analytics.
+- Password-reset delivery depends on a correctly configured SMTP server or PHP `mail()`.
+- The JSON API is internal, unversioned, session-authenticated, and has no documented rate limiting.
+- Application screenshots and a verified live demo are not included.
 
-```text
-deploy/DEPLOYMENT.md
-```
+## Future Improvements
 
-Checklist tom tat:
+- Add automated unit, integration, and browser tests with CI.
+- Introduce ordered, reversible database migrations.
+- Move all secrets and environment-specific settings to a consistent environment configuration layer.
+- Replace the hard-coded homepage hero with admin-managed featured content.
+- Add API versioning, CSRF policy documentation for JSON mutations, and rate limiting.
+- Add first-party analytics if unique viewers or time-based reporting is required.
+- Bundle or self-host critical frontend dependencies for deployments that cannot rely on CDNs.
 
-- Tao database va user MySQL tren hosting.
-- Copy `includes/config.example.php` thanh `includes/config.php`.
-- Cap nhat `APP_BASE_PATH`, `APP_URL`, database credentials, `TMDB_API_KEY` va SMTP credentials.
-- Import `database/schema.sql`.
-- Import `database/seed.sql`.
-- Neu database da ton tai va chi can nang cap chuong thong bao lich chieu, import `database/notification_upgrade.sql` trong dung database dang duoc cau hinh.
-- Neu database da ton tai va can bo sung quen mat khau, import `database/password_reset_upgrade.sql` trong dung database dang duoc cau hinh.
-- Import data TMDB bang CLI neu hosting cho phep, hoac import local roi export SQL data.
-- Cau hinh web root/vhost/.htaccess theo moi truong.
-- Kiem tra API, trang user va trang admin.
-- Doi mat khau admin mac dinh.
+## Contributors
 
-## 13. San pham ban giao
+Git history currently contains contributions under these normalized author names:
 
-- Source code website.
-- Database schema va seed.
-- Script import TMDB.
-- API PHP trong `/api`.
-- Trang admin.
-- Huong dan deploy.
-- README.
-- Tai khoan demo admin.
-- Anh chup man hinh va bao cao do an neu can nop kem.
+- Tran Huu Quyet
+- Hoang Thanh Dat
+- nhokmk00-png
+- Nguyen Cam Tu
+- Orange_Dev
+- TranQuan231005
+- Hhug19
+
+See the repository's [contributors graph](https://github.com/TranHuuQuyet/thauphim-movie-website/graphs/contributors) for commit attribution.
+
+## License
+
+`composer.json` declares this project as `proprietary`. No standalone `LICENSE` file is included. Do not assume permission to redistribute, modify, or use the project beyond the rights granted by its owner.

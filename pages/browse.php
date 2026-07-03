@@ -14,12 +14,6 @@ $countries = getAllCountriesFromDB();
         
         <section class="filter-section" style="background: #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
             <form id="filterForm" class="filter-form" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
-                
-                <div class="filter-group" style="flex: 1; min-width: 200px;">
-                    <label style="display: block; color: #ccc; margin-bottom: 5px; font-size: 14px;">Từ khóa</label>
-                    <input type="text" name="q" placeholder="Nhập tên phim cần tìm..." 
-                           style="width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 4px;">
-                </div>
 
                 <div class="filter-group" style="min-width: 150px;">
                     <label style="display: block; color: #ccc; margin-bottom: 5px; font-size: 14px;">Định dạng</label>
