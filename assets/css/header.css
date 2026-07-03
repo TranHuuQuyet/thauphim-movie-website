@@ -644,3 +644,104 @@ body.light-mode .icon-sun {
 .main-nav .nav-dropdown.is-active > summary {
     color: var(--color-primary);
 }
+.search-form {
+    position: relative;
+    z-index: 20;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 30;
+    min-width: 300px;
+    max-height: 360px;
+    padding: 6px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border-muted);
+    border-radius: 12px;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+}
+
+.search-suggestions[hidden] {
+    display: none;
+}
+
+.search-suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.search-suggestion-item:hover,
+.search-suggestion-item:focus-visible {
+    background: var(--color-surface-muted);
+    outline: none;
+}
+
+.search-suggestion-poster {
+    width: 42px;
+    height: 58px;
+    flex: 0 0 42px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: var(--color-surface-muted);
+}
+
+.search-suggestion-body {
+    min-width: 0;
+}
+
+.search-suggestion-title,
+.search-suggestion-original,
+.search-suggestion-meta {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.search-suggestion-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.search-suggestion-original,
+.search-suggestion-meta {
+    margin-top: 2px;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+}
+
+.search-suggestion-state {
+    padding: 12px;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+@media (max-width: 980px) {
+    .site-header.is-menu-open,
+    .site-header.is-menu-open .header-inner,
+    .site-header.is-menu-open .header-actions,
+    .site-header.is-menu-open .main-nav,
+    .site-header.is-menu-open .search-form {
+        overflow: visible;
+    }
+
+    .site-header.is-menu-open .search-form {
+        width: 100%;
+    }
+
+    .site-header.is-menu-open .search-suggestions {
+        width: 100%;
+        min-width: 0;
+        max-height: 300px;
+    }
+}

@@ -58,6 +58,7 @@ $isCountryActive = str_contains($currentPath, app_url("pages/country.php"));
     <script src="<?= htmlspecialchars(app_url('assets/js/theme.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/notifications.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <script src="<?= htmlspecialchars(app_url('assets/js/account-menu.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
+    <script src="<?= htmlspecialchars(app_url('assets/js/header-menu.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <?php foreach ($pageScripts as $scriptPath): ?>
         <script src="<?= htmlspecialchars(app_url((string) $scriptPath), ENT_QUOTES, 'UTF-8') ?>" defer></script>
     <?php endforeach; ?>
@@ -120,11 +121,18 @@ $isCountryActive = str_contains($currentPath, app_url("pages/country.php"));
 
                 <form class="search-form"
                     action="<?= htmlspecialchars(app_url('pages/browse.php'), ENT_QUOTES, 'UTF-8') ?>" method="get"
-                    role="search">
-                    <label class="sr-only" for="header-search">Tìm phim, diễn viên</label>
+                    role="search" data-header-search
+                    data-search-api="<?= htmlspecialchars(app_url('api/movies.php'), ENT_QUOTES, 'UTF-8') ?>"
+                    data-detail-page="<?= htmlspecialchars(app_url('pages/movie-detail.php'), ENT_QUOTES, 'UTF-8') ?>"
+                    data-fallback-poster="<?= htmlspecialchars(app_url('assets/images/poster_movie.jpg'), ENT_QUOTES, 'UTF-8') ?>"
+                    autocomplete="off">
+                    <label class="sr-only" for="header-search">Tìm phim</label>
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input id="header-search" name="q" type="search" placeholder="Tìm phim..." autocomplete="off"
+                        aria-autocomplete="list" aria-controls="header-search-suggestions" aria-expanded="false"
                         value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q'], ENT_QUOTES, 'UTF-8') : '' ?>">
+                    <div class="search-suggestions" id="header-search-suggestions" data-search-suggestions
+                        role="listbox" hidden></div>
                 </form>
 
                 <div class="header-icon-actions">
@@ -270,102 +278,3 @@ $isCountryActive = str_contains($currentPath, app_url("pages/country.php"));
         </div>
     </header>
     <?php include __DIR__ . "/auth_login.php"; ?>
-
-    <script>
-        (() => {
-            if (window.__thauHeaderMenuReady) {
-                return;
-            }
-            window.__thauHeaderMenuReady = true;
-
-            const initHeaderMenu = () => {
-                const header = document.querySelector(".site-header");
-                const toggleButton = document.querySelector(".menu-toggle");
-                const menu = document.querySelector("#primary-menu");
-
-                if (!header || !toggleButton || !menu) {
-                    return;
-                }
-
-                const closeMenu = () => {
-                    header.classList.remove("is-menu-open");
-                    toggleButton.setAttribute("aria-expanded", "false");
-                };
-
-                const updateHeaderState = () => {
-                    header.classList.toggle("scrolled", window.scrollY > 80);
-                };
-
-                updateHeaderState();
-
-                window.addEventListener("scroll", updateHeaderState, {
-                    passive: true,
-                });
-
-                toggleButton.addEventListener(
-                    "click",
-                    (event) => {
-                        event.preventDefault();
-                        event.stopImmediatePropagation();
-
-                        const isOpen = header.classList.toggle("is-menu-open");
-                        toggleButton.setAttribute("aria-expanded", String(isOpen));
-                    },
-                    true
-                );
-
-                document.addEventListener("click", (event) => {
-                    if (
-                        !header.classList.contains("is-menu-open") ||
-                        header.contains(event.target)
-                    ) {
-                        return;
-                    }
-
-                    closeMenu();
-                });
-
-                menu.querySelectorAll("a").forEach((link) => {
-                    link.addEventListener("click", closeMenu);
-                });
-
-                window.addEventListener("resize", () => {
-                    if (window.innerWidth > 980) {
-                        closeMenu();
-                    }
-                });
-            };
-
-            if (document.readyState === "loading") {
-                document.addEventListener("DOMContentLoaded", initHeaderMenu, {
-                    once: true,
-                });
-                return;
-            }
-
-            initHeaderMenu();
-        })();
-    </script>
-
-    <style>
-        header,
-        .header,
-        #header,
-        .navbar {
-            position: relative;
-            z-index: 99999 !important;
-        }
-
-        .menu-toggle {
-            position: relative;
-            z-index: 100000 !important;
-            cursor: pointer;
-        }
-
-        .mobile-menu,
-        .nav-menu,
-        .sidebar-menu,
-        .main-navigation {
-            z-index: 999999 !important;
-        }
-    </style>
