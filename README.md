@@ -4,6 +4,8 @@
 [![MySQL / MariaDB](https://img.shields.io/badge/Database-MySQL%20%2F%20MariaDB-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](#license)
 
+**Live website:** [https://fnbstore.store/](https://fnbstore.store/)
+
 ## Project Overview
 
 ThauPhim is a server-rendered movie website built with plain PHP, MySQL/MariaDB, HTML, CSS, and JavaScript. It includes a public catalog with live search suggestions, YouTube-based episode playback, member interactions, an administration panel, JSON endpoints used by the frontend, password-reset email support, and a CLI importer for TMDB metadata.
@@ -26,7 +28,7 @@ TMDB is used only by the CLI importer. Imported metadata is stored in MySQL and 
 ### Accounts and playback
 
 - Registration, login, logout, session authentication, and account locking.
-- One-time password-reset tokens with a configurable expiry and SMTP or PHP `mail()` delivery.
+- One-time password-reset tokens with a configurable expiry and Brevo SMTP delivery through PHPMailer, with optional PHP `mail()` fallback.
 - Free and premium memberships; premium titles require an active premium account.
 - YouTube iframe playback with episode navigation.
 - Watch progress and history for signed-in users.
@@ -63,7 +65,7 @@ TMDB is used only by the CLI importer. Imported metadata is stored in MySQL and 
 | Database | MySQL or MariaDB, `utf8mb4` |
 | Frontend | HTML5, CSS3, vanilla JavaScript |
 | Dependency management | Composer |
-| Email | PHPMailer `^7.1` for SMTP, with optional PHP `mail()` fallback |
+| Email | Brevo SMTP through PHPMailer `^7.1`, with optional PHP `mail()` fallback |
 | Metadata | TMDB API v3 |
 | Playback | YouTube iframe and iframe Player API |
 | Browser libraries | Swiper 12, Chart.js 4.5.1, Toastify, Font Awesome 6.5.2 |
@@ -223,6 +225,22 @@ Database and TMDB settings are PHP constants configured in `includes/config.php`
 | `SMTP_PASSWORD` | Placeholder | SMTP password |
 | `PASSWORD_RESET_TTL_MINUTES` | `60` | Reset-token lifetime; application minimum is 5 minutes |
 
+### Brevo password-reset email
+
+The current password-reset flow uses [Brevo transactional email](https://help.brevo.com/hc/en-us/articles/7924148470546-How-can-I-send-transactional-emails-with-Brevo) through its SMTP relay. PHPMailer performs the SMTP connection; the application does not call the Brevo REST API.
+
+Configure these values with the SMTP credentials provided in the Brevo dashboard:
+
+- `MAIL_DRIVER=smtp`
+- `MAIL_FROM` and `MAIL_FROM_NAME`
+- `SMTP_HOST`, `SMTP_PORT`, and `SMTP_ENCRYPTION`
+- `SMTP_USERNAME`
+- `SMTP_PASSWORD`, using a Brevo SMTP key rather than the Brevo account password
+
+The sender address or domain must be authorized in Brevo. `APP_URL` must also point to the deployed website because it is used to build the password-reset link included in the email.
+
+Do not commit Brevo SMTP credentials or keys. Store secrets in server environment variables or `includes/config.local.php`.
+
 For local development, a safe way to provide only the SMTP password is:
 
 ```php
@@ -232,6 +250,29 @@ define("SMTP_PASSWORD", "your-real-smtp-password");
 ```
 
 ## Database Setup and Migration
+
+### Backup and restore
+
+Back up an existing database before applying schema changes or upgrade scripts:
+
+```bash
+mysqldump -u root -p --default-character-set=utf8mb4 thauphim > thauphim-backup.sql
+```
+
+Restore that backup into an existing `thauphim` database with:
+
+```bash
+mysql -u root -p --default-character-set=utf8mb4 thauphim < thauphim-backup.sql
+```
+
+PowerShell with XAMPP:
+
+```powershell
+& "D:\Xampp\mysql\bin\mysqldump.exe" -u root -p --default-character-set=utf8mb4 thauphim --result-file="thauphim-backup.sql"
+& "D:\Xampp\mysql\bin\mysql.exe" -u root -p --default-character-set=utf8mb4 thauphim -e "SOURCE thauphim-backup.sql;"
+```
+
+Store backups outside the public web root and verify that the dump is not empty before continuing. Restoring replaces data according to the SQL statements in the backup; use a separate database first when validating a restore.
 
 ### Fresh database
 
@@ -305,6 +346,31 @@ php -S 127.0.0.1:8000
 
 Then open `http://127.0.0.1:8000/`. The configured MySQL/MariaDB service must already be running.
 
+## Troubleshooting
+
+### Database connection fails
+
+- Confirm that MySQL/MariaDB is running and that `pdo_mysql` is enabled.
+- Check `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASS`.
+- Confirm that `database/schema.sql` has been imported into the same database named by `DB_NAME`.
+- Use a database account with permission to read and update the application tables.
+
+### Password-reset email is not received
+
+- Run `php tools/diagnose_password_reset_mail.php user@example.com` to inspect configuration without sending.
+- Confirm that the sender address or domain is authorized in Brevo.
+- Use a Brevo SMTP key for `SMTP_PASSWORD`, not the Brevo account password.
+- Check the Brevo transactional logs, the recipient's spam folder, SMTP host/port/encryption, and server outbound-network rules.
+- Confirm that `APP_URL` is the public HTTPS URL; otherwise the email may contain an invalid reset link.
+
+### Assets or API requests return 404
+
+Serve the repository as the web root. Some templates and scripts still use root-relative `/assets`, `/api`, and `/pages` URLs, so subdirectory deployment is not consistently supported.
+
+### Blank page or JSON error
+
+Check the PHP and web-server error logs first. Enable `APP_DEBUG` only in a trusted local environment, reproduce the error, and disable it again before deployment.
+
 ## API Documentation
 
 The API is internal, session-aware, and not versioned. Most endpoints return:
@@ -368,7 +434,13 @@ The view endpoint validates that the episode is published and playable, enforces
 
 ## Screenshots and Demo
 
-No verified live demo URL or application screenshots are currently included in the repository.
+The deployed website is available at [https://fnbstore.store/](https://fnbstore.store/). Application screenshots are not currently included in the repository.
+
+### Live deployment status
+
+- The homepage returned HTTP `200 OK` over HTTPS on 2026-07-04.
+- This confirms availability only; it is not a full production feature or security test.
+- Production must use its own database and credentials. The seeded local administrator below is not a public demo account and must not be exposed on the live website.
 
 | View | Status |
 | --- | --- |
@@ -395,7 +467,7 @@ The current database relationship diagram is available here:
 | Membership | `premium` |
 | Status | `active` |
 
-Change this password immediately outside local development. The seed is intended for a fresh database and is not an idempotent account migration.
+This account is for local development only. It is not a live-demo credential and must not be enabled with the documented password on any public deployment. Change or remove it immediately outside local development. The seed is intended for a fresh database and is not an idempotent account migration.
 
 ## Scripts and Tooling
 
@@ -417,9 +489,33 @@ The repository was checked on 2026-07-04 with PHP 8.2.12 and MariaDB client 10.4
 
 - All 88 first-party PHP files pass `php -l`.
 - `composer.json` passes `composer validate --no-check-publish`.
-- The Git working tree was clean before this README update.
 
 These are static checks only. The repository still has no automated unit, integration, browser, or database test suite.
+
+### Manual smoke-test checklist
+
+Before deployment, verify:
+
+1. Homepage sections, header search suggestions, filters, and pagination load from the API.
+2. Registration, login, logout, account locking, and session persistence work.
+3. A password-reset request sends through Brevo, the link opens the correct host, the token expires, and it cannot be reused.
+4. Free users cannot open premium content; an active premium user can.
+5. Published YouTube episodes play, episode navigation works, and unpublished episodes remain hidden.
+6. Favorites, comments, ratings, watch progress, history, and view counting behave as documented.
+7. Upcoming notifications appear and the per-user read state is saved.
+8. Admin authorization, CSRF-protected mutations, CRUD pages, moderation, schedules, and dashboard charts work.
+9. Light/dark themes and responsive navigation work on desktop and mobile widths.
+10. Database backup and restore are tested against a separate database.
+
+## Security
+
+- Never publish database passwords, Brevo SMTP keys, TMDB keys, reset tokens, session data, or database backups.
+- Mail secrets can be supplied through server environment variables or an untracked `includes/config.local.php`.
+- `includes/config.php` is tracked by the current repository. Do not commit production values to it; use a deployment-only configuration process and inspect staged changes before every commit.
+- Rotate any credential that has ever been committed to Git. Removing it from the latest file does not remove it from Git history.
+- Keep `APP_DEBUG` disabled in production and serve the site over HTTPS with secure session cookies.
+- Change or remove the seeded administrator immediately and use a dedicated least-privilege database account.
+- Keep PHPMailer and PHP updated, restrict access to database dumps and tooling, and review server logs for repeated login or reset attempts.
 
 ## Deployment
 
@@ -454,7 +550,7 @@ The example `.htaccess` sets basic response headers and disables directory index
 - Watch history is available only to signed-in users. View counts are session-based, not unique-user analytics.
 - Password-reset delivery depends on a correctly configured SMTP server or PHP `mail()`.
 - The JSON API is internal, unversioned, session-authenticated, and has no documented rate limiting.
-- Application screenshots and a verified live demo are not included.
+- Application screenshots are not included in the repository.
 
 ## Future Improvements
 
