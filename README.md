@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-ThauPhim is a server-rendered movie website built with plain PHP, MySQL/MariaDB, HTML, CSS, and JavaScript. It includes a public catalog, YouTube-based episode playback, member interactions, an administration panel, JSON endpoints used by the frontend, password-reset email support, and a CLI importer for TMDB metadata.
+ThauPhim is a server-rendered movie website built with plain PHP, MySQL/MariaDB, HTML, CSS, and JavaScript. It includes a public catalog with live search suggestions, YouTube-based episode playback, member interactions, an administration panel, JSON endpoints used by the frontend, password-reset email support, and a CLI importer for TMDB metadata.
 
 TMDB is used only by the CLI importer. Imported metadata is stored in MySQL and served by the PHP application. Playback URLs are managed separately in `episodes.youtube_url`; the importer does not provide or create playable episodes.
 
@@ -15,11 +15,12 @@ TMDB is used only by the CLI importer. Imported metadata is stored in MySQL and 
 ### Public catalog
 
 - Homepage sections for featured, most-viewed, recent, movie, and series content.
-- Search, pagination, and filtering by type, genre, country, and release year.
+- Header search suggestions ranked by exact title and title-prefix matches.
+- Full search, pagination, and filtering by type, genre, country, and release year.
 - Sorting by newest, popularity, rating, and view count.
 - Movie detail pages with metadata, cast, genres, published episodes, ratings, comments, and related titles.
 - Country, genre, actor, movie, and series listing pages.
-- Responsive layout and a persisted light/dark theme preference.
+- Responsive navigation, shared header/footer branding, and a persisted light/dark theme preference across public pages.
 - Published upcoming-release notifications in the site header.
 
 ### Accounts and playback
@@ -35,7 +36,8 @@ TMDB is used only by the CLI importer. Imported metadata is stored in MySQL and 
 
 ### Administration
 
-- Role-protected dashboard with catalog, user, episode, view, error, and chart summaries.
+- Role-protected dashboard with catalog, user, episode, view, and error summaries.
+- Chart.js dashboards for content type, membership, and country distribution, plus top-10 movies by views, favorites, and visible comments.
 - Create, edit, list, and delete movies, episodes, genres, countries, and actors.
 - Normalize supported YouTube watch, short, live, and embed URLs before saving episodes.
 - Publish/unpublish episodes.
@@ -335,7 +337,7 @@ Errors use:
 
 | Method | Endpoint | Parameters | Authentication |
 | --- | --- | --- | --- |
-| `GET` | `/api/movies.php` | `page`, `limit`, `type`, `genre_id`, `country`, `year`, `q`, `sort` | Public |
+| `GET` | `/api/movies.php` | `page`, `limit`, `type`, `genre_id`, `country`, `year`, `q`, `sort`, `search_mode` | Public |
 | `GET` | `/api/movie-detail.php` | `id` | Public |
 | `GET` | `/api/genres.php` | `type`, `hide_empty` | Public |
 | `GET` | `/api/countries.php` | `type`, `hide_empty` | Public |
@@ -343,7 +345,7 @@ Errors use:
 | `GET` | `/api/episodes.php` | `movie_id` | Public |
 | `GET` | `/api/movies-by-country.php` | `code`, `page`, `limit`, `type` | Public |
 
-`type` accepts `movie`, `series`, or the `tv` alias. `country` on `/api/movies.php` accepts a country ID or two-letter code. `sort` accepts `newest`, `popular`, `top_rated`, or `most_viewed`. Page size is limited to 50.
+`type` accepts `movie`, `series`, or the `tv` alias. `country` on `/api/movies.php` accepts a country ID or two-letter code. `sort` accepts `newest`, `popular`, `top_rated`, or `most_viewed`. Search matches `title` and `original_title`; `search_mode=suggest` ranks exact and prefix matches first for the header suggestion panel. Page size is limited to 50.
 
 Only published episodes are returned by the episode and movie-detail APIs.
 
@@ -401,12 +403,23 @@ Change this password immediately outside local development. The seed is intended
 | --- | --- |
 | `composer install` | Install PHPMailer and generate Composer autoload files |
 | `composer install --no-dev --optimize-autoloader` | Install production dependencies |
+| `composer validate --no-check-publish` | Validate Composer metadata |
 | `php tools/import_tmdb.php` | Import TMDB metadata |
 | `php tools/diagnose_password_reset_mail.php user@example.com` | Inspect mail and user configuration without sending |
 | `php tools/diagnose_password_reset_mail.php user@example.com --send` | Create a reset request and send a test email |
 | `php tools/diagnose_password_reset_mail.php user@example.com --send --show-url` | Send and print the generated reset URL; use only in a trusted environment |
 
 There is no `package.json`, so there are no npm, Yarn, or pnpm scripts. CSS and JavaScript are served directly without compilation.
+
+## Current Validation Status
+
+The repository was checked on 2026-07-04 with PHP 8.2.12 and MariaDB client 10.4.32:
+
+- All 88 first-party PHP files pass `php -l`.
+- `composer.json` passes `composer validate --no-check-publish`.
+- The Git working tree was clean before this README update.
+
+These are static checks only. The repository still has no automated unit, integration, browser, or database test suite.
 
 ## Deployment
 
