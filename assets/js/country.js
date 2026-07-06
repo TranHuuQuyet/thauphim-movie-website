@@ -14,23 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const header = document.querySelector(".site-header");
     const menuToggle = document.querySelector(".menu-toggle");
     const menu = document.querySelector("#primary-menu");
-    const themeToggle = document.querySelector("#themeToggle");
-
-    const applyTheme = (isLight) => {
-      document.body.classList.toggle("light-mode", isLight);
-      document.body.classList.toggle("light-theme", isLight);
-    };
-
-    applyTheme(localStorage.getItem("theme") === "light");
-
-    if (themeToggle) {
-      themeToggle.addEventListener("click", () => {
-        const isLight = !document.body.classList.contains("light-theme");
-        applyTheme(isLight);
-        localStorage.setItem("theme", isLight ? "light" : "dark");
-      });
-    }
-
     if (!header || !menuToggle || !menu) return;
 
     const closeMenu = () => {

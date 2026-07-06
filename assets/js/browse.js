@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const API_BASE = "/api";
-    
+
     const filterForm = document.querySelector("#filterForm");
     const typeSelect = document.querySelector('select[name="type"]');
     const genreSelect = document.querySelector('select[name="genre"]');
@@ -8,34 +8,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const yearSelect = document.querySelector('select[name="year"]');
     const sortSelect = document.querySelector('select[name="sort"]');
     const btnClear = document.querySelector(".btn-clear-filter");
-  
+
     const movieList = document.querySelector("#browseMovieList");
     const movieStatus = document.querySelector("#browseMovieStatus");
     const paginationContainer = document.querySelector("#browsePagination");
     const resultTitle = document.querySelector("#browseResultTitle");
-  
+
     let currentPage = 1;
-    const limit = 12; 
-  
+    const limit = 12;
+
     const urlParams = new URLSearchParams(window.location.search);
     let globalSearchKeyword = urlParams.get("q") || "";
     if (urlParams.has("page")) currentPage = parseInt(urlParams.get("page"));
     if (typeSelect && urlParams.has("type")) typeSelect.value = urlParams.get("type");
-    
+
     if (genreSelect) {
         const initialGenre = urlParams.get("genre") || urlParams.get("genre_id");
         if (initialGenre) genreSelect.value = initialGenre;
     }
-    
+
     if (countrySelect && urlParams.has("country")) countrySelect.value = urlParams.get("country");
-    
+
     if (yearSelect) {
         const initialYear = urlParams.get("year") || urlParams.get("release_year");
         if (initialYear) yearSelect.value = initialYear;
     }
-    
+
     if (sortSelect && urlParams.has("sort")) sortSelect.value = urlParams.get("sort");
-  
+
     const updateBrowserURL = () => {
         const params = new URLSearchParams();
         if (typeSelect.value) params.set("type", typeSelect.value);
@@ -44,19 +44,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (yearSelect.value) params.set("year", yearSelect.value);
         if (sortSelect.value) params.set("sort", sortSelect.value);
         params.set("page", currentPage);
-        
+
         window.history.pushState({}, "", `${window.location.pathname}?${params.toString()}`);
     };
-  
+
     const createMovieCard = (movie) => {
         const card = document.createElement("div");
         card.className = "movie-card";
         card.style.cssText = "background: #111; border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative;";
-        
+
         const posterSrc = movie.poster_url || movie.poster || '/assets/images/default.jpg';
         const movieType = movie.type === 'series' ? 'Phim Bộ' : 'Phim Lẻ';
         const views = (movie.views || 0).toLocaleString('vi-VN');
-  
+
         card.innerHTML = `
             <a href="/pages/movie-detail.php?id=${movie.id}" style="text-decoration: none; color: inherit; display: block;">
                 <div class="poster-wrapper" style="position: relative; padding-top: 145%; background: #222; overflow: hidden;">
@@ -78,23 +78,23 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         return card;
     };
-  
+
     const renderPagination = (totalPages) => {
         paginationContainer.innerHTML = "";
         if (totalPages <= 1) return;
-  
+
         const ul = document.createElement("ul");
         ul.style.cssText = "display: flex; list-style: none; padding: 0; margin: 0; gap: 8px;";
-  
+
         for (let i = 1; i <= totalPages; i++) {
             const li = document.createElement("li");
             const a = document.createElement("a");
             a.href = "#";
             a.textContent = i;
             a.className = `page-link ${i === currentPage ? 'active-page' : ''}`;
-            
+
             if (i === currentPage) {
-                a.style.backgroundColor = "#e50914"; 
+                a.style.backgroundColor = "#e50914";
                 a.style.color = "#fff";
                 a.style.borderColor = "#e50914";
                 a.style.fontWeight = "bold";
@@ -106,21 +106,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadMoviesAPI();
                 window.scrollTo({ top: 0, behavior: "smooth" });
             });
-            
+
             li.append(a);
             ul.append(li);
         }
         paginationContainer.append(ul);
     };
-  
+
     const loadMoviesAPI = async () => {
-        updateBrowserURL(); 
-        
+        updateBrowserURL();
+
         movieList.innerHTML = "";
         movieStatus.textContent = "Đang tìm kiếm phim...";
         movieStatus.style.display = "block";
         paginationContainer.innerHTML = "";
-  
+
         try {
             const apiParams = new URLSearchParams();
             if (globalSearchKeyword.trim() !== "") {
@@ -133,33 +133,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 resultTitle.textContent = `Danh sách phim tổng hợp`;
             }
             if (typeSelect.value) apiParams.set("type", typeSelect.value);
-            if (genreSelect.value) apiParams.set("genre_id", genreSelect.value); 
+            if (genreSelect.value) apiParams.set("genre_id", genreSelect.value);
             if (countrySelect.value) apiParams.set("country", countrySelect.value);
-            
+
             if (yearSelect.value) {
                 apiParams.set("year", yearSelect.value);
                 apiParams.set("release_year", yearSelect.value);
             }
-            
+
             if (sortSelect.value) apiParams.set("sort", sortSelect.value);
             apiParams.set("page", currentPage);
             apiParams.set("limit", limit);
-  
+
             const response = await fetch(`${API_BASE}/movies.php?${apiParams.toString()}`);
             const payload = await response.json();
 
             console.log("Dữ liệu kết quả tìm kiếm API trả về:", payload);
-  
+
             if (!response.ok || !payload.success) {
                 throw new Error(payload.message || "Lỗi khi lấy dữ liệu phim");
             }
-  
+
             const movies = payload.data || [];
             const meta = payload.meta || {};
             const totalMovies = meta.total || movies.length;
-            
+
             resultTitle.textContent = `Danh sách phim tổng hợp (${totalMovies} phim)`;
-  
+
             if (movies.length === 0) {
                 movieStatus.innerHTML = `
                     <div class="no-results-box" style="padding: 40px 20px; background: #111; border-radius: 8px; border: 1px dashed #333;">
@@ -168,37 +168,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 return;
             }
-  
+
             movieStatus.style.display = "none";
             const fragment = document.createDocumentFragment();
             movies.forEach(movie => fragment.append(createMovieCard(movie)));
             movieList.append(fragment);
-  
+
             renderPagination(meta.total_pages || Math.ceil(totalMovies / limit));
-  
+
         } catch (error) {
             console.error(error);
             movieStatus.textContent = "Đã xảy ra lỗi khi tải phim. Vui lòng thử lại.";
             movieStatus.style.color = "#ff5c7a";
         }
     };
-  
+
     const autoSubmitFields = [typeSelect, genreSelect, countrySelect, yearSelect, sortSelect];
     autoSubmitFields.forEach(field => {
         if (field) {
             field.addEventListener("change", () => {
-                currentPage = 1; 
+                currentPage = 1;
                 loadMoviesAPI();
             });
         }
     });
-  
+
     if (filterForm) {
         filterForm.addEventListener("submit", (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
         });
     }
-  
+
     // Nút Xóa Lọc
     if (btnClear) {
         btnClear.addEventListener("click", (e) => {
@@ -213,8 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
             loadMoviesAPI();
         });
     }
-  
-    loadMoviesAPI();
-  });
 
-  
+    loadMoviesAPI();
+});
+
